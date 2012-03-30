@@ -48,7 +48,16 @@ Nexus.App = {
 			], function($, Mustache, tpl) {
 				$(placeholder).html(Mustache.to_html(tpl, evt));						
 			});    	
-		}
+		},
+		appendView: function(evt, templatePath, placeholder){
+			require([
+				Nexus.App.UI.Path.Require.jquery,
+				Nexus.App.UI.Path.Require.mustache,
+				"text!" + Nexus.App.UI.Path.templates + "/" + templatePath
+			], function($, Mustache, tpl) {
+				$(placeholder).append(Mustache.to_html(tpl, evt));						
+			});    	
+		}		
     },
     Services: {},
     Tests: {},
