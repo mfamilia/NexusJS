@@ -14,7 +14,7 @@ Benefits of CQRS on UI for Developers
 -------------------------
 * Behavior Driven Development (BDD)
 * Behaviors (Given/When/Then) == your implementation!
-* BDD Testing Framework included and integrated with QUnit test runner and RequireJS
+* BDD Testing Framework included and integrated with QUnit test runner
 * Domain Driven Design (DDD)
 * Implicit Routing
 * Reusable Validators
