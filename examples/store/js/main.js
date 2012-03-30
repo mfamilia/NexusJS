@@ -71,20 +71,3 @@ require([
 	});
 });
 
-
-require([
-	"jquery",
-	"Nexus",
-	"Nexus.App.Commands.BuyerCommands"
-], function($, Nexus) {
-	$('#clickMe2').click(function () {
-		var x = new Nexus.App.Commands.BuyerCommands.PopulateBuyersCommand("some buyers 2");
-		var y = new Nexus.App.Commands.BuyerCommands.PopulateBuyersCommand("bc bc bc");
-	
-		
-		console.log(JSON.stringify(y));
-
-		$('#result').html(JSON.stringify(x));		
-	});	
-});
-
