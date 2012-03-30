@@ -1,0 +1,8 @@
+.div-below {margin-top:10px;}
+.link {color:#0000ff; text-decoration:underline;cursor:pointer;}
+.spacer {margin-top: 50px;}
+.small-spacer {margin-top: 20px;}
+.hidden {display: none;}
+.visible {display: block;}
+#error {color: #ff0000; font-weight:bold;}
+#authenticatedUserId {color: #0000ff; font-weight:bold;}
