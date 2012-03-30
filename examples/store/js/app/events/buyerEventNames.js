@@ -1,11 +1,7 @@
-require([
-	"Nexus"
-], function (Nexus) {
+define(function () {
 	
-	Nexus.App.Events.BuyerEventNames = {
-
-		buyerCreatedEventName: 'Nexus.App.Events.BuyerEventNames.BuyerCreatedEvent'
-
+	return {
+		buyerCreatedEventName: 'Buyer created'
 	};
 	
 });

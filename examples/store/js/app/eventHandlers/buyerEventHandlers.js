@@ -1,28 +1,27 @@
-require([
+define([
 	"Nexus",
-	"Nexus.App.Events.BuyerEventNames",
-	"Nexus.App.DTOs.BuyerDTOs"
-], function (Nexus) {
+	"app/events/buyerEventNames",
+	"app/dtos/buyerDtos"
+], function (Nexus, BuyerEventNames) {
 
-	var saveToBuyerReadModel = new Nexus.EventHandler(
-		'Nexus.App.EventHandlers.BuyerEventHandlers.saveToBuyerReadModel',
-		Nexus.App.Events.BuyerEventNames.buyerCreatedEventName,
+	var eventHandlers = new Array();
+
+	eventHandlers.push(new Nexus.EventHandler(
+		'Save to buyer read model',
+		BuyerEventNames.buyerCreatedEventName,
 		function(evt){
-			Nexus.App.ReadModels.Buyers.insert(new Nexus.App.DTOs.BuyerDTOs.BuyerDTO(evt.id, evt.firstName, evt.lastName, evt.userId, evt.password));
+			Nexus.App.ReadModels.Buyers.insert(new Nexus.App.DTOs.BuyerDTO(evt.id, evt.firstName, evt.lastName, evt.userId, evt.password));
 		}	
-	);
+	));
 	
-	var notifyUserOfCreatedBuyer = new Nexus.EventHandler(
-		'Nexus.App.EventHandlers.BuyerEventHandlers.notifyUserOfCreatedBuyer',
-		Nexus.App.Events.BuyerEventNames.buyerCreatedEventName,
+	eventHandlers.push(new Nexus.EventHandler(
+		'Notify user of created buyer',
+		BuyerEventNames.buyerCreatedEventName,
 		function(evt){
 			Nexus.App.UI.appendView(evt, 'createdBuyer.html','#output');	
 		}	
-	);	
+	));	
 	
-	Nexus.App.EventBus.registerEventHandlers([
-		saveToBuyerReadModel,
-		notifyUserOfCreatedBuyer
-	]);
+	return eventHandlers;
 
 });

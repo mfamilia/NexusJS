@@ -1,9 +1,8 @@
-require([
-	"Nexus",
-	"Nexus.App.Events.BuyerEventNames"
-], function (Nexus) {
+define([
+	"app/events/buyerEventNames"
+], function (BuyerEventNames) {
 	
-	Nexus.App.Events.BuyerEvents = {
+	return {
 
 		BuyerCreatedEvent: function(id, firstName, lastName, userId, password){
 			this.id = id;
@@ -11,12 +10,11 @@ require([
 			this.lastName = lastName;
 			this.userId = userId;
 			this.password = password;
-			this.eventName = Nexus.App.Events.BuyerEventNames.buyerCreatedEventName;
+			this.eventName = BuyerEventNames.buyerCreatedEventName;
 		}	
 
 	};
 
-	
 });
 
 

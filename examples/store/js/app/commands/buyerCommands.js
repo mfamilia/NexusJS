@@ -1,13 +1,11 @@
-require([
-	"Nexus",
-	"Nexus.App.Commands.BuyerCommandNames"
-], function (Nexus) {
+define([
+	"app/commands/buyerCommandNames"
+], function (BuyerCommandNames) {
 	
-	Nexus.App.Commands.BuyerCommands = {
-
+	return {
 		PopulateBuyersCommand: function(buyers){
 			this.buyers = buyers;
-			this.commandName = Nexus.App.Commands.BuyerCommandNames.populateBuyersCommandName;
+			this.commandName = BuyerCommandNames.populateBuyersCommandName;
 		}	
 	};
 	

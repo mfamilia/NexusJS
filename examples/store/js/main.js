@@ -4,22 +4,7 @@ require.config({
     "mustache": 'lib/mustache',
     "text": 'lib/text',
     "qunit": 'lib/qunit',
-    
-    "Nexus": 'lib/nexus',
-
-    "Nexus.App.Commands.BuyerCommandNames": 'app/commands/buyerCommandNames',
-    "Nexus.App.Commands.BuyerCommands": 'app/commands/buyerCommands',
-    
-    "Nexus.App.CommandHandlers.BuyerCommandHandlers": 'app/commandHandlers/buyerCommandHandlers',    
-    
-    "Nexus.App.Domain.Buyer": 'app/domain/buyer',
-    
-    "Nexus.App.Events.BuyerEventNames": 'app/events/buyerEventNames',
-    "Nexus.App.Events.BuyerEvents": 'app/events/buyerEvents',
-    
-    "Nexus.App.EventHandlers.BuyerEventHandlers": 'app/eventHandlers/buyerEventHandlers',
-    
-    "Nexus.App.DTOs.BuyerDTOs": 'app/dtos/buyerDtos'
+    "Nexus": 'lib/nexus'
   }
 });
 
@@ -59,12 +44,15 @@ require(["Nexus"], function(Nexus) {
 		
 });
 
+// register command handlers and event handlers
 require([
-	"Nexus.App.CommandHandlers.BuyerCommandHandlers", 
-	"Nexus.App.EventHandlers.BuyerEventHandlers"
-], function() {
-	// register command handlers
-	// register event handlers
+	"Nexus",
+	"app/commandHandlers/buyerCommandHandlers", 
+	"app/eventHandlers/buyerEventHandlers"
+], function(Nexus,buyerCommandHandlers,buyerEventHandlers) {
+
+	Nexus.App.CommandBus.registerCommandHandlers(buyerCommandHandlers);	
+	Nexus.App.EventBus.registerEventHandlers(buyerEventHandlers);
 });
 
 
@@ -72,8 +60,8 @@ require([
 require([
 	"jquery",
 	"Nexus",
-	"Nexus.App.Commands.BuyerCommands"
-], function($, Nexus) {
+	"app/commands/buyerCommands"
+], function($, Nexus, BuyerCommands) {
 	$('#populateBuyers').click(function(){
 		var buyers = [
 			{
@@ -93,7 +81,7 @@ require([
 		];
 					
 		Nexus.App.CommandBus.dispatch(
-			new Nexus.App.Commands.BuyerCommands.PopulateBuyersCommand(
+			new BuyerCommands.PopulateBuyersCommand(
 				buyers
 			)
 		);

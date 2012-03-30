@@ -1,8 +1,6 @@
-require([
-	"Nexus"
-], function (Nexus) {
+require(['Nexus'], function (Nexus) {
 	
-	Nexus.App.DTOs.BuyerDTOs = {
+	Nexus.App.DTOs = {
 		BuyerDTO: function (id, firstName, lastName, userId, password) {
 		    this.id = id;
 		    this.firstName = firstName;

@@ -11,6 +11,7 @@ require([
 		Nexus.App.Analytics.EnabledForEvents = false;
 
 		Nexus.App.Tests.BuyerTests.shouldInitBuyers();
+		//Nexus.App.Tests.BuyerTests.shouldLoginBuyer();
 
 		Nexus.App.Analytics.EnabledForCommands = true;
 		Nexus.App.Analytics.EnabledForEvents = true;        	        

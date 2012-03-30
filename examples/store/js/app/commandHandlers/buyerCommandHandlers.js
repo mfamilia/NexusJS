@@ -1,12 +1,15 @@
-require([
+define([
 	"Nexus",
-	"Nexus.App.Commands.BuyerCommandNames",
-	"Nexus.App.Domain.Buyer"
-], function (Nexus) {
+	"app/commands/buyerCommandNames",
+	"app/domain/buyer"
+], function (Nexus, BuyerCommandNames, Buyer) {
 
-	var ch = new Nexus.CommandHandler(
-		'Nexus.App.CommandHandlers.BuyerCommandHandlers.populateBuyersCommandHandler',	
-		Nexus.App.Commands.BuyerCommandNames.populateBuyersCommandName,
+	var buyerCommandHandlers = new Array();
+
+
+	buyerCommandHandlers.push(new Nexus.CommandHandler(
+		'Populate buyers command handler',	
+		BuyerCommandNames.populateBuyersCommandName,
 		function(cmd){
 			cmd.buyers.map(function(buyer){
 				new Nexus.App.Domain.Buyer(
@@ -18,9 +21,9 @@ require([
 				);
 			});		
 		}		
-	);
+	));
 	
-	Nexus.App.CommandBus.registerCommandHandlers([ch]);
+	return buyerCommandHandlers;
 
-});
+})
 
