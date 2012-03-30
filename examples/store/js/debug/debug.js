@@ -1,8 +1,4 @@
-require(['Nexus','debug/debugService','debug/queryService','debug/utilService'],function(Nexus,debugService, queryService, utilService){
-			
-	var clearDiv = function(divId){
-		$('#' + divId).html('');
-	};									
+require(['Nexus','debug/debugService','debug/queryService','debug/utilService'],function(Nexus,debugService, queryService, utilService){								
 			
 	// Event Repo Queries
 
