@@ -10,7 +10,7 @@ Examples (WORK IN PROGRESS)
 	<dd>tests.html (BDD tests for store app)</dd>
 </dl>
 
-Benefits of CQRS on UI for Developers
+Benefits for Developers
 -------------------------
 * Behavior Driven Development (BDD)
 * Behaviors (Given/When/Then) == your implementation!
@@ -22,10 +22,9 @@ Benefits of CQRS on UI for Developers
 * Integrates well with RequireJS, Qunit and Mustache.js
 * Streamlined Development
 
-Benefits of CQRS on UI for Business
+Benefits for Business
 -------------------------
-* Behavior Analytics
-* Specialization
+* Behavior Analytics with Time Machine
 * Faster Time to Market
 * Developers use same language as product owners
 
