@@ -1,11 +1,15 @@
-NexusJS.Tests.SimpleArrayListTests = function(){
-	module("Simple Array List Tests");  		
+define(['Nexus'],function(Nexus){
+	Nexus.Tests.SimpleArrayListTests = function(){
+		module("Simple Array List Tests");  		
+	
+		test("SimpleArrayList should implement Nexus.Interfaces.ArrayList interface", function() {
+			// Arrange/Act
+			var arrList = Nexus.CreateSimpleArrayList();
+			// Assert
+			ok(Nexus.Interfaces.CheckIfImplements(arrList, Nexus.Interfaces.ArrayList));
+	
+		});
+	};
+return Nexus.Tests.SimpleArrayListTests;
+});
 
-	test("SimpleArrayList should implement NexusJS.Interfaces.ArrayList interface", function() {
-		// Arrange/Act
-		var arrList = NexusJS.CreateSimpleArrayList();
-		// Assert
-		ok(NexusJS.Interfaces.CheckIfImplements(arrList, NexusJS.Interfaces.ArrayList));
-
-	});
-};

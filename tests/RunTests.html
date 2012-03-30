@@ -2,37 +2,8 @@
 <html>
 	<head>
 		<title>NexusJS - Run Tests</title>
-		
-		<!-- jQuery -->
-		<script src="lib/jquery-1.7.1.js"></script>		
-		
-		<!-- QUnit -->
-		<link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen" />
-		<script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>					
-		
-		<!-- NexusJS -->
-		<script src="../nexus.js"></script>
-		
-		<!-- Tests -->
-		<script src="js/CreateCachableEventStoreTests.js"></script>				
-		<script src="js/DBTests.js"></script>			
-		<script src="js/HelpersTests.js"></script>	
-		<script src="js/LocalStorageArrayListTests.js"></script>	
-		<script src="js/LocalStorageArrayTests.js"></script>			
-		<script src="js/LocalStorageCachableEventStoreTests.js"></script>	
-		<script src="js/LocalStorageCommandBusTests.js"></script>		
-		<script src="js/LocalStorageDBTests.js"></script>							
-		<script src="js/SimpleArrayListTests.js"></script>		
-		<script src="js/SimpleArrayTests.js"></script>		
-		<script src="js/SimpleCachableEventStoreTests.js"></script>			
-		<script src="js/SimpleCommandBusTests.js"></script>		
-		<script src="js/SimpleDBTests.js"></script>					
-		<script src="js/UtilTests.js"></script>		
-		
-	
-		
-	
-		
+		<script data-main="main" src="lib/require.js"></script>
+		<link rel="stylesheet" href="css/qunit.css" type="text/css" media="screen" />				
 	</head>
 	
 	<body>
@@ -62,32 +33,5 @@
 		<h2 id="qunit-userAgent"></h2>
 		<ol id="qunit-tests"></ol>
 
-		<script type="text/javascript">
-
-
-
-		    $().ready(function () {
-				$('#performTest').click(function () { 	        
-					
-					NexusJS.Tests.run([
-						NexusJS.Tests.CreateCachableEventStoreTests,					
-						NexusJS.Tests.DBTests,
-						NexusJS.Tests.HelpersTests,
-						NexusJS.Tests.LocalStorageArrayListTests,
-						NexusJS.Tests.LocalStorageArrayTests,
-						NexusJS.Tests.LocalStorageCachableEventStoreTests,
-						NexusJS.Tests.LocalStorageCommandBusTests,
-						NexusJS.Tests.LocalStorageDBTests,					
-						NexusJS.Tests.SimpleArrayListTests,
-						NexusJS.Tests.SimpleArrayTests,
-						NexusJS.Tests.SimpleCachableEventStoreTests,							
-						NexusJS.Tests.SimpleCommandBusTests,
-						NexusJS.Tests.SimpleDBTests,
-						NexusJS.Tests.UtilTests
-					]);
-		
-			    });
-		    });
-		</script>
 	</body>
 </html>
