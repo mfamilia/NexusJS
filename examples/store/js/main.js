@@ -28,9 +28,9 @@ require.config({
 // Init
 require(["Nexus"], function(Nexus) {
 	Nexus.App.setUpBussesAndEventStore = function(){
-		Nexus.App.CommandBus = Nexus.CreateSimpleCommandBus(); // Nexus.CreateLocalStorageCommandBus('LocalStorageCommandBus');
-		Nexus.App.EventStore = Nexus.CreateSimpleCachableEventStore(); // Nexus.CreateLocalStorageCachableEventStore('CachableLocalStorageEventStore');
-		Nexus.App.EventBus = Nexus.CreateSimpleEventBus(Nexus.App.EventStore); //Nexus.CreateLocalStorageEventBus(Nexus.App.EventStore, 'LocalStorageEventBus');		
+		Nexus.App.CommandBus = Nexus.CreateLocalStorageCommandBus('LocalStorageCommandBus');
+		Nexus.App.EventStore = Nexus.CreateLocalStorageCachableEventStore('CachableLocalStorageEventStore');
+		Nexus.App.EventBus = Nexus.CreateLocalStorageEventBus(Nexus.App.EventStore, 'LocalStorageEventBus');		
 	};
 
 	Nexus.App.setUpIdGenerationStrategy = function(){
