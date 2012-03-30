@@ -16,7 +16,7 @@ require([
 		'Nexus.App.EventHandlers.BuyerEventHandlers.notifyUserOfCreatedBuyer',
 		Nexus.App.Events.BuyerEventNames.buyerCreatedEventName,
 		function(evt){
-			Nexus.App.UI.renderView(evt, 'createdBuyer.html','#output');	
+			Nexus.App.UI.appendView(evt, 'createdBuyer.html','#output');	
 		}	
 	);	
 	
