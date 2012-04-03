@@ -18,8 +18,17 @@ define([
 
 			};
 			
+			var expectedApplyFunction = ''; //function(){};
 			var expectedTemplate = "loginForm.html";
 			var expectedPlaceholder = "#body"
+			var expectedData = '';
+			
+			var expected = {
+					template: expectedTemplate,
+					placeholder: expectedPlaceholder,
+					applyFunction: expectedApplyFunction,
+					data: expectedData
+				};			
 	
 			new Nexus
 				.Test('Should show login form')
@@ -28,7 +37,7 @@ define([
 					    .When(whenCommand)
 					    .Then(expectEvents)
 					.AfterTest(afterTest)
-				.Run(expectedTemplate, expectedPlaceholder);  		
+				.Run(expected);	
 	
 		}
 			    

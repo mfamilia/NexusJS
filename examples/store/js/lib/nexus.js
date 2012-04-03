@@ -24,7 +24,8 @@ var Nexus = {
 		ViewSpy: {
 			data: '',
 			template: '',
-			placeholder: ''
+			placeholder: '',
+			applyFunction: ''
 		}
 	}
 };
@@ -1187,7 +1188,7 @@ Nexus.Test = function(testName){
 						this.AfterTest = function(afterTest){
 							fixture.afterTest = afterTest;
 							// run test
-							this.Run = function(expectedTemplate, expectedPlaceholder, expectedData){
+							this.Run = function(expected){
 							
 								Nexus.isInTestMode = true;
 
@@ -1245,17 +1246,23 @@ Nexus.Test = function(testName){
 								test(testName, function() {
 									deepEqual( actualEvents, expectedEvents, 'expectedEvents, actualEvents are different');
 			
-									if (expectedTemplate){
-										equal(Nexus.Tests.ViewSpy.template, expectedTemplate,'wrong view template path');
-									}
-									
-									if (expectedPlaceholder){
-										equal(Nexus.Tests.ViewSpy.placeholder, expectedPlaceholder,'wrong view placeholder');										
-									}
-									
-									if (expectedData){
-										deepEqual(Nexus.Tests.ViewSpy.data, expectedData,'wrong view data');
-									}
+									if (expected){
+										if (expected.template){
+											equal(Nexus.Tests.ViewSpy.template, expected.template,'wrong view template path');
+										}
+										
+										if (expected.placeholder){
+											equal(Nexus.Tests.ViewSpy.placeholder, expected.placeholder,'wrong view placeholder');										
+										}
+										
+										if (expected.data){
+											deepEqual(Nexus.Tests.ViewSpy.data, expected.data,'wrong view data');
+										}
+										
+										if (expected.applyFunction){
+											deepEqual(Nexus.Tests.ViewSpy.applyFunction, expected.applyFunction,'wrong apply function');
+										}	
+									}								
 														
 									// after test
 									if (Nexus.Util.isFunction(fixture.afterTest)){
