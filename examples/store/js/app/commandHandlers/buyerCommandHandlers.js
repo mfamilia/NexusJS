@@ -2,10 +2,9 @@ define([
 	"Nexus",
 	"app/commands/buyerCommandNames",
 	"app/domain/buyer"
-], function (Nexus, BuyerCommandNames, Buyer) {
+], function (Nexus, BuyerCommandNames) {
 
 	var buyerCommandHandlers = new Array();
-
 
 	buyerCommandHandlers.push(new Nexus.CommandHandler(
 		'Populate buyers command handler',	
@@ -19,10 +18,10 @@ define([
 					buyer.userId, 
 					buyer.password
 				);
-			});		
+			});	
 		}		
 	));
-	
+
 	return buyerCommandHandlers;
 
 })

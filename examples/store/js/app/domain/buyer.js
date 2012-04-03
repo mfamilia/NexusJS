@@ -13,7 +13,6 @@ require([
 
 		Nexus.App.EventBus.publish(new BuyerEvents.BuyerCreatedEvent(id, firstName, lastName, userId, password));	
 		
-
 		this.applyEvent = function(evt){
 			if (evt.eventName == BuyerEventNames.buyerCreatedEventName){
 				this.id = evt.id;

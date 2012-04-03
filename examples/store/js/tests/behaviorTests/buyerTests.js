@@ -1,4 +1,4 @@
-require([
+define([
 	"Nexus",
 	"app/commands/buyerCommands",
 	"app/events/buyerEvents"
@@ -54,30 +54,10 @@ require([
 				.Run();  		
 	
 		}
-		
-/*
-		shouldLoginBuyer: function(){
-		
-			var date = 'date';
-			var userId = 'user';
-			var pwd = 'pwd'
-
-			var givenEvents = new buyerEvents.BuyerCreatedEvent('id', 'firstName', 'lastName', userId, pwd)
-			var whenCommand = new Nexus.App.Commands.BuyerCommands.LoginBuyersCommand(date, userId, pwd);
-			var expectEvents = new buyerEvents.BuyerLoggedInEvent(date, userId, pwd);
-		
-			new Nexus
-				.Test('Should login buyer')
-					.BeforeTest(Nexus.App.Tests.BuyerTests.beforeEachTest)
-					    .Given(givenEvents)
-					    .When(whenCommand)
-					    .Then(expectEvents)
-					.AfterTest(Nexus.App.Tests.BuyerTests.afterEachTest)
-				.Run();		
-		}  
-*/ 
 	    
 	};
+	
+	return Nexus.App.Tests.BuyerTests;
 
 });
 

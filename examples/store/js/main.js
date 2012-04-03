@@ -9,7 +9,29 @@ require.config({
 });
 
 // Init
-require(["Nexus"], function(Nexus) {
+require([
+	"Nexus",
+	"app/domain/buyer",
+	"app/domain/ui",
+	"app/dtos/buyerDtos",
+	"app/commandHandlers/buyerCommandHandlers", 
+	"app/eventHandlers/buyerEventHandlers",
+	"app/commands/buyerCommands",
+	"app/commands/uiCommands",
+	"app/commandHandlers/uiCommandHandlers",
+	"app/eventHandlers/uiEventHandlers"
+], function(
+	Nexus,
+	Buyer,
+	UI,
+	BuyerDTO,
+	buyerCommandHandlers,
+	buyerEventHandlers, 
+	BuyerCommands,
+	UICommands,
+	uiCommandHandlers,
+	uiEventHandlers
+) {
 	Nexus.App.setUpBussesAndEventStore = function(){
 		Nexus.App.CommandBus = Nexus.CreateLocalStorageCommandBus('LocalStorageCommandBus');
 		Nexus.App.EventStore = Nexus.CreateLocalStorageCachableEventStore('CachableLocalStorageEventStore');
@@ -21,7 +43,6 @@ require(["Nexus"], function(Nexus) {
 	};
 
 	Nexus.App.setUpReadModels = function(){
-		Nexus.App.ReadModels.Sellers = Nexus.CreateLocalStorageReadModel("ServerDB.Sellers"); 
 		Nexus.App.ReadModels.Buyers = Nexus.CreateLocalStorageReadModel("ServerDB.Buyers");
 		Nexus.App.ReadModels.Logins = Nexus.CreateLocalStorageReadModel("ServerDB.Logins");
 		Nexus.App.ReadModels.FailedLogins = Nexus.CreateLocalStorageReadModel("ServerDB.FailedLogins");		
@@ -41,28 +62,17 @@ require(["Nexus"], function(Nexus) {
 	Nexus.App.setUpIdGenerationStrategy();
 	Nexus.App.setUpReadModels();
 	Nexus.App.setUpAnalytics();	
-		
-});
-
-// register command handlers and event handlers
-require([
-	"Nexus",
-	"app/commandHandlers/buyerCommandHandlers", 
-	"app/eventHandlers/buyerEventHandlers"
-], function(Nexus,buyerCommandHandlers,buyerEventHandlers) {
-
+	
+	// Register command handlers
 	Nexus.App.CommandBus.registerCommandHandlers(buyerCommandHandlers);	
-	Nexus.App.EventBus.registerEventHandlers(buyerEventHandlers);
-});
-
-
-// Populate Buyers
-require([
-	"jquery",
-	"Nexus",
-	"app/commands/buyerCommands"
-], function($, Nexus, BuyerCommands) {
-	$('#populateBuyers').click(function(){
+	Nexus.App.CommandBus.registerCommandHandlers(uiCommandHandlers);	
+	
+	// Register event handlers
+	Nexus.App.EventBus.registerEventHandlers(buyerEventHandlers);	
+	Nexus.App.EventBus.registerEventHandlers(uiEventHandlers);	
+		
+	// Populate Buyers if there are non in read model
+	if (Nexus.App.ReadModels.Buyers.size() == 0){
 		var buyers = [
 			{
 				id: Nexus.App.newId(),
@@ -79,13 +89,16 @@ require([
 				password: 'pwd'
 			}					
 		];
-					
+
 		Nexus.App.CommandBus.dispatch(
 			new BuyerCommands.PopulateBuyersCommand(
 				buyers
 			)
-		);
-	});
+		);	
+	}
+	
+	// Start UI
+	Nexus.App.CommandBus.dispatch(
+		new UICommands.StartUICommand()
+	);		
 });
-
-

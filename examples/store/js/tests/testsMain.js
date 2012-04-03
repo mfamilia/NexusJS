@@ -3,17 +3,12 @@ require([
 	"jquery",
 	"Nexus",
 	"qunit",
-	"tests/behaviorTests/buyerTests"
-],function($, Nexus,QUnit){
+	"tests/behaviorTests/buyerTests",
+	"tests/behaviorTests/uiTests"
+],function($,Nexus,QUnit,BuyerTests,UITests){
 
 	$('#performTest').click(function () {
-		Nexus.App.Analytics.EnabledForCommands = false;
-		Nexus.App.Analytics.EnabledForEvents = false;
-
-		Nexus.App.Tests.BuyerTests.shouldInitBuyers();
-		//Nexus.App.Tests.BuyerTests.shouldLoginBuyer();
-
-		Nexus.App.Analytics.EnabledForCommands = true;
-		Nexus.App.Analytics.EnabledForEvents = true;        	        
+		BuyerTests.shouldInitBuyers();
+		UITests.shouldDisplayLoginForm();
 	});
 });

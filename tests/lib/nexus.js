@@ -20,6 +20,11 @@ var Nexus = {
 			tests.map(function(test){
 				test();
 			});
+		},
+		ViewSpy: {
+			data: '',
+			template: '',
+			placeholder: ''
 		}
 	}
 };
@@ -46,6 +51,11 @@ Nexus.App = {
 				Nexus.App.UI.Path.Require.mustache,
 				"text!" + Nexus.App.UI.Path.templates + "/" + templatePath
 			], function($, Mustache, tpl) {
+				if (Nexus.isInTestMode){
+					Nexus.Tests.ViewSpy.data = evt;
+					Nexus.Tests.ViewSpy.template = templatePath;
+					Nexus.Tests.ViewSpy.placeholder = placeholder;
+				}
 				$(placeholder).html(Mustache.to_html(tpl, evt));						
 			});    	
 		},
@@ -55,6 +65,11 @@ Nexus.App = {
 				Nexus.App.UI.Path.Require.mustache,
 				"text!" + Nexus.App.UI.Path.templates + "/" + templatePath
 			], function($, Mustache, tpl) {
+				if (Nexus.isInTestMode){
+					Nexus.Tests.ViewSpy.data = evt;
+					Nexus.Tests.ViewSpy.template = templatePath;
+					Nexus.Tests.ViewSpy.placeholder = placeholder;
+				}			
 				$(placeholder).append(Mustache.to_html(tpl, evt));						
 			});    	
 		}		
@@ -88,6 +103,7 @@ Nexus.App = {
 /////////////////////////////////////////////////////
 Nexus.Aggregate = { isRehydrating: false };
 Nexus.isReplayingEvents = false;
+Nexus.isInTestMode = false;
 
 /////////////////////////////////////////////////////
 ///////// INTERFACES ////////////////////////////////
@@ -256,7 +272,24 @@ Nexus.Util = {
 		}else{
 			return handlerFunction(stuffToHandle);
 		}	
-	},
+	},	
+	setCookie: function(c_name,value,exdays){
+		var exdate=new Date();
+		exdate.setDate(exdate.getDate() + exdays);
+		var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+		document.cookie=c_name + "=" + c_value;
+	},	
+	getCookie: function(c_name){
+		var i,x,y,ARRcookies=document.cookie.split(";");
+		for (i=0;i<ARRcookies.length;i++){
+	  		x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+	  		y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+	  		x=x.replace(/^\s+|\s+$/g,"");
+	  		if (x==c_name){
+	    			return unescape(y);
+	    		}
+	  	}
+	},		
 	serialize: function(_obj)
 	{
 	   // Let Gecko browsers do this the easy way
@@ -688,7 +721,11 @@ Nexus.CreateDB = function(arr){
 		
 		self.clear = function(){
 			self.arr.splice(0,self.arr.size());			
-		}		
+		},
+		
+		self.size = function(){
+			return self.arr.size();
+		}
 									
 	};
 
@@ -1126,7 +1163,9 @@ Nexus.Test = function(testName){
 	
 	// test uses fake event store so not to write to real one
 	var BACKUP = {
-		EVENT_STORE: Nexus.App.EventStore
+		EVENT_STORE: Nexus.App.EventStore,
+		ANALYTICS_ENABLED_FOR_COMMANDS: Nexus.App.Analytics.EnabledForCommands,
+		ANALYTICS_ENABLED_FOR_EVENTS: Nexus.App.Analytics.EnabledForEvents
 	};
 
 	// before test
@@ -1148,7 +1187,9 @@ Nexus.Test = function(testName){
 						this.AfterTest = function(afterTest){
 							fixture.afterTest = afterTest;
 							// run test
-							this.Run = function(){
+							this.Run = function(expectedTemplate, expectedPlaceholder, expectedData){
+							
+								Nexus.isInTestMode = true;
 
 								Nexus.Aggregate.isRehydrating = false;
 								var finalGivenEvent = 'final_given_event';
@@ -1157,6 +1198,8 @@ Nexus.Test = function(testName){
 								Nexus.App.EventStore = Nexus.CreateSimpleEventStore();
 								Nexus.App.EventBus.eventStore = Nexus.App.EventStore;
 								Nexus.App.EventStore.setEventBus(Nexus.App.EventBus);								
+								Nexus.App.Analytics.EnabledForCommands = false;
+								Nexus.App.Analytics.EnabledForEvents = false;
 								if (Nexus.Util.isFunction(fixture.beforeTest)){
 									fixture.beforeTest();
 								}
@@ -1201,15 +1244,33 @@ Nexus.Test = function(testName){
 								// QUnit integration
 								test(testName, function() {
 									deepEqual( actualEvents, expectedEvents, 'expectedEvents, actualEvents are different');
+			
+									if (expectedTemplate){
+										equal(Nexus.Tests.ViewSpy.template, expectedTemplate,'wrong view template path');
+									}
+									
+									if (expectedPlaceholder){
+										equal(Nexus.Tests.ViewSpy.placeholder, expectedPlaceholder,'wrong view placeholder');										
+									}
+									
+									if (expectedData){
+										deepEqual(Nexus.Tests.ViewSpy.data, expectedData,'wrong view data');
+									}
+														
+									// after test
+									if (Nexus.Util.isFunction(fixture.afterTest)){
+										fixture.afterTest();
+									}
+								
 								})
 								
-								// after test
+								// restore app state
 								Nexus.App.EventStore = BACKUP.EVENT_STORE;
 								Nexus.App.EventBus.eventStore = Nexus.App.EventStore;
 								Nexus.App.EventStore.setEventBus(Nexus.App.EventBus);	
-								if (Nexus.Util.isFunction(fixture.afterTest)){
-									fixture.afterTest();
-								}
+								Nexus.App.Analytics.EnabledForCommands = BACKUP.ANALYTICS_ENABLED_FOR_COMMANDS;
+								Nexus.App.Analytics.EnabledForEvents = BACKUP.ANALYTICS_ENABLED_FOR_EVENTS;																
+								Nexus.isInTestMode = false;
 								
 							// run test
 							};														
