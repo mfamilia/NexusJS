@@ -73,6 +73,12 @@ Nexus.App = {
 				}			
 				$(placeholder).append(Mustache.to_html(tpl, evt));						
 			});    	
+		},
+		applyFunction: function(f){
+			if (Nexus.isInTestMode){
+				Nexus.Tests.ViewSpy.applyFunction = Nexus.Util.serialize(f);
+			}			
+			f();
 		}		
     },
     Services: {},
@@ -1260,7 +1266,7 @@ Nexus.Test = function(testName){
 										}
 										
 										if (expected.applyFunction){
-											deepEqual(Nexus.Tests.ViewSpy.applyFunction, expected.applyFunction,'wrong apply function');
+											deepEqual(Nexus.Tests.ViewSpy.applyFunction, Nexus.Util.serialize(expected.applyFunction),'wrong apply function');
 										}	
 									}								
 														

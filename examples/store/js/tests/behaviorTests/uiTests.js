@@ -18,11 +18,12 @@ define([
 
 			};
 			
-			var expectedApplyFunction = ''; //function(){};
+			var expectedApplyFunction = function(){alert('hello')};
 			var expectedTemplate = "loginForm.html";
 			var expectedPlaceholder = "#body"
 			var expectedData = '';
 			
+			// example how to pass expected object to the Run method
 			var expected = {
 					template: expectedTemplate,
 					placeholder: expectedPlaceholder,
