@@ -9,6 +9,9 @@ require([
 
 	$('#performTest').click(function () {
 		BuyerTests.shouldInitBuyers();
+		//BuyerTests.shouldAuthenticateBuyer();
+		BuyerTests.shouldDisplayHttp404Page();
 		UITests.shouldDisplayLoginForm();
+		
 	});
 });

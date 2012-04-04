@@ -13,6 +13,34 @@ require([
 
 		Nexus.App.EventBus.publish(new BuyerEvents.BuyerCreatedEvent(id, firstName, lastName, userId, password));	
 		
+		this.authenticate = function(date, userId, password){
+			var postData = {userId: userId, pwd: password};
+			
+console.log('auth');			
+					
+			$.ajax({
+				url: 'http://some.backend.server.com',
+				type: 'POST',
+				data: JSON.stringify(postData),
+				dataType: 'json',
+				contentTypeString: 'application/json',
+				// success callback
+				success: function(data, textStatus, jqXHR){
+					Nexus.App.EventBus.publish(
+						new BuyerEvents.BuyerAuthenticatedEvent(data)
+					);									
+				},
+				// error callback
+				error: function(jqXHR, textStatus, errorThrown){
+console.log('err');				
+					Nexus.App.EventBus.publish(
+							new BuyerEvents.Http404PageDisplayedEvent()					
+					);									
+				}			
+			});
+
+		};
+		
 		this.applyEvent = function(evt){
 			if (evt.eventName == BuyerEventNames.buyerCreatedEventName){
 				this.id = evt.id;

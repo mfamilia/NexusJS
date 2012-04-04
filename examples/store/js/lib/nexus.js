@@ -1193,8 +1193,8 @@ Nexus.Test = function(testName){
 						
 						this.AfterTest = function(afterTest){
 							fixture.afterTest = afterTest;
-							// run test
-							this.Run = function(expected){
+							// run test (waitTime is how long to wait for async calls)
+							this.Run = function(expected, waitTime){
 							
 								Nexus.isInTestMode = true;
 
@@ -1248,10 +1248,31 @@ Nexus.Test = function(testName){
 								}
 								});
 
-								// QUnit integration
-								test(testName, function() {
+								// QUnit integration 
+								test(testName, function() {		
+
+
+									// for async calls
+									if(waitTime){								
+										stop(); 
+									}
+									
+	
+								// for async calls
+									if(waitTime){
+										setTimeout(
+											function() {  
+										        start();  							        
+										    }, waitTime
+										);									
+									}	
+
+							
+								
+									// behavior asserts (events that should have fired were fired)
 									deepEqual( actualEvents, expectedEvents, 'expectedEvents, actualEvents are different');
-			
+									
+									// view asserts
 									if (expected){
 										if (expected.template){
 											equal(Nexus.Tests.ViewSpy.template, expected.template,'wrong view template path');
@@ -1270,11 +1291,12 @@ Nexus.Test = function(testName){
 										}	
 									}								
 														
-									// after test
+									// after test (can pass extra QUnit asserts and/or teardown)
 									if (Nexus.Util.isFunction(fixture.afterTest)){
 										fixture.afterTest();
-									}
-								
+									}	
+									
+
 								})
 								
 								// restore app state

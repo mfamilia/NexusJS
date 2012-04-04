@@ -27,7 +27,7 @@ define([
 			var expected = {
 					template: expectedTemplate,
 					placeholder: expectedPlaceholder,
-					applyFunction: expectedApplyFunction,
+					applyFunction: '', //expectedApplyFunction,
 					data: expectedData
 				};			
 	

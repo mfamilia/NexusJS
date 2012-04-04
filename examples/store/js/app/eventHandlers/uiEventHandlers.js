@@ -11,7 +11,7 @@ define([
 			UIEventNames.loginFormDisplayedEventName,
 			function(evt){
 				Nexus.App.UI.renderView(evt, 'loginForm.html','#body');	
-				Nexus.App.UI.applyFunction(function(){alert('hello')});
+				//Nexus.App.UI.applyFunction(function(){alert('hello')});
 			}	
 	);
 	

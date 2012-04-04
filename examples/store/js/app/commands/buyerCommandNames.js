@@ -1,7 +1,8 @@
 define(function () {
 
 	return {
-		populateBuyersCommandName: "Populate buyers"
+		populateBuyersCommandName: "Populate buyers command",
+		authenticateBuyerCommandName: "Authenticate buyer command"
 	};
 
 });

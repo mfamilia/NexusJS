@@ -53,7 +53,58 @@ define([
 					.AfterTest(Nexus.App.Tests.BuyerTests.afterEachTest)
 				.Run();  		
 	
-		}
+		},
+		
+		shouldAuthenticateBuyer: function(){
+		
+			var buyer1 = 	{
+						id: Nexus.App.newId(),
+						firstName: 'Buyer',
+						lastName: 'One',
+						userId: 'bone',
+						password: 'pwd'
+					};
+			var data = {
+				//some data
+			}
+							
+			var givenEvents = new BuyerEvents.BuyerCreatedEvent(buyer1.id, buyer1.firstName, buyer1.lastName, buyer1.userId, buyer1.password);
+			var whenCommand = new BuyerCommands.AuthenticateBuyerCommand(new Date(), buyer1.userId, buyer1.password); 
+			var expectedEvents = new BuyerEvents.BuyerAuthenticatedEvent(data); 
+			
+			new Nexus
+				.Test('Should authenticate buyer')
+					.BeforeTest(Nexus.App.Tests.BuyerTests.beforeEachTest)
+					    .Given(givenEvents)
+					    .When(whenCommand)
+					    .Then(expectedEvents)
+					.AfterTest(Nexus.App.Tests.BuyerTests.afterEachTest)
+				.Run({},1000);			
+		},
+		
+		shouldDisplayHttp404Page: function(){
+		
+			var buyer1 = 	{
+						id: Nexus.App.newId(),
+						firstName: 'Buyer',
+						lastName: 'One',
+						userId: 'bone',
+						password: 'pwd'
+					};
+							
+			var givenEvents = new BuyerEvents.BuyerCreatedEvent(buyer1.id, buyer1.firstName, buyer1.lastName, buyer1.userId, buyer1.password);
+			var whenCommand = new BuyerCommands.AuthenticateBuyerCommand(new Date(), buyer1.userId, buyer1.password); 
+			var expectedEvents = new BuyerEvents.Http404PageDisplayedEvent(); 
+			
+			new Nexus
+				.Test('Should display 404 page')
+					.BeforeTest(Nexus.App.Tests.BuyerTests.beforeEachTest)
+					    .Given(givenEvents)
+					    .When(whenCommand)
+					    .Then(expectedEvents)
+					.AfterTest(Nexus.App.Tests.BuyerTests.afterEachTest)
+				.Run({},3000);			
+		}		
 	    
 	};
 	

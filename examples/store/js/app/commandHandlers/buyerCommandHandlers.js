@@ -1,7 +1,8 @@
 define([
 	"Nexus",
 	"app/commands/buyerCommandNames",
-	"app/domain/buyer"
+	"app/domain/buyer",
+	"app/services/aggregateService"	
 ], function (Nexus, BuyerCommandNames) {
 
 	var buyerCommandHandlers = new Array();
@@ -21,6 +22,14 @@ define([
 			});	
 		}		
 	));
+	
+	buyerCommandHandlers.push(new Nexus.CommandHandler(
+		'Authenticate buyer command handler',	
+		BuyerCommandNames.authenticateBuyerCommandName,
+		function(cmd){
+			Nexus.App.Services.AggregateService.Buyer.getStaticBuyer().authenticate(cmd.date, cmd.userId, cmd.password);	
+		}		
+	));	
 
 	return buyerCommandHandlers;
 
