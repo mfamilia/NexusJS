@@ -89,7 +89,7 @@ define([
 						firstName: 'Buyer',
 						lastName: 'One',
 						userId: 'bone',
-						password: 'pwd'
+						password: 'password'
 					};
 							
 			var givenEvents = new BuyerEvents.BuyerCreatedEvent(buyer1.id, buyer1.firstName, buyer1.lastName, buyer1.userId, buyer1.password);

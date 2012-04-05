@@ -1,9 +1,9 @@
 define([
 	"Nexus",
-	"app/commands/buyerCommandNames",
 	"app/domain/buyer",
+	"app/commands/buyerCommandNames",
 	"app/services/aggregateService"	
-], function (Nexus, BuyerCommandNames) {
+], function (Nexus, BUYER, BuyerCommandNames) {
 
 	var buyerCommandHandlers = new Array();
 

@@ -1,8 +1,10 @@
 require([
 	"Nexus",
 	"app/events/buyerEvents",
-	"app/events/buyerEventNames"
-], function (Nexus, BuyerEvents, BuyerEventNames) {
+	"app/events/buyerEventNames",
+	"app/services/backendRestService",
+	"app/validators/lengthValidator"
+], function (Nexus, BuyerEvents, BuyerEventNames, backendRestService, LengthValidator) {
 	
 	Nexus.App.Domain.Buyer = function (id, firstName, lastName, userId, password) {
 		this.id = '';
@@ -13,31 +15,29 @@ require([
 
 		Nexus.App.EventBus.publish(new BuyerEvents.BuyerCreatedEvent(id, firstName, lastName, userId, password));	
 		
-		this.authenticate = function(date, userId, password){
-			var postData = {userId: userId, pwd: password};
+		this.authenticate = function(date, userId, password){			
+			// ui validator (can be an array of them)
+			var validator = new LengthValidator(password, 6, 16);
 			
-console.log('auth');			
-					
-			$.ajax({
-				url: 'http://some.backend.server.com',
-				type: 'POST',
-				data: JSON.stringify(postData),
-				dataType: 'json',
-				contentTypeString: 'application/json',
-				// success callback
-				success: function(data, textStatus, jqXHR){
-					Nexus.App.EventBus.publish(
-						new BuyerEvents.BuyerAuthenticatedEvent(data)
-					);									
-				},
-				// error callback
-				error: function(jqXHR, textStatus, errorThrown){
-console.log('err');				
-					Nexus.App.EventBus.publish(
+			// if ui is valid, call backend
+			if(Nexus.Helpers.Validation.isValid(validator)){
+				// call rest backend service in async way
+				backendRestService.post({
+					url: 'http://www.some.back.end.server',
+					data: {userId:userId, password:password},
+					success: function(data){
+						Nexus.App.EventBus.publish(
+							new BuyerEvents.BuyerAuthenticatedEvent(data)
+						);				
+					},
+					error: function(){
+						Nexus.App.EventBus.publish(
 							new BuyerEvents.Http404PageDisplayedEvent()					
-					);									
-				}			
-			});
+						);				
+					}
+				});
+			}			
+
 
 		};
 		

@@ -89,12 +89,13 @@ require([
 				password: 'pwd'
 			}					
 		];
-
+/*
 		Nexus.App.CommandBus.dispatch(
 			new BuyerCommands.PopulateBuyersCommand(
 				buyers
 			)
 		);	
+*/		
 	}
 	
 	// Start UI

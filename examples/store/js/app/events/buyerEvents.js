@@ -19,7 +19,7 @@ define([
 		},
 		
 		Http404PageDisplayedEvent: function(){
-			this.eventName = BuyerEventNames.http404PageDisplayedEventName;		
+			this.eventName = BuyerEventNames.http404PageDisplayedEventName;					
 		}	
 
 	};

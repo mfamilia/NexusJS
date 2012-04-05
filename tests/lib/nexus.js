@@ -24,7 +24,8 @@ var Nexus = {
 		ViewSpy: {
 			data: '',
 			template: '',
-			placeholder: ''
+			placeholder: '',
+			applyFunction: ''
 		}
 	}
 };
@@ -72,6 +73,12 @@ Nexus.App = {
 				}			
 				$(placeholder).append(Mustache.to_html(tpl, evt));						
 			});    	
+		},
+		applyFunction: function(f){
+			if (Nexus.isInTestMode){
+				Nexus.Tests.ViewSpy.applyFunction = Nexus.Util.serialize(f);
+			}			
+			f();
 		}		
     },
     Services: {},
@@ -97,13 +104,6 @@ Nexus.App = {
 	}
     }
 };
-
-/////////////////////////////////////////////////////
-///////// DEFAULTS //////////////////////////////////
-/////////////////////////////////////////////////////
-Nexus.Aggregate = { isRehydrating: false };
-Nexus.isReplayingEvents = false;
-Nexus.isInTestMode = false;
 
 /////////////////////////////////////////////////////
 ///////// INTERFACES ////////////////////////////////
@@ -199,6 +199,13 @@ Nexus.Interfaces.EventStore = {
 	getById: function(){},
 	clear: function(){}	
 };
+
+/////////////////////////////////////////////////////
+///////// DEFAULTS //////////////////////////////////
+/////////////////////////////////////////////////////
+Nexus.Aggregate = { isRehydrating: false };
+Nexus.isReplayingEvents = false;
+Nexus.isInTestMode = false;
 
 /////////////////////////////////////////////////////
 ///////// HELPERS ///////////////////////////////////
@@ -1186,92 +1193,104 @@ Nexus.Test = function(testName){
 						
 						this.AfterTest = function(afterTest){
 							fixture.afterTest = afterTest;
-							// run test
-							this.Run = function(expectedTemplate, expectedPlaceholder, expectedData){
+							// run test (waitTime is how long to wait for async calls)
+							this.Run = function(expected, waitTime){
+								// QUnit integration 
+								test(testName, function() {		
+
+									Nexus.isInTestMode = true;
+
+									Nexus.Aggregate.isRehydrating = false;
+									var finalGivenEvent = 'final_given_event';
+
+									// before test
+									Nexus.App.EventStore = Nexus.CreateSimpleEventStore();
+									Nexus.App.EventBus.eventStore = Nexus.App.EventStore;
+									Nexus.App.EventStore.setEventBus(Nexus.App.EventBus);								
+									Nexus.App.Analytics.EnabledForCommands = false;
+									Nexus.App.Analytics.EnabledForEvents = false;
+									if (Nexus.Util.isFunction(fixture.beforeTest)){
+										fixture.beforeTest();
+									}
+
+									// given
+									if (fixture.givenEvents){
+										Nexus.Util.handleOneOrMany(
+											fixture.givenEvents, 
+											function(evt){
+												Nexus.App.EventBus.publish(evt);
+											}
+										);									
+									}
+									Nexus.App.EventStore.saveEvent(finalGivenEvent);
+
+									// when
+									Nexus.App.CommandBus.dispatch(fixture.whenCommand); // single command only! by design!
 							
-								Nexus.isInTestMode = true;
+									stop(); 
+									setTimeout(function(){
 
-								Nexus.Aggregate.isRehydrating = false;
-								var finalGivenEvent = 'final_given_event';
+										// then
+										var expectedEvents =
+										Nexus.Util.handleOneOrMany(
+											fixture.expectedEvents, 
+											function(evt){								
+												return JSON.stringify(evt);
+											}, 
+											function(arr){
+												return arr.join('');
+											}
+										);
+										var actualEvents = '';
+										var startWritingToActualEvents = false;
 
-								// before test
-								Nexus.App.EventStore = Nexus.CreateSimpleEventStore();
-								Nexus.App.EventBus.eventStore = Nexus.App.EventStore;
-								Nexus.App.EventStore.setEventBus(Nexus.App.EventBus);								
-								Nexus.App.Analytics.EnabledForCommands = false;
-								Nexus.App.Analytics.EnabledForEvents = false;
-								if (Nexus.Util.isFunction(fixture.beforeTest)){
-									fixture.beforeTest();
-								}
-
-								// given
-								if (fixture.givenEvents){
-									Nexus.Util.handleOneOrMany(
-										fixture.givenEvents, 
-										function(evt){
-											Nexus.App.EventBus.publish(evt);
+										Nexus.App.EventStore.getAllEvents().map(function (evt) {
+										if (startWritingToActualEvents){
+											actualEvents += JSON.stringify(evt);
 										}
-									);									
-								}
-								Nexus.App.EventStore.saveEvent(finalGivenEvent);
+										if (evt == finalGivenEvent){
+											startWritingToActualEvents = true;
+										}
+										});																	
 
-								// when
-								Nexus.App.CommandBus.dispatch(fixture.whenCommand); // single command only! by design!
+										// behavior asserts (events that should have fired were fired)
+										deepEqual( actualEvents, expectedEvents, 'expectedEvents, actualEvents are different');
 
-								// then
-								var expectedEvents =
-								Nexus.Util.handleOneOrMany(
-									fixture.expectedEvents, 
-									function(evt){								
-										return JSON.stringify(evt);
-									}, 
-									function(arr){
-										return arr.join('');
-									}
-								);
-								var actualEvents = '';
-								var startWritingToActualEvents = false;
+										// view asserts
+										if (expected){
+											if (expected.template){
+												equal(Nexus.Tests.ViewSpy.template, expected.template,'wrong view template path');
+											}
 
-								Nexus.App.EventStore.getAllEvents().map(function (evt) {
-								if (startWritingToActualEvents){
-									actualEvents += JSON.stringify(evt);
-								}
-								if (evt == finalGivenEvent){
-									startWritingToActualEvents = true;
-								}
-								});
+											if (expected.placeholder){
+												equal(Nexus.Tests.ViewSpy.placeholder, expected.placeholder,'wrong view placeholder');										
+											}
 
-								// QUnit integration
-								test(testName, function() {
-									deepEqual( actualEvents, expectedEvents, 'expectedEvents, actualEvents are different');
-			
-									if (expectedTemplate){
-										equal(Nexus.Tests.ViewSpy.template, expectedTemplate,'wrong view template path');
-									}
-									
-									if (expectedPlaceholder){
-										equal(Nexus.Tests.ViewSpy.placeholder, expectedPlaceholder,'wrong view placeholder');										
-									}
-									
-									if (expectedData){
-										deepEqual(Nexus.Tests.ViewSpy.data, expectedData,'wrong view data');
-									}
-														
-									// after test
-									if (Nexus.Util.isFunction(fixture.afterTest)){
-										fixture.afterTest();
-									}
-								
-								})
-								
-								// restore app state
-								Nexus.App.EventStore = BACKUP.EVENT_STORE;
-								Nexus.App.EventBus.eventStore = Nexus.App.EventStore;
-								Nexus.App.EventStore.setEventBus(Nexus.App.EventBus);	
-								Nexus.App.Analytics.EnabledForCommands = BACKUP.ANALYTICS_ENABLED_FOR_COMMANDS;
-								Nexus.App.Analytics.EnabledForEvents = BACKUP.ANALYTICS_ENABLED_FOR_EVENTS;																
-								Nexus.isInTestMode = false;
-								
+											if (expected.data){
+												deepEqual(Nexus.Tests.ViewSpy.data, expected.data,'wrong view data');
+											}
+
+											if (expected.applyFunction){
+												deepEqual(Nexus.Tests.ViewSpy.applyFunction, Nexus.Util.serialize(expected.applyFunction),'wrong apply function');
+											}	
+										}								
+
+										// after test (can pass extra QUnit asserts and/or teardown)
+										if (Nexus.Util.isFunction(fixture.afterTest)){
+											fixture.afterTest();
+										}	
+										
+										// restore app state
+										Nexus.App.EventStore = BACKUP.EVENT_STORE;
+										Nexus.App.EventBus.eventStore = Nexus.App.EventStore;
+										Nexus.App.EventStore.setEventBus(Nexus.App.EventBus);	
+										Nexus.App.Analytics.EnabledForCommands = BACKUP.ANALYTICS_ENABLED_FOR_COMMANDS;
+										Nexus.App.Analytics.EnabledForEvents = BACKUP.ANALYTICS_ENABLED_FOR_EVENTS;																
+										Nexus.isInTestMode = false;										
+
+									start();
+									},waitTime ? waitTime : 0); // waitTime for async tests
+								})																
 							// run test
 							};														
 							return this; // return after test
@@ -1293,5 +1312,17 @@ Nexus.Test = function(testName){
 // Nexus.Test	
 };
 
+/////////////////////////////////////////////////////
+///////// DEFAULT INIT //////////////////////////////
+/////////////////////////////////////////////////////
+Nexus.App.Analytics.EnabledForCommands = true;
+Nexus.App.Analytics.EnabledForEvents = true;
+Nexus.App.newId = Nexus.NewGuid;
+Nexus.App.CommandBus = Nexus.CreateSimpleCommandBus();
+Nexus.App.EventStore = Nexus.CreateSimpleCachableEventStore();
+Nexus.App.EventBus = Nexus.CreateSimpleEventBus(Nexus.App.EventStore);	
+
 return Nexus;
 });
+
+
