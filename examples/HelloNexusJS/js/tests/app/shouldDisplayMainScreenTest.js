@@ -29,7 +29,7 @@ define([
 				// any tear down that should run after test
 				.AfterTest()
 			// runs and tests ui
-			.Run(expectedOnUI);		
+			.Run(expectedOnUI, 50);		
 	};
 			    
 });

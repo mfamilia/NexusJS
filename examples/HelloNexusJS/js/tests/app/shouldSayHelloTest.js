@@ -22,7 +22,7 @@ define([
 						.When(whenCommand)
 						.Then(expectEvents)
 					.AfterTest()
-				.Run(expectedOnUI);								
+				.Run(expectedOnUI, 50);	// 50 is a number of miliseconds to wait before making assertions							
 		};
 			    
 });

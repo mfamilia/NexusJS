@@ -10,27 +10,31 @@ require.config({
 
 // Init Domain
 require([
-	'app/domain/mainScreen',
-	'app/domain/helloScreen'	
+	'app/domain/mainScreen'
 ], function(){});
 
 // Init App
 require([
 	'Nexus',
+	'qunit',
 	'app/commands/displayMainScreen',
 	'app/commandHandlers/displayMainScreenHandler',
 	'app/commandHandlers/sayHelloHandler',	
 	'app/eventHandlers/mainScreenDisplayedHandler',
-	'app/eventHandlers/helloScreenDisplayedHandler'	
+	'app/eventHandlers/helloScreenDisplayedHandler',
+	'app/commandHandlers/sayItHandler',
+	'app/eventHandlers/saidItHandler'
 ], function(
 	Nexus,
+	QUnit,
 	DisplayMainScreen,
 	displayMainScreenHandler,
 	sayHelloHandler,
 	mainScreenDisplayedHandler,
-	helloScreenDisplayedHandler
+	helloScreenDisplayedHandler,
+	sayItHandler,
+	saidItHandler
 ) {
-
 	// set up what to do with analytics
 	Nexus.App.Analytics.PostToAnalyticsServer = function(msg){
 		// will just log to console for now
@@ -41,13 +45,15 @@ require([
 	// Register command handlers
 	Nexus.App.CommandBus.registerCommandHandlers([
 		displayMainScreenHandler,
-		sayHelloHandler
+		sayHelloHandler,
+		sayItHandler
 	]);		
 	
 	// Register event handlers
 	Nexus.App.EventBus.registerEventHandlers([
 		mainScreenDisplayedHandler,
-		helloScreenDisplayedHandler
+		helloScreenDisplayedHandler,
+		saidItHandler
 	]);			
 	
 	// Display main screen

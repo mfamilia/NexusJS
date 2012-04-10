@@ -1,21 +1,28 @@
-require([
+define([
 	"Nexus",
-	"app/events/mainScreenDisplayed"
-], function (Nexus, MainScreenDisplayed) {
+	"app/events/mainScreenDisplayed",
+	'app/events/saidIt',
+	'app/events/helloScreenDisplayed'
+], function (Nexus, MainScreenDisplayed, SaidIt, HelloScreenDisplayed) {
 
-	Nexus.App.Domain.MainScreen = function(id, date){
-		this.id = '';
-		this.date = '';
-	
-		Nexus.App.EventBus.publish(new MainScreenDisplayed.Event(id, date));
+	return function(){
+						
+		this.start = function(id, date){		
+			Nexus.App.EventBus.publish(new MainScreenDisplayed.Event(id, date));
+		};		
+			
+		this.sayHello = function(id, date){
+			Nexus.App.EventBus.publish(new HelloScreenDisplayed.Event(id, date));			
+		};		
 		
-		this.applyEvent = function(evt){
-			if(evt.eventName == MainScreenDisplayed.eventName){
-				this.id = evt.id;
-				this.date = evt.date;
-			}
+		this.sayIt = function(id, date, text){
+			Nexus.App.EventBus.publish(new SaidIt.Event(id, date, text));
 		};
+		
+		this.applyEvent = function(evt){};
 	};
+	
+	
 
 });
 

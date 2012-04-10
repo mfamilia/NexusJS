@@ -2,13 +2,13 @@ define([
 	"Nexus",
 	"app/commands/displayMainScreen",
 	"app/domain/mainScreen"	
-], function (Nexus, DisplayMainScreen) {
+], function (Nexus, DisplayMainScreen, MainScreen) {
 
 	return new Nexus.CommandHandler(
 		'Display main screen command handler',	
 		DisplayMainScreen.commandName,
 		function(cmd){
-			new Nexus.App.Domain.MainScreen(cmd.id, cmd.date);
+			new MainScreen().start(cmd.id, cmd.date);	
 		}		
 	);	
 

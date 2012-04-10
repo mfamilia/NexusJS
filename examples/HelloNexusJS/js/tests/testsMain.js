@@ -3,17 +3,19 @@ require([
 	'Nexus',
 	'qunit',
 	'tests/app/shouldDisplayMainScreenTest',
-	'tests/app/shouldSayHelloTest'	
+	'tests/app/shouldSayHelloTest',
+	'tests/app/shouldSayItTest'
 ],function(
 	$,
 	Nexus,
 	QUnit,
 	shouldDisplayMainScreenTest,
-	shouldSayHelloTest
+	shouldSayHelloTest,
+	shouldSayItTest
 ){
-
-	$('#runTests').click(function () {
+	$('#runTests').click(function () {	
 		shouldDisplayMainScreenTest();
 		shouldSayHelloTest();
+		shouldSayItTest();	
 	});
 });
