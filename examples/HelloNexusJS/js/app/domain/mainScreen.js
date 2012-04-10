@@ -19,7 +19,6 @@ define([
 			Nexus.App.EventBus.publish(new SaidIt.Event(id, date, text));
 		};
 		
-		this.applyEvent = function(evt){};
 	};
 	
 	
