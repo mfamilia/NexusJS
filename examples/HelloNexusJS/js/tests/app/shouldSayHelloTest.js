@@ -11,7 +11,7 @@ define([
 			var expectEvents = new HelloScreenDisplayed.Event(id, date);		
 			
 			var expectedOnUI = {
-				template: 'helloScreen.html',
+				template: 'helloTemplate.html',
 				placeholder: '#body'
 			};	
 			

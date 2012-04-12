@@ -15,7 +15,8 @@ define([
 			var expectEvent = new SaidIt.Event(id, date, text);		
 			
 			var expectedOnUI = {
-				//applyFunction: function(text){} // Nexus.App.Domain.MainScreenFunctions.sayIt(text)
+				template: 'saidItTemplate.html',
+				placeholder: '#output'			
 			};	
 			
 			new Nexus
@@ -25,7 +26,7 @@ define([
 						.When(whenCommand)
 						.Then(expectEvent)
 					.AfterTest()
-				.Run(expectedOnUI,50);	// 50 is a number of miliseconds to wait before making assertions							
+				.Run(expectedOnUI,100);		
 		};
 			    
 });

@@ -13,7 +13,7 @@ define([
 
 		// setup for ui						
 		var expectedOnUI = {
-			template: 'mainScreen.html', // template to be rendered
+			template: 'mainTemplate.html', // template to be rendered
 			placeholder: '#body' // where should it be rendered
 		};			
 
