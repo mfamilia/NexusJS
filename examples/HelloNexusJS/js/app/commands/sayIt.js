@@ -4,8 +4,8 @@ define(function () {
 	
 		commandName: "Say it",		
 	
-		Command: function(id, date, text, viewModel){
-			this.id = id;
+		Command: function(selector, date, text){
+			this.selector = selector;
 			this.date = date;
 			this.text = text;
 			this.commandName = SayIt.commandName;

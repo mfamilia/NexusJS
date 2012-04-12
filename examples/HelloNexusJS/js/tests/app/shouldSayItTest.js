@@ -9,7 +9,7 @@ define([
 		return function(){
 			var id = Nexus.App.newId();
 			var date = new Date();
-			var text = 'hello sexy!';
+			var text = 'hello';
 			var givenEvent = new MainScreenDisplayed.Event(id, date); 
 			var whenCommand = new SayIt.Command(id, date, text);
 			var expectEvent = new SaidIt.Event(id, date, text);		

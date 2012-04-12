@@ -18,12 +18,18 @@ require([
 	'Nexus',
 	'qunit',
 	'app/commands/displayMainScreen',
+	
 	'app/commandHandlers/displayMainScreenHandler',
 	'app/commandHandlers/sayHelloHandler',	
+	
 	'app/eventHandlers/mainScreenDisplayedHandler',
 	'app/eventHandlers/helloScreenDisplayedHandler',
+	
 	'app/commandHandlers/sayItHandler',
-	'app/eventHandlers/saidItHandler'
+	'app/eventHandlers/saidItHandler',
+	'app/eventHandlers/errorRaisedHandler',
+	'app/eventHandlers/highlightedHandler'
+	
 ], function(
 	Nexus,
 	QUnit,
@@ -33,7 +39,9 @@ require([
 	mainScreenDisplayedHandler,
 	helloScreenDisplayedHandler,
 	sayItHandler,
-	saidItHandler
+	saidItHandler,
+	errorRaisedHandler,
+	highlightedHandler
 ) {
 	// set up what to do with analytics
 	Nexus.App.Analytics.PostToAnalyticsServer = function(msg){
@@ -53,7 +61,9 @@ require([
 	Nexus.App.EventBus.registerEventHandlers([
 		mainScreenDisplayedHandler,
 		helloScreenDisplayedHandler,
-		saidItHandler
+		saidItHandler,
+		errorRaisedHandler,
+		highlightedHandler
 	]);			
 	
 	// Display main screen

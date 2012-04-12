@@ -8,7 +8,7 @@ define([
 		'Say it command handler',	
 		SayIt.commandName,
 		function(cmd){
-			new MainScreen().sayIt(cmd.id, cmd.date, cmd.text);	
+			new MainScreen().sayIt(cmd.selector, cmd.date, cmd.text);	
 		}		
 	);	
 

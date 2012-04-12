@@ -7,7 +7,9 @@ define([
 		'Hello screen displayed event handler',
 		HelloScreenDisplayed.eventName,
 		function(evt){
-			Nexus.App.UI.renderView('', 'helloScreen.html','#body');	
+			Nexus.View
+			.forTemplate('helloTemplate.html')
+			.renderOn('#body');	
 		}	
 	);
 	
