@@ -21,12 +21,17 @@ define(['Nexus'],function(Nexus){
 			
 			var myEmailValidator = new EmailValidator('test@test.com');
 			var myZipCodeValidator = new ZipCodeValidator(123);
-			
-			var validators = [myEmailValidator, myZipCodeValidator];
+		
+			var isValid = false;
+		
+			var validatables = [
+				new Nexus.Validatable(myEmailValidator, function(){isValid=false;}),
+				new Nexus.Validatable(myZipCodeValidator, function(){isValid=false;})
+			];
 																		
 			
 			//Act
-			var isValid = Nexus.Helpers.Validation.isValid(validators);
+			Nexus.Validate(validatables, function(){isValid = true;});
 	
 			// Assert
 			equal(isValid, false, "should be invalid since zip code is invalid");
@@ -44,10 +49,13 @@ define(['Nexus'],function(Nexus){
 			};					
 			
 			var myEmailValidator = new EmailValidator('test@test.com');
+			
+			var isValid = false;			
+			var validatable = new Nexus.Validatable(myEmailValidator, function(){isValid=false;})
 		
 			//Act
-			var isValid = Nexus.Helpers.Validation.isValid(myEmailValidator);
-	
+			Nexus.Validate(validatable, function(){isValid = true;});
+				
 			// Assert
 			equal(isValid, true, "should be valid since email contains @");
 															

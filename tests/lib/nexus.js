@@ -27,7 +27,72 @@ var Nexus = {
 			placeholder: '',
 			applyFunction: ''
 		}
-	}
+	},
+	///////////////////////////////////////////////////    
+	// VALIDATION /////////////////////////////////////
+	///////////////////////////////////////////////////
+	Validatable: function(validator, failFunction, failFunctionParams){
+		this.validator = validator;
+		this.failFunction = failFunction;
+		this.failFunctionParams = failFunctionParams;
+	},
+	Validate: function(validatables, passFunction, passFunctionParams){   	    	
+		var allAreValid = Nexus.Util.handleOneOrMany(
+			validatables,
+			function(validatable){
+				var isValid = validatable.validator.isValid();
+				if (!isValid){
+					validatable.failFunction(validatable.failFunctionParams);
+				}
+				return isValid;
+			},
+			function(arr){
+				return arr.indexOf(false) == -1;
+			}
+		);    	
+
+		if (allAreValid){
+			passFunction(passFunctionParams);
+		}
+	},
+	///////////////////////////////////////////////////    
+	// VIEWS //////////////////////////////////////////
+	///////////////////////////////////////////////////	
+	View: (function(){
+		//TODO: save to readmodel for browser history
+		//TODO: make it testable
+		var View = function(){
+			self = this; 
+			self.template = '';
+			self.data = '';
+			self.forTemplate = function(template){
+				self.template = template;
+				return self;
+			};
+			self.withData = function(data){
+				self.data = data;
+				return self;
+			};
+			self.renderOn = function(placeholder){
+				Nexus.App.UI.renderView(self.data, self.template, placeholder);
+				return self;
+			};
+			self.appendTo = function(placeholder){
+				Nexus.App.UI.appendView(self.data, self.template, placeholder);
+				return self;		
+			};
+			self.bind = function(f){
+				f();
+				return self;
+			};
+			self.execute = function(f){
+				f();
+				return self;
+			};
+		};
+		
+		return new View();	
+	})(/*pass observer for testing?*/)
 };
 
 Nexus.App = {
@@ -83,7 +148,6 @@ Nexus.App = {
     },
     Services: {},
     Tests: {},
-    Validators: {},
     Templates: {},
     CommandBus: '',
     EventStore: '',
@@ -206,25 +270,6 @@ Nexus.Interfaces.EventStore = {
 Nexus.Aggregate = { isRehydrating: false };
 Nexus.isReplayingEvents = false;
 Nexus.isInTestMode = false;
-
-/////////////////////////////////////////////////////
-///////// HELPERS ///////////////////////////////////
-/////////////////////////////////////////////////////
-Nexus.Helpers = {
-	Validation: {
-		isValid: function(validators){
-			return Nexus.Util.handleOneOrMany(
-				validators,
-				function(validator){
-					return validator.isValid();
-				},
-				function(arr){
-					return arr.indexOf(false) == -1;
-				}
-			);
-		}
-	}
-};
 
 /////////////////////////////////////////////////////
 ///////// UTIL //////////////////////////////////////

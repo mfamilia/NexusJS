@@ -13,7 +13,6 @@ require([
 	'qunit',
 	'js/CreateCachableEventStoreTests',
 	'js/DBTests',
-	'js/HelpersTests',
 	'js/LocalStorageArrayListTests',
 	'js/LocalStorageArrayTests',
 	'js/LocalStorageCachableEventStoreTests',
@@ -24,14 +23,14 @@ require([
 	'js/SimpleCachableEventStoreTests',
 	'js/SimpleCommandBusTests',
 	'js/SimpleDBTests',
-	'js/UtilTests'
+	'js/UtilTests',
+	'js/ValidationTests'
 ],function(
 	$, 
 	Nexus,
 	QUnit,
 	CreateCachableEventStoreTests,
 	DBTests,
-	HelpersTests,
 	LocalStorageArrayListTests,
 	LocalStorageArrayTests,
 	LocalStorageCachableEventStoreTests,
@@ -42,7 +41,8 @@ require([
 	SimpleCachableEventStoreTests,
 	SimpleCommandBusTests,
 	SimpleDBTests,
-	UtilTests
+	UtilTests,
+	ValidationTests
 	){
 
 	$('#performTest').click(function () {
@@ -50,7 +50,6 @@ require([
 		Nexus.Tests.run([
 			CreateCachableEventStoreTests,
 			DBTests,
-			HelpersTests,
 			LocalStorageArrayListTests,
 			LocalStorageArrayTests,
 			LocalStorageCachableEventStoreTests,
@@ -61,7 +60,8 @@ require([
 			SimpleCachableEventStoreTests,
 			SimpleCommandBusTests,
 			SimpleDBTests,
-			UtilTests
+			UtilTests,
+			ValidationTests
 		]);
 
 	});
