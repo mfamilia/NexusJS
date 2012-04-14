@@ -8,7 +8,7 @@ define([
 		'Display main screen command handler',	
 		DisplayMainScreen.commandName,
 		function(cmd){
-			new MainScreen().start(cmd.id, cmd.date);	
+			new MainScreen().load(cmd.id, cmd.date);	
 		}		
 	);	
 

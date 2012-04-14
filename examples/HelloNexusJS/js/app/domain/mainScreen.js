@@ -27,7 +27,7 @@ define([
 			
 		this.thingToSay = '';
 			
-		this.start = function(id, date){			
+		this.load = function(id, date){			
 			Nexus.App.EventBus.publish(MainScreenDisplayed.Event(id, date));
 		};		
 			
