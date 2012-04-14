@@ -4,14 +4,16 @@ require([
 	'tests/app/shouldDisplayMainScreenTest',
 	'tests/app/shouldSayHelloTest',
 	'tests/app/shouldSayItTest',
-	'tests/app/shouldDisplayErrorAndHighlightWhenTextToSayIsUnder3CharactersTest'
+	'tests/app/shouldDisplayErrorAndHighlightWhenTextToSayIsUnder3CharactersTest',
+	'tests/app/shouldDisplayErrorAndHighlightWhenTextToSayIsOver8CharactersTest'
 ],function(
 	$,
 	Nexus,
 	shouldDisplayMainScreenTest,
 	shouldSayHelloTest,
 	shouldSayItTest,
-	shouldDisplayErrorAndHighlightWhenTextToSayIsUnder3CharactersTest
+	shouldDisplayErrorAndHighlightWhenTextToSayIsUnder3CharactersTest,
+	shouldDisplayErrorAndHighlightWhenTextToSayIsOver8CharactersTest
 ){
 
 	$().ready(function(){
@@ -23,6 +25,7 @@ require([
 			shouldSayHelloTest();
 			shouldSayItTest();	
 			shouldDisplayErrorAndHighlightWhenTextToSayIsUnder3CharactersTest();
+			shouldDisplayErrorAndHighlightWhenTextToSayIsOver8CharactersTest();
 			
 		
 		}).show();		
