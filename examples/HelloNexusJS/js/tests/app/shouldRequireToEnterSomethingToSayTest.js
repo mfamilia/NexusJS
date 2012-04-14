@@ -29,16 +29,13 @@ define([
 		var expectedView = {
 			onLoad: 
 			function(){
-				var cssObj = {
-					'border':'5px solid red'
-				};
-				$(evt.selector).css(cssObj); 
+				$(evt.selector).addClass('highlighted'); 
 			}									
 		};
 
 		// Act/Assert
 		new Nexus
-		.Test('Should display error and highlight when text length is under 3 characters long')
+		.Test('Should require to enter something to say')
 		// Behavior
 		.Given(mainScreenDisplayedEvent)
 		.When(sayItCommand)

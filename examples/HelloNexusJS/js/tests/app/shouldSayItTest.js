@@ -31,10 +31,7 @@ define([
 			data: saidItEvent,
 			onLoad: 
 			function(){
-				var cssObj = {
-					'border' : '1px solid Gray'
-				};
-				$(evt.selector).css(cssObj);						
+				$(evt.selector).removeClass('highlighted').addClass('textbox');					
 			}									
 		};
 

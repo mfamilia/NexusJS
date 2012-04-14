@@ -11,10 +11,7 @@ define([
 		
 			new Nexus.View({
 				onLoad: function(){
-					var cssObj = {
-						'border':'5px solid red'
-					};
-					$(evt.selector).css(cssObj); 
+					$(evt.selector).addClass('highlighted'); 
 				}				
 			})
 			.render();		

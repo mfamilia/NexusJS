@@ -31,10 +31,7 @@ define([
 		var expectedView = {
 			onLoad: 
 			function(){
-				var cssObj = {
-					'border':'5px solid red'
-				};
-				$(evt.selector).css(cssObj); 
+				$(evt.selector).addClass('highlighted'); 
 			}									
 		};
 

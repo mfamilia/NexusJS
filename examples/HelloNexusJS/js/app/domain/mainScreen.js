@@ -70,7 +70,7 @@ define([
 				// 3) pass function params [optional]
 			Nexus.Validate(
 				[lengthValidatable, requiredValidatable],
-				function(passFunctionParams){						
+				function(){						
 					Nexus.App.EventBus.publish(SaidIt.Event(selector, date, text));
 				}
 			);
