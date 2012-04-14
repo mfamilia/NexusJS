@@ -7,26 +7,49 @@ define([
 ], function (Nexus, SayIt, SaidIt, MainScreenDisplayed) {
 		
 	return function(){
+		// Arrange
 		var id = Nexus.App.newId();
 		var date = new Date();
 		var text = 'hello';
-		var givenEvent = MainScreenDisplayed.Event(id, date); 
-		var whenCommand = SayIt.Command(id, date, text);
-		var expectEvent = SaidIt.Event(id, date, text);		
-
-
+		var selector = '#thingToSay';
+		var mainScreenDisplayedEvent = {
+			id: id,
+			date: date,
+			eventName: 'Main screen displayed'
+		};		
+		var sayItCommand = {
+			selector: selector,
+			date: date,
+			text: text,
+			commandName: 'Say it'		
+		};
+		var saidItEvent = {
+			selector: selector,
+			date: date,
+			text: text,
+			eventName: 'Said it'		
+		};
 		var expectedView = {
 			template: 'saidItTemplate.html',
 			placeholder: '#output',
-			data: expectEvent,
-			onLoad: function(){varcssObj={'border':'1pxsolidGray'};$(evt.selector).css(cssObj);}										
+			data: saidItEvent,
+			onLoad: 
+			function(){
+				var cssObj = {
+					'border' : '1px solid Gray'
+				};
+				$(evt.selector).css(cssObj);						
+			}									
 		};
 
+		// Act/Assert
 		new Nexus
 		.Test('Should say it')
-		.Given(givenEvent)
-		.When(whenCommand)
-		.Then(expectEvent)
+		// Behavior
+		.Given(mainScreenDisplayedEvent)
+		.When(sayItCommand)
+		.Then(saidItEvent)
+		// UI
 		.ExpectView(expectedView)
 		.Run();					
 	};

@@ -6,6 +6,7 @@ define([
 ], function (Nexus, SayHello, HelloScreenDisplayed, DisplayMainScreen) {
 		
 		return function(){
+			// Arrange
 			var id = Nexus.App.newId();
 			var date = new Date();
 			
@@ -31,11 +32,14 @@ define([
 				placeholder: '#output'
 			};
 
+			// Act/Assert
 			new Nexus
 			.Test('Should say hello')
+			// Behavior
 			.Given(mainScreenDisplayedEvent)
 			.When(sayHelloCommand)
 			.Then(helloScreenDisplayedEvent)
+			// UI
 			.ExpectView(expectedView)
 			.Run();
 		};
