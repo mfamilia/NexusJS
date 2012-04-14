@@ -4,8 +4,6 @@ define([
 	"app/events/errorRaised"
 ], function ($, Nexus, ErrorRaised) {
 	
-	//Nexus.loadCSS('css/site.css');
-	
 	return new Nexus.EventHandler(
 		'Error raised event handler',
 		ErrorRaised.eventName,
