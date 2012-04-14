@@ -21,7 +21,7 @@ define([
 						);	
 					});
 					$('#sayIt').click(function () {
-						var text = $('#thingToSay').val();
+						var text = $('#thingToSay').val();						
 						Nexus.App.CommandBus.dispatch(
 							SayIt.Command('#thingToSay', new Date, text)
 						);		

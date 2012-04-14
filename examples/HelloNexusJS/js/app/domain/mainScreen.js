@@ -1,13 +1,27 @@
 define([
 	"Nexus",
+	'app/errorMessages',	
+	'app/validators/lengthValidator',
+	'app/validators/requiredValidator',
+			
 	"app/events/mainScreenDisplayed",
 	'app/events/saidIt',
 	'app/events/helloScreenDisplayed',
-	'app/validators/lengthValidator',
 	'app/events/errorRaised',
-	'app/events/highlighted',
-	'app/errorMessages'
-], function (Nexus, MainScreenDisplayed, SaidIt, HelloScreenDisplayed, LengthValidator, ErrorRaised, Highlighted, ErrorMessages) {
+	'app/events/highlighted'
+
+], function (
+	Nexus, 
+	ErrorMessages,
+	LengthValidator, 	
+	RequiredValidator,
+	
+	MainScreenDisplayed, 
+	SaidIt, 
+	HelloScreenDisplayed, 
+	ErrorRaised, 
+	Highlighted 
+	) {
 
 	return function(){
 			
@@ -41,19 +55,21 @@ define([
 				}
 			);
 			
-			// validatables is an array of Nexus.Validatable instances (if you validating for more than one thing
-			/*
-			var validatables = [
-				lengthValidatable				
-			];
-			*/
+			var requiredValidatable = new Nexus.Validatable(
+				new RequiredValidator(text),
+				function(){
+					var msg = ErrorMessages.EM002;
+					Nexus.App.EventBus.publish(ErrorRaised.Event(msg));
+					Nexus.App.EventBus.publish(Highlighted.Event(selector));							
+				}
+			);
 		
 			// Nexus.Validate expects 
 				// 1) array of validatables or single validatable 
 				// 2) pass function (what to do if all validations pass)
 				// 3) pass function params [optional]
 			Nexus.Validate(
-				lengthValidatable, 
+				[lengthValidatable, requiredValidatable],
 				function(passFunctionParams){						
 					Nexus.App.EventBus.publish(SaidIt.Event(selector, date, text));
 				}
