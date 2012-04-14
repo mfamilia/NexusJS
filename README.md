@@ -5,9 +5,13 @@ NexusJS
 Examples (WORK IN PROGRESS)
 -------------------------
 <dl>
-	<dt>Store App (e-commerce example app)</dt>
-	<dd>index.html (main app)</dd>
-	<dd>tests.html (BDD tests for store app)</dd>
+	<dt>Hello NexusJS</dt>
+	<dd>index.html (example app)</dd>
+	<dd>tests.html (BDD/UI tests)</dd>
+</dl>
+<dl>
+	<dt>Store</dt>
+	<dd>currently not working</dd>
 </dl>
 
 Benefits for Developers
