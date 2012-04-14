@@ -1172,8 +1172,8 @@ Nexus.Test = function(testName){
 	fixture.expectedEvents = '';
 	fixture.beforeTest = '';
 	fixture.afterTest = '';
-	fixture.expectRenderedView = {};
-	fixture.actualRenderedView = {};
+	fixture.expectedView = {};
+	fixture.actualView = {};
 	
 	fixture.appendToResult = function(html){
 		document.getElementById("nexus-test-runner").innerHTML += html;
@@ -1229,8 +1229,8 @@ Nexus.Test = function(testName){
 		return fixture;
 	};
 	
-	fixture.ExpectRenderedView = function(view){
-		fixture.expectRenderedView = view;
+	fixture.ExpectView = function(view){
+		fixture.expectedView = view;
 		return fixture;
 	};	
 	
@@ -1299,58 +1299,58 @@ Nexus.Test = function(testName){
 			}
 			
 			// view asserts
-			else if (fixture.expectRenderedView != {}){
-				fixture.actualRenderedView = Nexus.Tests.ViewSpy;
+			else if (fixture.expectedView != {}){
+				fixture.actualView = Nexus.Tests.ViewSpy;
 
 				////////////// DATA //////////////////////////////////////////////
 				// data was expected
-				if (fixture.expectRenderedView.data){
-					var actualData = ('' + Nexus.Util.serialize(fixture.actualRenderedView.data)).replace(/\s+/g, "");
-					var expectedData = ('' + Nexus.Util.serialize(fixture.expectRenderedView.data)).replace(/\s+/g, "");
+				if (fixture.expectedView.data){
+					var actualData = ('' + Nexus.Util.serialize(fixture.actualView.data)).replace(/\s+/g, "");
+					var expectedData = ('' + Nexus.Util.serialize(fixture.expectedView.data)).replace(/\s+/g, "");
 					if(actualData != expectedData){	
 						errors += fixture.getExpectedActualErrorMessage(expectedData, actualData, 'Wrong view data!');												
 					}
 				// data was not expected but did appear
-				}else if(fixture.actualRenderedView.data){
-					var actualData = ('' + Nexus.Util.serialize(fixture.actualRenderedView.data)).replace(/\s+/g, "");
+				}else if(fixture.actualView.data){
+					var actualData = ('' + Nexus.Util.serialize(fixture.actualView.data)).replace(/\s+/g, "");
 					errors += fixture.getUnexpectedErrorMessage(actualData, 'Data was not expected but the following data did appear!');			
 				}			
 
 				////////////// PLACEHOLDER //////////////////////////////////////////////
 				// placeholder was expected
-				if (fixture.expectRenderedView.placeholder){
-					if(fixture.actualRenderedView.placeholder != fixture.expectRenderedView.placeholder){	
+				if (fixture.expectedView.placeholder){
+					if(fixture.actualView.placeholder != fixture.expectedView.placeholder){	
 						errors += fixture.getExpectedActualErrorMessage(
-							fixture.expectRenderedView.placeholder, fixture.actualRenderedView.placeholder, 'Wrong view placeholder!');								
+							fixture.expectedView.placeholder, fixture.actualView.placeholder, 'Wrong view placeholder!');								
 					}
 				// placeholder was not expected but did appear
-				}else if(fixture.actualRenderedView.placeholder){					
-					errors += fixture.getUnexpectedErrorMessage(fixture.actualRenderedView.placeholder, 'Placeholder was not expected but the following placeholder did appear!');
+				}else if(fixture.actualView.placeholder){					
+					errors += fixture.getUnexpectedErrorMessage(fixture.actualView.placeholder, 'Placeholder was not expected but the following placeholder did appear!');
 				}			
 
 				////////////// TEMPLATE //////////////////////////////////////////////
 				// template was expected
-				if (fixture.expectRenderedView.template){
-					if(fixture.actualRenderedView.template != fixture.expectRenderedView.template){	
+				if (fixture.expectedView.template){
+					if(fixture.actualView.template != fixture.expectedView.template){	
 						errors += fixture.getExpectedActualErrorMessage(
-							fixture.expectRenderedView.template, fixture.actualRenderedView.template, 'Wrong template rendered!');						
+							fixture.expectedView.template, fixture.actualView.template, 'Wrong template rendered!');						
 					}
 				// template was not expected but was rendered
-				}else if(fixture.actualRenderedView.template){
-					errors += fixture.getUnexpectedErrorMessage(fixture.actualRenderedView.template, 'Template was not expected but the following template was rendered!');					
+				}else if(fixture.actualView.template){
+					errors += fixture.getUnexpectedErrorMessage(fixture.actualView.template, 'Template was not expected but the following template was rendered!');					
 				}			
 
 				////////////// ON LOAD //////////////////////////////////////////////
 				// it was expected for something to be executed			
-				if (fixture.expectRenderedView.onLoad){
-					var actualExecuted = ('' + Nexus.Util.serialize(fixture.actualRenderedView.onLoad)).replace(/\s+/g, "");
-					var expectedExecuted = ('' + Nexus.Util.serialize(fixture.expectRenderedView.onLoad)).replace(/\s+/g, "");
+				if (fixture.expectedView.onLoad){
+					var actualExecuted = ('' + Nexus.Util.serialize(fixture.actualView.onLoad)).replace(/\s+/g, "");
+					var expectedExecuted = ('' + Nexus.Util.serialize(fixture.expectedView.onLoad)).replace(/\s+/g, "");
 					if (actualExecuted != expectedExecuted){
 						errors += fixture.getExpectedActualErrorMessage(expectedExecuted, actualExecuted, 'Wrong onLoad executed!');							
 					}
 				// nothing was expected but something was executed	
-				}else if(fixture.actualRenderedView.onLoad){
-					var actualExecuted = ('' + Nexus.Util.serialize(fixture.actualRenderedView.onLoad)).replace(/\s+/g, "");
+				}else if(fixture.actualView.onLoad){
+					var actualExecuted = ('' + Nexus.Util.serialize(fixture.actualView.onLoad)).replace(/\s+/g, "");
 					errors += fixture.getUnexpectedErrorMessage(actualExecuted, 'Nothing was expected to execute but the following did execute!');							
 				}
 			
