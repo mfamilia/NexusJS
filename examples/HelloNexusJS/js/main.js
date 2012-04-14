@@ -8,37 +8,35 @@ require.config({
   }
 });
 
-// Init Domain
-require([
-	'app/domain/mainScreen'
-], function(){});
-
 // Init App
 require([
 	'Nexus',
-	'qunit',
 	'app/commands/displayMainScreen',
 	
+	// command handlers
 	'app/commandHandlers/displayMainScreenHandler',
 	'app/commandHandlers/sayHelloHandler',	
+	'app/commandHandlers/sayItHandler',	
 	
+	// event handlers
 	'app/eventHandlers/mainScreenDisplayedHandler',
-	'app/eventHandlers/helloScreenDisplayedHandler',
-	
-	'app/commandHandlers/sayItHandler',
+	'app/eventHandlers/helloScreenDisplayedHandler',	
 	'app/eventHandlers/saidItHandler',
 	'app/eventHandlers/errorRaisedHandler',
 	'app/eventHandlers/highlightedHandler'
 	
 ], function(
 	Nexus,
-	QUnit,
 	DisplayMainScreen,
+	
+	// command handlers
 	displayMainScreenHandler,
 	sayHelloHandler,
-	mainScreenDisplayedHandler,
-	helloScreenDisplayedHandler,
 	sayItHandler,
+	
+	// event handlers
+	mainScreenDisplayedHandler,
+	helloScreenDisplayedHandler,	
 	saidItHandler,
 	errorRaisedHandler,
 	highlightedHandler
@@ -64,7 +62,7 @@ require([
 		saidItHandler,
 		errorRaisedHandler,
 		highlightedHandler
-	]);			
+	]);	
 	
 	// Display main screen
 	Nexus.App.CommandBus.dispatch(

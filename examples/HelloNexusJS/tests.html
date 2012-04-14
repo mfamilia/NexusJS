@@ -1,25 +1,34 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Hello NexusJS Example - Tests</title>
+		<title>Say Hello NexusJS Tests</title>
+		
 		<!-- RequireJS -->
 		<script data-main="js/main" src="js/lib/require.js"></script>
-		<!-- QUnit -->
-		<link rel="stylesheet" href="css/qunit.css" type="text/css" media="screen" />	
+		
+		<!-- Move to css file -->
+		<style type="text/css" media="screen">
+			.nexus-test-name {color: #366097;}
+			.nexus-test-failed {color: #EE5757; font-weight: bold;}
+			.nexus-test-failed-message {color: #000000; background-color: #EE5757; padding: 3px; font-weight: bold; margin-bottom: 5px;}			
+			.nexus-test-passed {color: #528CE0; }
+			.nexus-test-failed-expected-events {color: green;}
+			.nexus-test-failed-actual-events {color: #EE5757; margin-bottom: 10px; }
+			.nexus-test-failed-expected-header {font-weight: bold;}
+			.nexus-test-failed-actual-header {font-weight: bold;}
+			.nexus-test-failed-expected-actual {margin-left: 70px; border: solid 1px #660000; padding: 10px;}
+		</style>
 	</head>
 	
 	<body>
-		<h1>Hello NexusJS Example - Tests</h1>
-		<div><input type="button" value="Run Tests " id="runTests" /></div>
-        	<h1 id="qunit-header">QUnit Test Runner</h1>
-		<h2 id="qunit-banner"></h2>
-		<div id="qunit-testrunner-toolbar"></div>
-		<h2 id="qunit-userAgent"></h2>
-		<ol id="qunit-tests"></ol>
+		<h1>Say Hello NexusJS Tests</h1>
+		<div><input type="button" value="Run Tests" style="display:none;" id="runTests" /></div>
+		
+		<ul id="nexus-test-runner"></ul>
 		
 		<!-- Tests to run -->
 		<script type="text/javascript">
-			require(['tests/testsMain'],function(){});
+			require(['tests/testsMain']);
 		</script>		
 	</body>
 </html>

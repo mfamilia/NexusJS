@@ -6,28 +6,30 @@ define([
 	"app/domain/mainScreen"
 ], function (Nexus, SayIt, SaidIt, MainScreenDisplayed) {
 		
-		return function(){
-			var id = Nexus.App.newId();
-			var date = new Date();
-			var text = 'hello';
-			var givenEvent = new MainScreenDisplayed.Event(id, date); 
-			var whenCommand = new SayIt.Command(id, date, text);
-			var expectEvent = new SaidIt.Event(id, date, text);		
-			
-			var expectedOnUI = {
-				template: 'saidItTemplate.html',
-				placeholder: '#output'			
-			};	
-			
-			new Nexus
-				.Test('Should say hello')
-					.BeforeTest()
-						.Given(givenEvent)
-						.When(whenCommand)
-						.Then(expectEvent)
-					.AfterTest()
-				.Run(expectedOnUI,100);		
+	return function(){
+		var id = Nexus.App.newId();
+		var date = new Date();
+		var text = 'hello';
+		var givenEvent = MainScreenDisplayed.Event(id, date); 
+		var whenCommand = SayIt.Command(id, date, text);
+		var expectEvent = SaidIt.Event(id, date, text);		
+
+
+		var expectedView = {
+			template: 'saidItTemplate.html',
+			placeholder: '#output',
+			data: expectEvent,
+			onLoad: function(){varcssObj={'border':'1pxsolidGray'};$(evt.selector).css(cssObj);}										
 		};
+
+		new Nexus
+		.Test('Should say it')
+		.Given(givenEvent)
+		.When(whenCommand)
+		.Then(expectEvent)
+		.ExpectRenderedView(expectedView)
+		.Run();					
+	};
 			    
 });
 

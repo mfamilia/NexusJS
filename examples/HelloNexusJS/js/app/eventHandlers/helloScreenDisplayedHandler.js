@@ -7,9 +7,13 @@ define([
 		'Hello screen displayed event handler',
 		HelloScreenDisplayed.eventName,
 		function(evt){
-			Nexus.View
-			.forTemplate('helloTemplate.html')
-			.renderOn('#body');	
+			
+			new Nexus.View({
+				template: 'helloTemplate.html',
+				placeholder: '#output'
+			})
+			.render();
+			
 		}	
 	);
 	

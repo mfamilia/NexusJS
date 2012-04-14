@@ -8,10 +8,14 @@ define([
 		'Error raised event handler',
 		ErrorRaised.eventName,
 		function(evt){
-			Nexus.View
-			.forTemplate('errorTemplate.html')
-			.withData(evt)
-			.renderOn('#output');			
+
+			new Nexus.View({
+				template: 'errorTemplate.html',
+				placeholder: '#output',
+				data: evt			
+			})
+			.render();
+		
 		}	
 	);
 	

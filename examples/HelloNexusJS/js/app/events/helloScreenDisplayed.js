@@ -4,9 +4,11 @@ define(function () {
 		eventName:  'Hello screen displayed',	
 		
 		Event: function(id, date){	
-			this.id = id;
-			this.date = date;
-			this.eventName = HelloScreenDisplayed.eventName;
+			return {
+				id: id,
+				date: date,
+				eventName: HelloScreenDisplayed.eventName
+			};
 		}	
 	};
 	

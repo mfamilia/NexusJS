@@ -9,18 +9,20 @@ define([
 		'Said it event handler',
 		SaidIt.eventName,
 		function(evt){
-			Nexus.View
-			.forTemplate('saidItTemplate.html')
-			.withData(evt)
-			.renderOn('#output')
-			.execute(function(){
-				$().ready(function(){
+			
+			new Nexus.View({
+				template: 'saidItTemplate.html',
+				placeholder: '#output',
+				data: evt,
+				onLoad: function(){
 					var cssObj = {
 						'border' : '1px solid Gray'
 					};
-					$(evt.selector).css(cssObj);
-				});					
-			});		
+					$(evt.selector).css(cssObj);						
+				}				
+			})
+			.render();
+
 		}	
 	);
 	

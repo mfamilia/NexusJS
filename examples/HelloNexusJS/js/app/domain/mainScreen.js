@@ -13,11 +13,11 @@ define([
 		this.thingToSay = '';
 			
 		this.start = function(id, date){			
-			Nexus.App.EventBus.publish(new MainScreenDisplayed.Event(id, date));
+			Nexus.App.EventBus.publish(MainScreenDisplayed.Event(id, date));
 		};		
 			
 		this.sayHello = function(id, date){
-			Nexus.App.EventBus.publish(new HelloScreenDisplayed.Event(id, date));			
+			Nexus.App.EventBus.publish(HelloScreenDisplayed.Event(id, date));			
 		};		
 		
 		this.sayIt = function(selector, date, text){
@@ -35,8 +35,8 @@ define([
 				new LengthValidator(text, validData.minLengthOfText, validData.maxLengthOfText), 
 				function(){
 					var msg = 'say it must be between ' + validData.minLengthOfText + ' and ' + validData.maxLengthOfText + ' characters long';
-					Nexus.App.EventBus.publish(new ErrorRaised.Event(msg));
-					Nexus.App.EventBus.publish(new Highlighted.Event(selector));					
+					Nexus.App.EventBus.publish(ErrorRaised.Event(msg));
+					Nexus.App.EventBus.publish(Highlighted.Event(selector));					
 				}
 			);
 			
@@ -54,7 +54,7 @@ define([
 			Nexus.Validate(
 				lengthValidatable, 
 				function(passFunctionParams){						
-					Nexus.App.EventBus.publish(new SaidIt.Event(selector, date, text));
+					Nexus.App.EventBus.publish(SaidIt.Event(selector, date, text));
 				}
 			);
 		};

@@ -5,9 +5,11 @@ define(function () {
 		commandName: "Say hello",		
 	
 		Command: function(id, date){
-			this.id = id;
-			this.date = date;
-			this.commandName = SayHello.commandName;
+			return {
+				id: id,
+				date: date,
+				commandName: SayHello.commandName
+			};
 		}	
 	};
 	

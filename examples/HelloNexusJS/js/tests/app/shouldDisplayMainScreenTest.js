@@ -1,35 +1,48 @@
 define([
 	"Nexus",
-	"app/commands/displayMainScreen",
-	"app/events/mainScreenDisplayed"
-], function (Nexus, DisplayMainScreen, MainScreenDisplayed) {
+], function (Nexus) {
 
 	return function () {	
-		// setup for behavior tests
+		// arrange	
 		var id = Nexus.App.newId();
 		var date = new Date();
-		var whenCommand = new DisplayMainScreen.Command(id, date);
-		var expectEvents = new MainScreenDisplayed.Event(id, date);
+				
+		var expectedEvent = {
+			id: id,
+			date: date,
+			eventName: 'Main screen displayed'
+		};
+		
+		var expectedCommand = {
+			id: id,
+			date: date,
+			commandName: "Display main screen"
+		};		
 
-		// setup for ui						
-		var expectedOnUI = {
-			template: 'mainTemplate.html', // template to be rendered
-			placeholder: '#body' // where should it be rendered
-		};			
-
+		// act/assert (behavior, ui, commands, events)
 		new Nexus
-			// test name that will show up in the qunit runner
-			.Test('Should display main screen')
-				// any additional setup that would run before test
-				.BeforeTest()
-					//tests behavior (given events happend, when command is executed, expect events to have happened)
-					.Given()
-					.When(whenCommand)
-					.Then(expectEvents)
-				// any tear down that should run after test
-				.AfterTest()
-			// runs and tests ui
-			.Run(expectedOnUI, 50);		
+		.Test('Should display main screen')
+		.When(expectedCommand)
+		.Then(expectedEvent)
+		.ExpectRenderedView({
+			template: 'mainTemplate.html', // template to be rendered
+			placeholder: '#body', // where should it be rendered
+			onLoad: function(){
+					$('#sayHello').click(function () {
+						Nexus.App.CommandBus.dispatch(
+							SayHello.Command(Nexus.App.newId(), new Date)		
+						);	
+					});
+					$('#sayIt').click(function () {
+						var text = $('#thingToSay').val();
+						Nexus.App.CommandBus.dispatch(
+							SayIt.Command('#thingToSay', new Date, text)
+						);		
+					});						
+				}	
+				  				
+		})
+		.Run();					
 	};
 			    
 });

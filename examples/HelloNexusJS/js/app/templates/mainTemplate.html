@@ -1,11 +1,33 @@
 <h3>Main Screen</h3>
 
-<input id="sayHello" type="button" value="Say Hello NexusJS" />
+<style type="text/css" media="screen">
+	li {margin-top: 20px;}
+</style>
 
-<div style="margin-top: 20px;">
-	<input id="thingToSay" /> <input id="sayIt" type="button" value="Say it!" />
-</div>
+<table border="1" cellspacing="0" cellpadding="10">
+	<tr>
+		<td>Actions</td>
+		<td>Results</td>
+	</tr>
+	<tr>
+		<td>
+			<ol>
+				<li>
+					<input id="sayHello" type="button" value="Say 'Hello NexusJS!'" />
+				</li>
+				<li>
+					<input id="thingToSay" /> <input id="sayIt" type="button" value="Say it!" />
+				</li>
+			</ol>	
+		</td>
+		<td>
+			<span id="output"></span>		
+		</td>
+	</tr>
+</table>
 
-<span id="output"></span>
+
+
+
 
 

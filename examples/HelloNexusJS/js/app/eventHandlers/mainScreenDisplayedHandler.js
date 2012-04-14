@@ -10,24 +10,26 @@ define([
 		'Main screen displayed event handler',
 		MainScreenDisplayed.eventName,
 		function(evt){
-			Nexus.View
-			.forTemplate('mainTemplate.html')
-			.renderOn('#body')
-			.bind(function(){
-				$().ready(function(){
+								
+			new Nexus.View({
+				template: 'mainTemplate.html',
+				placeholder: '#body',		
+				onLoad: function(){
 					$('#sayHello').click(function () {
 						Nexus.App.CommandBus.dispatch(
-							new SayHello.Command(Nexus.App.newId(), new Date())			
+							SayHello.Command(Nexus.App.newId(), new Date)			
 						);	
 					});
 					$('#sayIt').click(function () {
 						var text = $('#thingToSay').val();
 						Nexus.App.CommandBus.dispatch(
-							new SayIt.Command('#thingToSay', new Date(), text)
+							SayIt.Command('#thingToSay', new Date, text)
 						);		
-					});	
-				});					
-			});
+					});						
+				}
+
+			})
+			.render();			
 		}	
 	);
 	

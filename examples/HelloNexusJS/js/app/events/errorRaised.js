@@ -4,8 +4,10 @@ define(function () {
 		eventName:  'Error raised',	
 		
 		Event: function(msg){	
-			this.msg = msg;
-			this.eventName = ErrorRaised.eventName;
+			return {
+				msg: msg,
+				eventName: ErrorRaised.eventName
+			};
 		}	
 	};
 

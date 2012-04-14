@@ -1,21 +1,31 @@
 require([
 	'jquery',
 	'Nexus',
-	'qunit',
 	'tests/app/shouldDisplayMainScreenTest',
 	'tests/app/shouldSayHelloTest',
 	'tests/app/shouldSayItTest'
 ],function(
 	$,
 	Nexus,
-	QUnit,
 	shouldDisplayMainScreenTest,
 	shouldSayHelloTest,
 	shouldSayItTest
 ){
-	$('#runTests').click(function () {	
-		shouldDisplayMainScreenTest();
-		shouldSayHelloTest();
-		shouldSayItTest();	
+
+	$().ready(function(){
+		
+		$('#runTests').click(function () {	
+			$('#nexus-test-runner').html('<h2>Module: All Tests</h2>');
+
+			shouldDisplayMainScreenTest();
+			shouldSayHelloTest();
+			shouldSayItTest();	
+			
+		
+		}).show();		
+		
 	});
+
+
+
 });

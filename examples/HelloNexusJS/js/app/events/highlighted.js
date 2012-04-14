@@ -4,8 +4,10 @@ define(function () {
 		eventName:  'Highlighted',	
 		
 		Event: function(selector){	
-			this.selector = selector;
-			this.eventName = Highlighted.eventName;
+			return {
+				selector: selector,
+				eventName: Highlighted.eventName
+			};
 		}	
 	};
 	
