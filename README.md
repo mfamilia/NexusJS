@@ -1,6 +1,6 @@
 NexusJS
 ================================
-*an open source implementation of CQRS architecture in JavaScript tailored to client side application development*
+*Analytics & Behavior Test Driven JavaScript Development Framework*
 
 Examples (WORK IN PROGRESS)
 -------------------------
@@ -17,20 +17,16 @@ Examples (WORK IN PROGRESS)
 Benefits for Developers
 -------------------------
 * Behavior Driven Development (BDD)
-* Behaviors (Given/When/Then) == your implementation!
-* BDD Testing Framework included and integrated with QUnit test runner
-* Domain Driven Design (DDD)
-* Implicit Routing
+* UI Test Driven Development
 * Reusable Validators
-* View Render/Append Helpers
-* Integrates well with RequireJS, Qunit and Mustache.js
-* Streamlined Development
+* Implicit Routing
+* Integrates well with RequireJS and Mustache.js
 
 Benefits for Business
 -------------------------
-* Behavior Analytics with Time Machine
-* Faster Time to Market
-* Developers use same language as product owners
+* Behavior Analytics
+* Behavior requirements translate 1-to-1 into code
+* Higher Quality Software
 
 Questions & Suggestions
 -------------------------
