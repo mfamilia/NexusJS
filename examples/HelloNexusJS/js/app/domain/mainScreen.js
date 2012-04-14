@@ -5,8 +5,9 @@ define([
 	'app/events/helloScreenDisplayed',
 	'app/validators/lengthValidator',
 	'app/events/errorRaised',
-	'app/events/highlighted'
-], function (Nexus, MainScreenDisplayed, SaidIt, HelloScreenDisplayed, LengthValidator, ErrorRaised, Highlighted) {
+	'app/events/highlighted',
+	'app/errorMessages'
+], function (Nexus, MainScreenDisplayed, SaidIt, HelloScreenDisplayed, LengthValidator, ErrorRaised, Highlighted, ErrorMessages) {
 
 	return function(){
 			
@@ -34,7 +35,7 @@ define([
 			var lengthValidatable = new Nexus.Validatable(
 				new LengthValidator(text, validData.minLengthOfText, validData.maxLengthOfText), 
 				function(){
-					var msg = 'say it must be between ' + validData.minLengthOfText + ' and ' + validData.maxLengthOfText + ' characters long';
+					var msg = ErrorMessages.EM001(validData.minLengthOfText, validData.maxLengthOfText); 
 					Nexus.App.EventBus.publish(ErrorRaised.Event(msg));
 					Nexus.App.EventBus.publish(Highlighted.Event(selector));					
 				}

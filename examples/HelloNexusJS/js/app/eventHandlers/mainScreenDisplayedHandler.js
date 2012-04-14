@@ -3,7 +3,7 @@ define([
 	'Nexus',
 	"app/events/mainScreenDisplayed",	
 	'app/commands/sayHello',
-	'app/commands/sayIt'	
+	'app/commands/sayIt'
 ], function ($, Nexus, MainScreenDisplayed, SayHello, SayIt) {
 	
 	return new Nexus.EventHandler(
@@ -27,7 +27,6 @@ define([
 						);		
 					});						
 				}
-
 			})
 			.render();			
 		}	

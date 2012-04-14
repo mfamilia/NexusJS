@@ -8,7 +8,7 @@ define([
 		var date = new Date();
 		var text = 'hi';
 		var selector = '#thingToSay';
-		var msg = 'say it must be between 3 and 8 characters long';
+		var msg = 'length must be between 3 and 8 characters long';
 		var mainScreenDisplayedEvent = {
 			id: id,
 			date: date,
@@ -40,7 +40,7 @@ define([
 
 		// Act/Assert
 		new Nexus
-		.Test('Should display error and highlight when text to say is under 3 characters long')
+		.Test('Should display error and highlight when text length is under 3 characters long')
 		// Behavior
 		.Given(mainScreenDisplayedEvent)
 		.When(sayItCommand)
