@@ -20,7 +20,7 @@ Benefits for Developers
 * UI Test Driven Development
 * Reusable Validators
 * Implicit Routing
-* Integrates well with RequireJS and Mustache.js
+* Integrates well with jQuery, RequireJS and Mustache.js
 
 Benefits for Business
 -------------------------
