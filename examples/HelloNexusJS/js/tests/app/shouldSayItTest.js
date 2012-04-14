@@ -31,7 +31,7 @@ define([
 			data: saidItEvent,
 			onLoad: 
 			function(){
-				$(evt.selector).removeClass('highlighted').addClass('textbox');					
+				$(evt.selector).removeClass().addClass('textbox');					
 			}									
 		};
 

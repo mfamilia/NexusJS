@@ -11,7 +11,7 @@ define([
 		
 			new Nexus.View({
 				onLoad: function(){
-					$(evt.selector).removeClass('textbox').addClass('highlighted'); 
+					$(evt.selector).removeClass().addClass('highlighted'); 
 				}				
 			})
 			.render();		

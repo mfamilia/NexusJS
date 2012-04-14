@@ -31,7 +31,7 @@ define([
 		var expectedView = {
 			onLoad: 
 			function(){
-				$(evt.selector).addClass('highlighted'); 
+				$(evt.selector).removeClass().addClass('highlighted'); 
 			}									
 		};
 

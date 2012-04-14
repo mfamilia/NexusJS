@@ -15,7 +15,7 @@ define([
 				placeholder: '#output',
 				data: evt,
 				onLoad: function(){
-					$(evt.selector).removeClass('highlighted').addClass('textbox');						
+					$(evt.selector).removeClass().addClass('textbox');						
 				}				
 			})
 			.render();
