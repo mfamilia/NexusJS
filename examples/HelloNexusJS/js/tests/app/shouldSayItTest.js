@@ -1,10 +1,6 @@
 define([
-	"Nexus",
-	"app/commands/sayIt",
-	"app/events/saidIt",
-	"app/events/mainScreenDisplayed",
-	"app/domain/mainScreen"
-], function (Nexus, SayIt, SaidIt, MainScreenDisplayed) {
+	"Nexus"
+], function (Nexus) {
 		
 	return function(){
 		// Arrange

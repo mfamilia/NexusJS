@@ -1,9 +1,6 @@
 define([
-	"Nexus",
-	"app/commands/sayHello",
-	"app/events/helloScreenDisplayed",
-	"app/commands/displayMainScreen"
-], function (Nexus, SayHello, HelloScreenDisplayed, DisplayMainScreen) {
+	"Nexus"
+], function (Nexus) {
 		
 		return function(){
 			// Arrange
