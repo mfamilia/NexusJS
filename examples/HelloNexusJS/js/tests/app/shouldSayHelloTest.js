@@ -8,9 +8,23 @@ define([
 		return function(){
 			var id = Nexus.App.newId();
 			var date = new Date();
-			var whenCommand = SayHello.Command(id, date);
-			var expectEvents = HelloScreenDisplayed.Event(id, date);		
-
+			
+			var mainScreenDisplayedEvent = {
+				id: id,
+				date: date,
+				eventName: 'Main screen displayed'
+			};
+			
+			var sayHelloCommand = {
+				id: id,
+				date: date,
+				commandName: 'Say hello'
+			};
+			var helloScreenDisplayedEvent = {
+				id: id,
+				date: date,
+				eventName: 'Hello screen displayed'
+			};
 
 			var expectedView = {
 				template: 'helloTemplate.html',
@@ -19,10 +33,10 @@ define([
 
 			new Nexus
 			.Test('Should say hello')
-			.Given(new DisplayMainScreen.Command(id, date))
-			.When(whenCommand)
-			.Then(expectEvents)
-			.ExpectRenderedView(expectedView)
+			.Given(mainScreenDisplayedEvent)
+			.When(sayHelloCommand)
+			.Then(helloScreenDisplayedEvent)
+			.ExpectView(expectedView)
 			.Run();
 		};
 			   

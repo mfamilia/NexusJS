@@ -1,7 +1,7 @@
 define(['Nexus'],function(Nexus){
 
 	Nexus.Tests.HelpersTests = function(){
-		module("Helpers Tests");  	
+		module("Validation Tests");  	
 		
 		test("should validate multiple validators", function() {
 			// Arrange

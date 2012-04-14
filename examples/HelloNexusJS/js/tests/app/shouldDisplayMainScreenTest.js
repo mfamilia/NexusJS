@@ -24,7 +24,7 @@ define([
 		.Test('Should display main screen')
 		.When(expectedCommand)
 		.Then(expectedEvent)
-		.ExpectRenderedView({
+		.ExpectView({
 			template: 'mainTemplate.html', // template to be rendered
 			placeholder: '#body', // where should it be rendered
 			onLoad: function(){

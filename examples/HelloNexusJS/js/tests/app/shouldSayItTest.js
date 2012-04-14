@@ -27,7 +27,7 @@ define([
 		.Given(givenEvent)
 		.When(whenCommand)
 		.Then(expectEvent)
-		.ExpectRenderedView(expectedView)
+		.ExpectView(expectedView)
 		.Run();					
 	};
 			    
