@@ -1172,6 +1172,21 @@ Nexus.CreateLocalStorageReadModel = function(localStorageKey){
 };
 
 /////////////////////////////////////////////////////
+///////// TEST RUNNER ///////////////////////////////
+/////////////////////////////////////////////////////
+Nexus.TestRunner = function(moduleName){
+	self = this;
+	self.run = function(tests){
+		for (var i=0; i<tests.length; i++){
+			if (tests.length > (i+1)){
+				tests[i]._nextTest = tests[i+1];
+			}	
+		}		
+		tests[0].Run(moduleName);
+	};
+};
+
+/////////////////////////////////////////////////////
 ///////// TEST //////////////////////////////////////
 /////////////////////////////////////////////////////
 Nexus.Test = function(testName){
@@ -1244,13 +1259,12 @@ Nexus.Test = function(testName){
 		return fixture;
 	};	
 	
-	fixture.Run = function(waitTime){
-	
+	fixture._beforeTest = function(){
+		// setup 
 		Nexus.isInTestMode = true;
 		Nexus.Aggregate.isRehydrating = false;
-		var finalGivenEvent = 'final_given_event';
-
-		// before test
+		Nexus._finalGivenEvent = 'final_given_event';	
+		// backup app state	
 		Nexus.App.EventStore = Nexus.CreateSimpleEventStore();
 		Nexus.App.EventBus.eventStore = Nexus.App.EventStore;
 		Nexus.App.EventStore.setEventBus(Nexus.App.EventBus);								
@@ -1258,8 +1272,80 @@ Nexus.Test = function(testName){
 		Nexus.App.Analytics.EnabledForEvents = false;
 		if (Nexus.Util.isFunction(fixture.beforeTest)){
 			fixture.beforeTest();
-		}
+		}	
+	};
+	
+	fixture._afterTest = function(){
+		// restore app state
+		Nexus.App.EventStore = BACKUP.EVENT_STORE;
+		Nexus.App.EventBus.eventStore = Nexus.App.EventStore;
+		Nexus.App.EventStore.setEventBus(Nexus.App.EventBus);	
+		Nexus.App.Analytics.EnabledForCommands = BACKUP.ANALYTICS_ENABLED_FOR_COMMANDS;
+		Nexus.App.Analytics.EnabledForEvents = BACKUP.ANALYTICS_ENABLED_FOR_EVENTS;																
+		Nexus.isInTestMode = false;			
+	};
+	
+	fixture._viewAsserts = function(){
+			// view asserts
+			var errors = '';
+			fixture.actualView = Nexus.Tests.ViewSpy;
 
+			////////////// DATA //////////////////////////////////////////////
+			// data was expected
+			if (fixture.expectedView.data){
+				var actualData = ('' + Nexus.Util.serialize(fixture.actualView.data)).replace(/\s+/g, "");
+				var expectedData = ('' + Nexus.Util.serialize(fixture.expectedView.data)).replace(/\s+/g, "");
+				if(actualData != expectedData){	
+					errors += fixture.getExpectedActualErrorMessage(expectedData, actualData, 'Wrong view data!');												
+				}
+			// data was not expected but did appear
+			}else if(fixture.actualView.data){
+				var actualData = ('' + Nexus.Util.serialize(fixture.actualView.data)).replace(/\s+/g, "");
+				errors += fixture.getUnexpectedErrorMessage(actualData, 'Data was not expected but the following data did appear!');			
+			}			
+
+			////////////// PLACEHOLDER //////////////////////////////////////////////
+			// placeholder was expected
+			if (fixture.expectedView.placeholder){
+				if(fixture.actualView.placeholder != fixture.expectedView.placeholder){	
+					errors += fixture.getExpectedActualErrorMessage(
+						fixture.expectedView.placeholder, fixture.actualView.placeholder, 'Wrong view placeholder!');								
+				}
+			// placeholder was not expected but did appear
+			}else if(fixture.actualView.placeholder){					
+				errors += fixture.getUnexpectedErrorMessage(fixture.actualView.placeholder, 'Placeholder was not expected but the following placeholder did appear!');
+			}			
+
+			////////////// TEMPLATE //////////////////////////////////////////////
+			// template was expected
+			if (fixture.expectedView.template){
+				if(fixture.actualView.template != fixture.expectedView.template){	
+					errors += fixture.getExpectedActualErrorMessage(
+						fixture.expectedView.template, fixture.actualView.template, 'Wrong template rendered!');						
+				}
+			// template was not expected but was rendered
+			}else if(fixture.actualView.template){
+				errors += fixture.getUnexpectedErrorMessage(fixture.actualView.template, 'Template was not expected but the following template was rendered!');					
+			}			
+
+			////////////// ON LOAD //////////////////////////////////////////////
+			// it was expected for something to be executed			
+			if (fixture.expectedView.onLoad){
+				var actualExecuted = ('' + Nexus.Util.serialize(fixture.actualView.onLoad)).replace(/\s+/g, "");
+				var expectedExecuted = ('' + Nexus.Util.serialize(fixture.expectedView.onLoad)).replace(/\s+/g, "");
+				if (actualExecuted != expectedExecuted){
+					errors += fixture.getExpectedActualErrorMessage(expectedExecuted, actualExecuted, 'Wrong onLoad executed!');							
+				}
+			// nothing was expected but something was executed	
+			}else if(fixture.actualView.onLoad){
+				var actualExecuted = ('' + Nexus.Util.serialize(fixture.actualView.onLoad)).replace(/\s+/g, "");
+				errors += fixture.getUnexpectedErrorMessage(actualExecuted, 'Nothing was expected to execute but the following did execute!');							
+			}
+			
+			return errors;	
+	};
+	
+	fixture._publishGivenEvents = function(){
 		// given
 		if (fixture.givenEvents){
 			Nexus.Util.handleOneOrMany(
@@ -1269,119 +1355,91 @@ Nexus.Test = function(testName){
 				}
 			);									
 		}
-		Nexus.App.EventStore.saveEvent(finalGivenEvent);
-
+		Nexus.App.EventStore.saveEvent(Nexus._finalGivenEvent);	
+	};
+	
+	fixture._dispatchWhenCommand = function(){
 		// when
-		Nexus.App.CommandBus.dispatch(fixture.whenCommand); // single command only! by design!
-
-
-		//setTimeout(function(){
-
-			// then
-			var expectedEvents =
-			Nexus.Util.handleOneOrMany(
-				fixture.expectedEvents, 
-				function(evt){								
-					return JSON.stringify(evt);
-				}, 
-				function(arr){
-					return arr.join('');
-				}
-			);
-			var actualEvents = '';
-			var startWritingToActualEvents = false;
-
-			Nexus.App.EventStore.getAllEvents().map(function (evt) {
-				if (startWritingToActualEvents){
-					actualEvents += JSON.stringify(evt);
-				}
-				if (evt == finalGivenEvent){
-					startWritingToActualEvents = true;
-				}
-			});																	
-					
-					
-			var errors = '';
-			
-			// behavior asserts
-			if (actualEvents != expectedEvents){	
-				errors += fixture.getExpectedActualErrorMessage(expectedEvents, actualEvents || 'no events were published', 'Actual events do not match expected events!');					
+		Nexus.App.CommandBus.dispatch(fixture.whenCommand); // single command only! by design!	
+	};
+	
+	fixture._getExpectedEvents = function(){
+		return Nexus.Util.handleOneOrMany(
+			fixture.expectedEvents, 
+			function(evt){								
+				return JSON.stringify(evt);
+			}, 
+			function(arr){
+				return arr.join('');
 			}
-			
-			// view asserts
-			else if (fixture.expectedView != {}){
-				fixture.actualView = Nexus.Tests.ViewSpy;
+		);	
+	};
+	
+	fixture._getActualEvents = function(){
+		var actualEvents = '';
+		var startWritingToActualEvents = false;
 
-				////////////// DATA //////////////////////////////////////////////
-				// data was expected
-				if (fixture.expectedView.data){
-					var actualData = ('' + Nexus.Util.serialize(fixture.actualView.data)).replace(/\s+/g, "");
-					var expectedData = ('' + Nexus.Util.serialize(fixture.expectedView.data)).replace(/\s+/g, "");
-					if(actualData != expectedData){	
-						errors += fixture.getExpectedActualErrorMessage(expectedData, actualData, 'Wrong view data!');												
-					}
-				// data was not expected but did appear
-				}else if(fixture.actualView.data){
-					var actualData = ('' + Nexus.Util.serialize(fixture.actualView.data)).replace(/\s+/g, "");
-					errors += fixture.getUnexpectedErrorMessage(actualData, 'Data was not expected but the following data did appear!');			
-				}			
-
-				////////////// PLACEHOLDER //////////////////////////////////////////////
-				// placeholder was expected
-				if (fixture.expectedView.placeholder){
-					if(fixture.actualView.placeholder != fixture.expectedView.placeholder){	
-						errors += fixture.getExpectedActualErrorMessage(
-							fixture.expectedView.placeholder, fixture.actualView.placeholder, 'Wrong view placeholder!');								
-					}
-				// placeholder was not expected but did appear
-				}else if(fixture.actualView.placeholder){					
-					errors += fixture.getUnexpectedErrorMessage(fixture.actualView.placeholder, 'Placeholder was not expected but the following placeholder did appear!');
-				}			
-
-				////////////// TEMPLATE //////////////////////////////////////////////
-				// template was expected
-				if (fixture.expectedView.template){
-					if(fixture.actualView.template != fixture.expectedView.template){	
-						errors += fixture.getExpectedActualErrorMessage(
-							fixture.expectedView.template, fixture.actualView.template, 'Wrong template rendered!');						
-					}
-				// template was not expected but was rendered
-				}else if(fixture.actualView.template){
-					errors += fixture.getUnexpectedErrorMessage(fixture.actualView.template, 'Template was not expected but the following template was rendered!');					
-				}			
-
-				////////////// ON LOAD //////////////////////////////////////////////
-				// it was expected for something to be executed			
-				if (fixture.expectedView.onLoad){
-					var actualExecuted = ('' + Nexus.Util.serialize(fixture.actualView.onLoad)).replace(/\s+/g, "");
-					var expectedExecuted = ('' + Nexus.Util.serialize(fixture.expectedView.onLoad)).replace(/\s+/g, "");
-					if (actualExecuted != expectedExecuted){
-						errors += fixture.getExpectedActualErrorMessage(expectedExecuted, actualExecuted, 'Wrong onLoad executed!');							
-					}
-				// nothing was expected but something was executed	
-				}else if(fixture.actualView.onLoad){
-					var actualExecuted = ('' + Nexus.Util.serialize(fixture.actualView.onLoad)).replace(/\s+/g, "");
-					errors += fixture.getUnexpectedErrorMessage(actualExecuted, 'Nothing was expected to execute but the following did execute!');							
-				}
-			
+		Nexus.App.EventStore.getAllEvents().map(function (evt) {
+			if (startWritingToActualEvents){
+				actualEvents += JSON.stringify(evt);
 			}
-			
-			var passFail = (errors == '') ? '<span class="nexus-test-passed">[PASSED] </span>' : '<span class="nexus-test-failed">[FAILED] </span>'					
-			fixture.appendToResult('<li>' 
-			+ passFail
-			+ '<span class="nexus-test-name">' + testName + '</span>'		
-			+ errors
-			+ '</li>');
+			if (evt == Nexus._finalGivenEvent){
+				startWritingToActualEvents = true;
+			}
+		});	
+		return actualEvents;	
+	};
+	
+	fixture._asserts = function(){
+		var expectedEvents = fixture._getExpectedEvents();
+		var actualEvents = fixture._getActualEvents();
+		var errors = '';
+		
+		// behavior asserts
+		if (actualEvents != expectedEvents){	
+			errors += fixture.getExpectedActualErrorMessage(expectedEvents, actualEvents || 'no events were published', 'Actual events do not match expected events!');					
+		}
+		// ui asserts
+		else if (fixture.expectedView != {}){
+			errors += fixture._viewAsserts();
+		}	
+		
+		// render asserts
+		var passFail = (errors == '') ? '<span class="nexus-test-passed">[PASSED] </span>' : '<span class="nexus-test-failed">[FAILED] </span>'					
+		fixture.appendToResult('<li>' 
+		+ passFail
+		+ '<span class="nexus-test-name">' + testName + '</span>'		
+		+ errors
+		+ '</li>');		
+	};
+	
+	fixture._waitTime = 0;
+	fixture.Wait = function(waitTime){
+		fixture._waitTime = waitTime;
+		return fixture;
+	};
+	
+	fixture._nextTest = {
+		Run: function(){
+			fixture.appendToResult('<li>DONE!</li>');		
+		}
+	}
+	
+	fixture.Run = function(moduleName){
+		if (moduleName){
+			fixture.appendToResult('<li><div class="nexus-test-module">' + moduleName + '</div></li>');	
+		}
+	
+		fixture._beforeTest();
+		fixture._publishGivenEvents();
+		fixture._dispatchWhenCommand();		
+		setTimeout(function(){																					
+			fixture._asserts();
+			fixture._afterTest();	
+			fixture._nextTest.Run();
+		},fixture._waitTime); // waitTime for async tests			
 
-			// restore app state
-			Nexus.App.EventStore = BACKUP.EVENT_STORE;
-			Nexus.App.EventBus.eventStore = Nexus.App.EventStore;
-			Nexus.App.EventStore.setEventBus(Nexus.App.EventBus);	
-			Nexus.App.Analytics.EnabledForCommands = BACKUP.ANALYTICS_ENABLED_FOR_COMMANDS;
-			Nexus.App.Analytics.EnabledForEvents = BACKUP.ANALYTICS_ENABLED_FOR_EVENTS;																
-			Nexus.isInTestMode = false;										
 
-		//},waitTime ? waitTime : 0); // waitTime for async tests
 	};	
 };
 
