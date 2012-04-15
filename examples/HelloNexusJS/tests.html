@@ -18,6 +18,7 @@
 			.nexus-test-failed-expected-header {font-weight: bold;}
 			.nexus-test-failed-actual-header {font-weight: bold;}
 			.nexus-test-failed-expected-actual {margin-left: 70px; border: solid 1px #660000; padding: 10px;}
+			.nexus-test-module {margin-top: 20px;}
 		</style>
 	</head>
 	
@@ -25,7 +26,7 @@
 		<h1>Say Hello NexusJS Tests</h1>
 		<div><input type="button" value="Run Tests" style="display:none;" id="runTests" /></div>
 		
-		<ul id="nexus-test-runner"></ul>
+		<div id="nexus-test-results"></div>
 		
 		<!-- Tests to run -->
 		<script type="text/javascript">
