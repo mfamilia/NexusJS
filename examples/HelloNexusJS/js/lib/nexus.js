@@ -1182,7 +1182,7 @@ Nexus.TestRunner = function(moduleName){
 				tests[i]._nextTest = tests[i+1];
 			}	
 		}		
-		tests[0].Run();
+		tests[0].Run(moduleName);
 	};
 };
 
@@ -1425,7 +1425,10 @@ Nexus.Test = function(testName){
 		}
 	}
 	
-	fixture.Run = function(){
+	fixture.Run = function(moduleName){
+		if (moduleName){
+			fixture.appendToResult('<li><div class="nexus-test-module">' + moduleName + '</div></li>');	
+		}
 	
 		fixture._beforeTest();
 		fixture._publishGivenEvents();
