@@ -1,7 +1,7 @@
 require([
 	'jquery',
 	'Nexus',
-	'tests/app/shouldDisplayMainScreenTest',
+	'tests/app/shouldDisplayHomePageTest',
 	'tests/app/shouldSayHelloTest',
 	'tests/app/shouldSayItTest',
 	'tests/app/shouldDisplayErrorAndHighlightWhenTextToSayIsUnder3CharactersTest',
@@ -10,7 +10,7 @@ require([
 ],function(
 	$,
 	Nexus,
-	shouldDisplayMainScreenTest,
+	shouldDisplayHomePageTest,
 	shouldSayHelloTest,
 	shouldSayItTest,
 	shouldDisplayErrorAndHighlightWhenTextToSayIsUnder3CharactersTest,
@@ -23,7 +23,7 @@ require([
 		$('#runTests').click(function () {	
 			$('#nexus-test-runner').html('<h2>Module: All Tests</h2>');
 
-			shouldDisplayMainScreenTest();
+			shouldDisplayHomePageTest();
 			shouldSayHelloTest();
 			shouldSayItTest();	
 			shouldDisplayErrorAndHighlightWhenTextToSayIsUnder3CharactersTest();

@@ -11,15 +11,15 @@ require.config({
 // Init App
 require([
 	'Nexus',
-	'app/commands/displayMainScreen',
+	'app/commands/displayHomePage',
 	
 	// command handlers
-	'app/commandHandlers/displayMainScreenHandler',
+	'app/commandHandlers/displayHomePageHandler',
 	'app/commandHandlers/sayHelloHandler',	
 	'app/commandHandlers/sayItHandler',	
 	
 	// event handlers
-	'app/eventHandlers/mainScreenDisplayedHandler',
+	'app/eventHandlers/homePageDisplayedHandler',
 	'app/eventHandlers/helloScreenDisplayedHandler',	
 	'app/eventHandlers/saidItHandler',
 	'app/eventHandlers/errorRaisedHandler',
@@ -27,15 +27,15 @@ require([
 	
 ], function(
 	Nexus,
-	DisplayMainScreen,
+	DisplayHomePage,
 	
 	// command handlers
-	displayMainScreenHandler,
+	displayHomePageHandler,
 	sayHelloHandler,
 	sayItHandler,
 	
 	// event handlers
-	mainScreenDisplayedHandler,
+	homePageDisplayedHandler,
 	helloScreenDisplayedHandler,	
 	saidItHandler,
 	errorRaisedHandler,
@@ -50,14 +50,14 @@ require([
 	
 	// Register command handlers
 	Nexus.App.CommandBus.registerCommandHandlers([
-		displayMainScreenHandler,
+		displayHomePageHandler,
 		sayHelloHandler,
 		sayItHandler
 	]);		
 	
 	// Register event handlers
 	Nexus.App.EventBus.registerEventHandlers([
-		mainScreenDisplayedHandler,
+		homePageDisplayedHandler,
 		helloScreenDisplayedHandler,
 		saidItHandler,
 		errorRaisedHandler,
@@ -66,7 +66,7 @@ require([
 	
 	// Display main screen
 	Nexus.App.CommandBus.dispatch(
-		new DisplayMainScreen.Command(Nexus.App.newId(), new Date())
+		DisplayHomePage.Command(Nexus.App.newId(), new Date())
 	);	
 });
 

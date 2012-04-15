@@ -1,14 +1,14 @@
 define([
 	"Nexus",
 	"app/commands/sayIt",
-	"app/domain/mainScreen"	
-], function (Nexus, SayIt, MainScreen) {
+	"app/domain/homePage"	
+], function (Nexus, SayIt, HomePage) {
 
 	return new Nexus.CommandHandler(
 		'Say it command handler',	
 		SayIt.commandName,
 		function(cmd){
-			new MainScreen().sayIt(cmd.selector, cmd.date, cmd.text);	
+			new HomePage().sayIt(cmd.selector, cmd.date, cmd.text);	
 		}		
 	);	
 
