@@ -1211,6 +1211,17 @@ Nexus.TestHelper = {
 		+ '<div class="nexus-test-failed-message">' + errorMessage + '</div>'
 		+ '<div class="nexus-test-failed-actual-events">' + actual + '</div>'
 		+ '</div>';	
+	},
+	appendDoneToModule: function(moduleId){
+		Nexus.TestHelper.appendToModule(moduleId, '<div class="nexus-test-module-separator"></div>');	
+	},
+	renderAsserts: function(moduleId, testName, errors){
+		var passFail = (errors == '') ? '<span class="nexus-test-passed">[PASSED] </span>' : '<span class="nexus-test-failed">[FAILED] </span>';				
+		Nexus.TestHelper.appendToModule(moduleId, '<div>' 
+		+ passFail
+		+ '<span class="nexus-test-name">' + testName + '</span>'		
+		+ errors
+		+ '</div>');	
 	}		
 };
 /////////////////////////////////////////////////////
@@ -1225,14 +1236,7 @@ Nexus.BehaviorTest = function(testName, waitTime){
 	fixture.beforeTest = '';
 	fixture.afterTest = '';
 	fixture._waitTime = waitTime || 0;	
-	
-	// test uses fake event store so not to write to real one
-	var BACKUP = {
-		EVENT_STORE: Nexus.App.EventStore,
-		ANALYTICS_ENABLED_FOR_COMMANDS: Nexus.App.Analytics.EnabledForCommands,
-		ANALYTICS_ENABLED_FOR_EVENTS: Nexus.App.Analytics.EnabledForEvents
-	};
-	
+		
 	fixture.BeforeTest = function(beforeTest){
 		fixture.beforeTest = beforeTest;	
 		return fixture;
@@ -1263,7 +1267,15 @@ Nexus.BehaviorTest = function(testName, waitTime){
 		Nexus.isInTestMode = true;
 		Nexus.Aggregate.isRehydrating = false;
 		Nexus._finalGivenEvent = 'final_given_event';	
-		// backup app state	
+
+		// test uses fake event store so not to write to real one
+		fixture.BACKUP = {
+			EVENT_STORE: Nexus.App.EventStore,
+			ANALYTICS_ENABLED_FOR_COMMANDS: Nexus.App.Analytics.EnabledForCommands,
+			ANALYTICS_ENABLED_FOR_EVENTS: Nexus.App.Analytics.EnabledForEvents
+		};		
+		
+		// backup app state			
 		Nexus.App.EventStore = Nexus.CreateSimpleEventStore();
 		Nexus.App.EventBus.eventStore = Nexus.App.EventStore;
 		Nexus.App.EventStore.setEventBus(Nexus.App.EventBus);								
@@ -1276,11 +1288,11 @@ Nexus.BehaviorTest = function(testName, waitTime){
 	
 	fixture._afterTest = function(){
 		// restore app state
-		Nexus.App.EventStore = BACKUP.EVENT_STORE;
+		Nexus.App.EventStore = fixture.BACKUP.EVENT_STORE;
 		Nexus.App.EventBus.eventStore = Nexus.App.EventStore;
 		Nexus.App.EventStore.setEventBus(Nexus.App.EventBus);	
-		Nexus.App.Analytics.EnabledForCommands = BACKUP.ANALYTICS_ENABLED_FOR_COMMANDS;
-		Nexus.App.Analytics.EnabledForEvents = BACKUP.ANALYTICS_ENABLED_FOR_EVENTS;																
+		Nexus.App.Analytics.EnabledForCommands = fixture.BACKUP.ANALYTICS_ENABLED_FOR_COMMANDS;
+		Nexus.App.Analytics.EnabledForEvents = fixture.BACKUP.ANALYTICS_ENABLED_FOR_EVENTS;																
 		Nexus.isInTestMode = false;			
 	};
 	
@@ -1336,22 +1348,16 @@ Nexus.BehaviorTest = function(testName, waitTime){
 		
 		// behavior asserts
 		if (actualEvents != expectedEvents){	
-			errors += Nexus.TestHelper.getExpectedActualErrorMessage(expectedEvents, actualEvents || 'no events were published', 'Actual events do not match expected events!');					
+			errors += Nexus.TestHelper.getExpectedActualErrorMessage(expectedEvents, actualEvents || 'no events were published', 'Actual events do not match expected events!');				
 		}	
 		
 		// render asserts
-		var passFail = (errors == '') ? '<span class="nexus-test-passed">[PASSED] </span>' : '<span class="nexus-test-failed">[FAILED] </span>'		
-		Nexus.TestHelper.appendToModule(moduleId, 			
-		'<div>' 
-		+ passFail
-		+ '<span class="nexus-test-name">' + testName + '</span>'		
-		+ errors
-		+ '</div>');		
+		Nexus.TestHelper.renderAsserts(moduleId, testName, errors);			
 	};
 		
 	fixture._nextTest = {
 		Run: function(moduleId){
-			Nexus.TestHelper.appendToModule(moduleId, '<div>DONE!</div>');		
+			Nexus.TestHelper.appendDoneToModule(moduleId);		
 		}
 	}
 	
@@ -1476,17 +1482,12 @@ Nexus.ViewTest = function(testName, waitTime){
 		}	
 		
 		// render asserts
-		var passFail = (errors == '') ? '<span class="nexus-test-passed">[PASSED] </span>' : '<span class="nexus-test-failed">[FAILED] </span>'					
-		Nexus.TestHelper.appendToModule(moduleId, '<li>' 
-		+ passFail
-		+ '<span class="nexus-test-name">' + testName + '</span>'		
-		+ errors
-		+ '</li>');		
+		Nexus.TestHelper.renderAsserts(moduleId, testName, errors);								
 	};
 	
 	fixture._nextTest = {
 		Run: function(moduleId){
-			Nexus.TestHelper.appendToModule(moduleId, '<div>DONE!</div>');		
+			Nexus.TestHelper.appendDoneToModule(moduleId);		
 		}
 	}
 	
