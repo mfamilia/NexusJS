@@ -22,6 +22,8 @@ require([
 		
 		$('#runTests').click(function () {	
 		
+			$('#nexus-test-runner').html('');
+		
 			var tests = [
 				shouldDisplayHomePageTest,
 				shouldSayHelloTest,
