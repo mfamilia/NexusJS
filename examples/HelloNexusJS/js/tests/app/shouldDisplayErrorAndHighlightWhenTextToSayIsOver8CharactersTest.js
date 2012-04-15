@@ -2,7 +2,7 @@ define([
 	"Nexus"
 ], function (Nexus) {
 		
-	return function(){
+
 		// Arrange
 		var id = Nexus.App.newId();
 		var date = new Date();
@@ -36,16 +36,14 @@ define([
 		};
 
 		// Act/Assert
-		new Nexus
+		return new Nexus
 		.Test('Should display error and highlight when text length is over 8 characters long')
 		// Behavior
 		.Given(mainScreenDisplayedEvent)
 		.When(sayItCommand)
 		.Then([errorRaisedEvent, highlightedEvent])
 		// UI
-		.ExpectView(expectedView)
-		.Run();					
-	};
+		.ExpectView(expectedView);
 			    
 });
 

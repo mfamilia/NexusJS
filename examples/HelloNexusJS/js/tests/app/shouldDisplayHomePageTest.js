@@ -2,7 +2,7 @@ define([
 	"Nexus",
 ], function (Nexus) {
 
-	return function () {	
+
 		// Arrange	
 		var id = Nexus.App.newId();
 		var date = new Date();
@@ -40,15 +40,13 @@ define([
 		};
 
 		// Act/Assert
-		new Nexus
+		return new Nexus
 		.Test('Should display home page')
 		// Behavior
 		.When(displayHomePageCommand)
 		.Then(homePageDisplayedEvent)
 		// UI
-		.ExpectView(expectedView)
-		.Run();					
-	};
+		.ExpectView(expectedView);
 			    
 });
 

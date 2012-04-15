@@ -2,7 +2,7 @@ define([
 	"Nexus"
 ], function (Nexus) {
 		
-	return function(){
+
 		// Arrange
 		var id = Nexus.App.newId();
 		var date = new Date();
@@ -34,16 +34,14 @@ define([
 		};
 
 		// Act/Assert
-		new Nexus
+		return new Nexus
 		.Test('Should require to enter something to say')
 		// Behavior
 		.Given(mainScreenDisplayedEvent)
 		.When(sayItCommand)
 		.Then([errorRaisedEvent, highlightedEvent])
 		// UI
-		.ExpectView(expectedView)
-		.Run();					
-	};
+		.ExpectView(expectedView);
 			    
 });
 

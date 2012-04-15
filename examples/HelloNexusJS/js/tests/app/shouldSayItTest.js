@@ -2,7 +2,7 @@ define([
 	"Nexus"
 ], function (Nexus) {
 		
-	return function(){
+
 		// Arrange
 		var id = Nexus.App.newId();
 		var date = new Date();
@@ -36,7 +36,7 @@ define([
 		};
 
 		// Act/Assert
-		new Nexus
+		return new Nexus
 		.Test('Should say it')
 		// Behavior
 		.Given(mainScreenDisplayedEvent)
@@ -44,8 +44,7 @@ define([
 		.Then(saidItEvent)
 		// UI
 		.ExpectView(expectedView)
-		.Run();					
-	};
+		.Wait(500); // wait is # of milliseconds to wait before asserting (for async tests) … this one doesn't need it but it's here as an example
 			    
 });
 
