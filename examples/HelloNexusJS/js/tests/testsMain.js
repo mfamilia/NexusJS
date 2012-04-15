@@ -21,8 +21,7 @@ require([
 	$().ready(function(){
 		
 		$('#runTests').click(function () {	
-			$('#nexus-test-runner').html('<h2>Module: All Tests</h2>');
-
+		
 			var tests = [
 				shouldDisplayHomePageTest,
 				shouldSayHelloTest,
@@ -32,7 +31,7 @@ require([
 				shouldRequireToEnterSomethingToSayTest
 			];
 		
-			new Nexus.TestRunner('module 1').run(tests);
+			new Nexus.TestRunner('Hello NexusJS Test Module').run(tests);
 		
 		}).show();		
 		
