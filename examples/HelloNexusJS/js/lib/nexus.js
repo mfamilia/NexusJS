@@ -1172,6 +1172,21 @@ Nexus.CreateLocalStorageReadModel = function(localStorageKey){
 };
 
 /////////////////////////////////////////////////////
+///////// TEST RUNNER ///////////////////////////////
+/////////////////////////////////////////////////////
+Nexus.TestRunner = function(moduleName){
+	self = this;
+	self.run = function(tests){
+		for (var i=0; i<tests.length; i++){
+			if (tests.length > (i+1)){
+				tests[i]._nextTest = tests[i+1];
+			}	
+		}		
+		tests[0].Run();
+	};
+};
+
+/////////////////////////////////////////////////////
 ///////// TEST //////////////////////////////////////
 /////////////////////////////////////////////////////
 Nexus.Test = function(testName){
@@ -1398,17 +1413,28 @@ Nexus.Test = function(testName){
 		+ '</li>');		
 	};
 	
-	fixture.RunAsync = function(){
-	
+	fixture._waitTime = 0;
+	fixture.Wait = function(waitTime){
+		fixture._waitTime = waitTime;
+		return fixture;
 	};
 	
-	fixture.Run = function(waitTime){
+	fixture._nextTest = {
+		Run: function(){
+			fixture.appendToResult('<li>DONE!</li>');		
+		}
+	}
+	
+	fixture.Run = function(){
 	
 		fixture._beforeTest();
 		fixture._publishGivenEvents();
-		fixture._dispatchWhenCommand();																					
-		fixture._asserts();
-		fixture._afterTest();				
+		fixture._dispatchWhenCommand();		
+		setTimeout(function(){																					
+			fixture._asserts();
+			fixture._afterTest();	
+			fixture._nextTest.Run();
+		},fixture._waitTime); // waitTime for async tests			
 
 
 	};	
