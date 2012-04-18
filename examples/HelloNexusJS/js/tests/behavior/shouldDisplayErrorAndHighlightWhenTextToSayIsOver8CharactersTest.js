@@ -32,7 +32,7 @@ define([
 	};
 
 	return new Nexus
-	.BehaviorTest('Should display error and highlight when text length is over 8 characters long')
+	.BehaviorTest('Should display error and highlight when text length is over 8 characters long',300)
 		.Given(mainScreenDisplayedEvent)
 		.When(sayItCommand)
 		.Then([errorRaisedEvent, highlightedEvent]);

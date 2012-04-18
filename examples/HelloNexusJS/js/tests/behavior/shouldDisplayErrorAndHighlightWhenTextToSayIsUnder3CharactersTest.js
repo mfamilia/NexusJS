@@ -29,7 +29,7 @@ define([
 	};
 	
 	return new Nexus
-	.BehaviorTest('Should display error and highlight when text length is under 3 characters long')
+	.BehaviorTest('Should display error and highlight when text length is under 3 characters long',100)
 		.Given(mainScreenDisplayedEvent)
 		.When(sayItCommand)
 		.Then([errorRaisedEvent, highlightedEvent]);

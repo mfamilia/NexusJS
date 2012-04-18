@@ -75,7 +75,10 @@ var Nexus = {
 	///////////////////////////////////////////////////	
 	RenderView: function(view){
 		if (Nexus.isInTestMode){
-			Nexus.Tests.ViewSpy = view;
+			Nexus.Tests.ViewSpy.data = view.data ? ('' + Nexus.Util.serialize(view.data)).replace(/\s+/g, "") : undefined;
+			Nexus.Tests.ViewSpy.template = view.template || undefined;
+			Nexus.Tests.ViewSpy.placeholder = view.placeholder || undefined;
+			Nexus.Tests.ViewSpy.onLoad = view.onLoad ? ('' + Nexus.Util.serialize(view.onLoad)).replace(/\s+/g, "") : undefined;
 		}else{		
 			var includes = ['jquery','mustache'];
 			if (view.template) includes.push("text!" + 'app/templates' + "/" + view.template);
@@ -889,7 +892,7 @@ Nexus.CreateCachableEventStore = function(arrList){
 		};
 		
 		self.getAllEvents = function(){
-            return self.events.getAll();	
+            		return self.events.getAll();	
 		};		
 		
 		self.replayAllEvents = function(){
@@ -930,8 +933,8 @@ Nexus.CreateCachableEventStore = function(arrList){
 
 			Nexus.Aggregate.isRehydrating = false;
             
-            // cache object
-            self.cache.push(obj);
+           	 // cache object
+           	 self.cache.push(obj);
 
 			return obj;
 		};		
@@ -1138,6 +1141,15 @@ Nexus.CreateEventBus = function(eventStore, arr){
 		self.unregisterAllEventHandlers = function(){
 			self.eventHandlers.clear();
 		};
+		
+		self.isRegistered = function(eventHandler){
+			for (var i=0;i<self.eventHandlers.count();i++){				
+				if(self.eventHandlers.getAt(i).name == eventHandler.name){
+					return true;
+				}
+			}
+			return false;
+		};
 	};
 	
 	return new EventBus(eventStore, arr);
@@ -1174,19 +1186,59 @@ Nexus.CreateLocalStorageReadModel = function(localStorageKey){
 /////////////////////////////////////////////////////
 ///////// TEST RUNNER ///////////////////////////////
 /////////////////////////////////////////////////////
-Nexus.TestRunner = function(moduleName){
+Nexus.TestRunner = function(name){
 	self = this;
-	self.run = function(tests){
-		var moduleId = Nexus.NewGuid();
-		Nexus.TestHelper.appendToTestResults('<div class="nexus-test-module">' + moduleName + '</div><div id="' + moduleId +'"></div>');
-		for (var i=0; i<tests.length; i++){
-			if (tests.length > (i+1)){
-				tests[i]._nextTest = tests[i+1];
+	self.name = name;
+	self.id = Nexus.NewGuid();
+	self.run = function(modules){
+		Nexus.TestHelper.appendToTestResults('<div class="nexus-test-runner">' + self.name + '</div><div id="' + self.id +'"></div>');
+		for (var i=0; i<modules.length; i++){
+			if (modules.length > (i+1)){
+				modules[i]._nextModule = modules[i+1];
 			}	
 		}		
-		tests[0].Run(moduleId);
+		modules[0].run(self.id);		
 	};
 };
+
+/////////////////////////////////////////////////////
+///////// TEST MODULE ///////////////////////////////
+/////////////////////////////////////////////////////
+Nexus.TestModule = function(name, tests){
+	var self = this;
+	self._waitTime = 0;
+	tests.map(function(test){
+		self._waitTime += test._waitTime;
+	});
+	console.log(self._waitTime);	
+	self.name = name;
+	self.tests = tests;
+	self.id = Nexus.NewGuid();
+	self._nextModule = {
+		run: function(testRunnerId){
+			Nexus.TestHelper.appendDoneToTestRunner(testRunnerId);		
+		}
+	};
+	self._runTests = function(testRunnerId){
+		Nexus.TestHelper.appendToTestRunner(testRunnerId, '<div class="nexus-test-module">' + self.name + '</div><div id="' + self.id +'"></div>');
+		for (var i=0; i<self.tests.length; i++){
+			if (self.tests.length > (i+1)){
+				self.tests[i]._nextTest = self.tests[i+1];
+			}	
+		}		
+console.log(self.tests);		
+		self.tests[0].Run(self.id);			
+	};
+	
+	self.run = function(testRunnerId){
+console.log('module ' + self.name);	
+		self._runTests(testRunnerId);		
+		setTimeout(function(){																																							
+			self._nextModule.run(testRunnerId);		
+		},self._waitTime);	
+	};	
+};
+
 /////////////////////////////////////////////////////
 ///////// TEST HELPER ///////////////////////////////
 /////////////////////////////////////////////////////
@@ -1197,6 +1249,9 @@ Nexus.TestHelper = {
 	appendToModule: function(moduleId, html){
 		document.getElementById(moduleId).innerHTML += html;
 	},
+	appendToTestRunner: function(testRunnerId, html){
+		document.getElementById(testRunnerId).innerHTML += html;
+	},	
 	getExpectedActualErrorMessage: function(expected, actual, errorMessage){
 		return '<div class="nexus-test-failed-expected-actual">'
 		+ '<div class="nexus-test-failed-message">' + errorMessage + ' </div>'
@@ -1215,6 +1270,9 @@ Nexus.TestHelper = {
 	appendDoneToModule: function(moduleId){
 		Nexus.TestHelper.appendToModule(moduleId, '<div class="nexus-test-module-separator"></div>');	
 	},
+	appendDoneToTestRunner: function(testRunnerId){
+		Nexus.TestHelper.appendToTestRunner(testRunnerId, '<div>DONE!</div>');	
+	},	
 	renderAsserts: function(moduleId, testName, errors){
 		var passFail = (errors == '') ? '<span class="nexus-test-passed">[PASSED] </span>' : '<span class="nexus-test-failed">[FAILED] </span>';				
 		Nexus.TestHelper.appendToModule(moduleId, '<div>' 
@@ -1222,7 +1280,12 @@ Nexus.TestHelper = {
 		+ '<span class="nexus-test-name">' + testName + '</span>'		
 		+ errors
 		+ '</div>');	
-	}		
+	},
+	getUnregisteredEventHandlerMessage: function(eventHandlerName){
+		return '<div class="nexus-test-failed-expected-actual">'
+		+ '<div class="nexus-test-failed-message">Unregistered event handler: ' + eventHandlerName + '</div>'
+		+ '</div>';
+	}
 };
 /////////////////////////////////////////////////////
 ///////// BEHAVIOR TEST /////////////////////////////
@@ -1379,12 +1442,39 @@ Nexus.BehaviorTest = function(testName, waitTime){
 ///////// VIEW TEST /////////////////////////////////
 /////////////////////////////////////////////////////
 Nexus.ViewTest = function(testName, waitTime){
-
 	var fixture = this;
 	fixture.expectedView = {};
 	fixture.actualView = {};
 	fixture._waitTime = waitTime || 0;		
 	Nexus.isInTestMode = true;
+	fixture.name = testName;
+	
+	fixture.viewSpy = '';
+	
+	fixture.observableNexusView = function(view){
+		var self = this; 
+		self.data = view.data;
+		self.onLoad = view.onLoad;		
+		self.template = view.template;
+		self.placeholder = view.placeholder;
+		self.childViews = view.childViews;
+		self.render = function(){
+			//Nexus.RenderView(self);
+			fixture.viewSpy = self;
+console.log('rendering view');			
+		};	
+		return self;
+	},	
+	
+//	fixture.nexusView = Nexus.View;
+/*
+	fixture.observableNexusView = function(view){
+		fixture.viewSpy = view;
+	};
+	Nexus.Util.extend(fixture.observableNexusView, fixture.nexusView);
+*/
+	Nexus.View = fixture.observableNexusView;	
+	console.log(fixture.observableNexusView);
 	
 	fixture.ExpectTemplate = function(template){
 		fixture.expectedView.template = template;
@@ -1410,16 +1500,16 @@ Nexus.ViewTest = function(testName, waitTime){
 		fixture.eventHandler = eventHandler;
 		return fixture;
 	};
-	
+		
 	fixture._viewAsserts = function(){
 		// view asserts
 		var errors = '';
-		fixture.actualView = Nexus.Tests.ViewSpy;
+		fixture.actualView = fixture.viewSpy; // Nexus.Tests.ViewSpy;
 	
 		////////////// DATA //////////////////////////////////////////////
 		// data was expected
 		if (fixture.expectedView.data){
-			var actualData = ('' + Nexus.Util.serialize(fixture.actualView.data)).replace(/\s+/g, "");
+			var actualData = fixture.actualView.data;
 			var expectedData = ('' + Nexus.Util.serialize(fixture.expectedView.data)).replace(/\s+/g, "");
 			if(actualData != expectedData){	
 				errors += Nexus.TestHelper.getExpectedActualErrorMessage(expectedData, actualData, 'Wrong view data!');												
@@ -1434,7 +1524,7 @@ Nexus.ViewTest = function(testName, waitTime){
 		// placeholder was expected
 		if (fixture.expectedView.placeholder){
 			if(fixture.actualView.placeholder != fixture.expectedView.placeholder){	
-				errors += fixture.getExpectedActualErrorMessage(
+				errors += Nexus.TestHelper.getExpectedActualErrorMessage(
 					fixture.expectedView.placeholder, fixture.actualView.placeholder, 'Wrong view placeholder!');								
 			}
 		// placeholder was not expected but did appear
@@ -1457,7 +1547,7 @@ Nexus.ViewTest = function(testName, waitTime){
 		////////////// ON LOAD //////////////////////////////////////////////
 		// it was expected for something to be executed			
 		if (fixture.expectedView.onLoad){
-			var actualExecuted = ('' + Nexus.Util.serialize(fixture.actualView.onLoad)).replace(/\s+/g, "");
+			var actualExecuted = fixture.actualView.onLoad;
 			var expectedExecuted = ('' + Nexus.Util.serialize(fixture.expectedView.onLoad)).replace(/\s+/g, "");
 			if (actualExecuted != expectedExecuted){
 				errors += Nexus.TestHelper.getExpectedActualErrorMessage(expectedExecuted, actualExecuted, 'Wrong onLoad executed!');							
@@ -1475,6 +1565,11 @@ Nexus.ViewTest = function(testName, waitTime){
 	fixture._asserts = function(moduleId){
 
 		var errors = '';
+		
+		// is event handler registered assert
+		if (!Nexus.App.EventBus.isRegistered(fixture.eventHandler)){
+			errors += Nexus.TestHelper.getUnregisteredEventHandlerMessage(fixture.eventHandler.name);
+		}
 
 		// ui asserts
 		if (fixture.expectedView != {}){
@@ -1492,14 +1587,21 @@ Nexus.ViewTest = function(testName, waitTime){
 	}
 	
 	fixture.Run = function(moduleId){
-		fixture.eventHandler.handle();
+//		fixture.eventHandler.handle();
 		setTimeout(function(){																					
 			fixture._asserts(moduleId);
 			Nexus.isInTestMode = false;
-			fixture._nextTest.Run(moduleId);
-		},fixture._waitTime); // waitTime for async tests			
+			//fixture._nextTest.Run(moduleId);
+console.log('test: ' + fixture.name);			
 
+			setTimeout(function(){																					
+				fixture._nextTest.Run(moduleId);
+			},300); 			
 
+			
+		},fixture._waitTime); // waitTime for async tests
+		
+				
 	};	
 	
 						

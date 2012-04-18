@@ -18,7 +18,7 @@ define([
 	};		
 
 	return new Nexus
-	.BehaviorTest('Should load home page', 50) // 500 is # of milliseconds to wait before asserting (for async tests) … this one doesn't need it but it's here as an example
+	.BehaviorTest('Should load home page', 500) // 500 is # of milliseconds to wait before asserting (for async tests) … this one doesn't need it but it's here as an example
 		.Given()
 		.When(displayHomePageCommand)
 		.Then(homePageDisplayedEvent);

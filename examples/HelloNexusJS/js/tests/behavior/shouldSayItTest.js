@@ -26,7 +26,7 @@ define([
 	};
 	
 	return new Nexus
-	.BehaviorTest('Should say it')
+	.BehaviorTest('Should say it',300)
 		.Given(mainScreenDisplayedEvent)
 		.When(sayItCommand)
 		.Then(saidItEvent);

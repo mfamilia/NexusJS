@@ -26,7 +26,7 @@ define([
 	};
 
 	return new Nexus
-	.BehaviorTest('Should require to enter something to say')
+	.BehaviorTest('Should require to enter something to say',300)
 		.Given(mainScreenDisplayedEvent)
 		.When(sayItCommand)
 		.Then([errorRaisedEvent, highlightedEvent]);

@@ -8,7 +8,8 @@ require([
 	'tests/behavior/shouldDisplayErrorAndHighlightWhenTextToSayIsOver8CharactersTest',
 	'tests/behavior/shouldRequireToEnterSomethingToSayTest',
 	
-	'tests/views/shouldDisplayHelloScreenTest'
+	'tests/views/shouldDisplayHelloScreenTest',
+	'tests/views/shouldDisplayHomePageTest'
 ],function(
 	$,
 	Nexus,
@@ -19,28 +20,42 @@ require([
 	shouldDisplayErrorAndHighlightWhenTextToSayIsOver8CharactersTest,
 	shouldRequireToEnterSomethingToSayTest,
 	
-	shouldDisplayHelloScreenTest
+	shouldDisplayHelloScreenTest,
+	shouldDisplayHomePageViewTest
 ){
 
 	$().ready(function(){
 		
 		$('#runTests').click(function () {	
 		
-			$('#nexus-test-runner').html('');
+			$('#nexus-test-results').html('');
 		
-			new Nexus.TestRunner('Hello NexusJS - Behavior Tests').run([
-				shouldDisplayHomePageTest,
-				shouldSayHelloTest,
-				shouldSayItTest,	
-				shouldDisplayErrorAndHighlightWhenTextToSayIsUnder3CharactersTest,
-				shouldDisplayErrorAndHighlightWhenTextToSayIsOver8CharactersTest,
-				shouldRequireToEnterSomethingToSayTest
-			]);
+			var testModules = [
+		
+	
+		
+/*
+				new Nexus.TestModule('Hello NexusJS - Behavior Tests',
+				[
+					shouldDisplayHomePageTest,
+					shouldSayHelloTest,
+					shouldSayItTest,	
+					shouldDisplayErrorAndHighlightWhenTextToSayIsUnder3CharactersTest,
+					shouldDisplayErrorAndHighlightWhenTextToSayIsOver8CharactersTest,
+					shouldRequireToEnterSomethingToSayTest
+				]),
+*/
+				
+				new Nexus.TestModule('Hello NexusJS - View Tests',
+				[
+					//shouldDisplayHelloScreenTest,
+					shouldDisplayHomePageViewTest
+				])					
+
 			
-			new Nexus.TestRunner('Hello NexusJS - View Tests')
-			.run([
-				shouldDisplayHelloScreenTest
-			]);
+			];
+			
+			new Nexus.TestRunner('TEST RUNNER').run(testModules);
 		
 		}).show();		
 		
