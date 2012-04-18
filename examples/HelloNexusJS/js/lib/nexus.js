@@ -1210,7 +1210,6 @@ Nexus.TestModule = function(name, tests){
 	tests.map(function(test){
 		self._waitTime += test._waitTime;
 	});
-	console.log(self._waitTime);	
 	self.name = name;
 	self.tests = tests;
 	self.id = Nexus.NewGuid();
@@ -1226,12 +1225,10 @@ Nexus.TestModule = function(name, tests){
 				self.tests[i]._nextTest = self.tests[i+1];
 			}	
 		}		
-console.log(self.tests);		
 		self.tests[0].Run(self.id);			
 	};
 	
 	self.run = function(testRunnerId){
-console.log('module ' + self.name);	
 		self._runTests(testRunnerId);		
 		setTimeout(function(){																																							
 			self._nextModule.run(testRunnerId);		
@@ -1449,7 +1446,7 @@ Nexus.ViewTest = function(testName, waitTime){
 	Nexus.isInTestMode = true;
 	fixture.name = testName;
 	
-	fixture.viewSpy = '';
+	fixture.viewSpy = {};
 	
 	fixture.observableNexusView = function(view){
 		var self = this; 
@@ -1459,9 +1456,12 @@ Nexus.ViewTest = function(testName, waitTime){
 		self.placeholder = view.placeholder;
 		self.childViews = view.childViews;
 		self.render = function(){
-			//Nexus.RenderView(self);
-			fixture.viewSpy = self;
-console.log('rendering view');			
+			//Nexus.RenderView(self);			
+			fixture.viewSpy.data = self.data ? ('' + Nexus.Util.serialize(self.data)).replace(/\s+/g, "") : undefined;
+			fixture.viewSpy.template = self.template;
+			fixture.viewSpy.placeholder = self.placeholder;
+			fixture.viewSpy.onLoad = self.onLoad ? ('' + Nexus.Util.serialize(self.onLoad)).replace(/\s+/g, "") : undefined;
+console.log('template: ' + fixture.viewSpy.template);			
 		};	
 		return self;
 	},	
@@ -1474,7 +1474,6 @@ console.log('rendering view');
 	Nexus.Util.extend(fixture.observableNexusView, fixture.nexusView);
 */
 	Nexus.View = fixture.observableNexusView;	
-	console.log(fixture.observableNexusView);
 	
 	fixture.ExpectTemplate = function(template){
 		fixture.expectedView.template = template;
@@ -1505,6 +1504,9 @@ console.log('rendering view');
 		// view asserts
 		var errors = '';
 		fixture.actualView = fixture.viewSpy; // Nexus.Tests.ViewSpy;
+		
+		console.log(fixture.viewSpy);
+		
 	
 		////////////// DATA //////////////////////////////////////////////
 		// data was expected
@@ -1577,7 +1579,7 @@ console.log('rendering view');
 		}	
 		
 		// render asserts
-		Nexus.TestHelper.renderAsserts(moduleId, testName, errors);								
+		Nexus.TestHelper.renderAsserts(moduleId, fixture.name, errors);								
 	};
 	
 	fixture._nextTest = {
@@ -1587,12 +1589,12 @@ console.log('rendering view');
 	}
 	
 	fixture.Run = function(moduleId){
-//		fixture.eventHandler.handle();
+		fixture.eventHandler.handle();
 		setTimeout(function(){																					
 			fixture._asserts(moduleId);
 			Nexus.isInTestMode = false;
 			//fixture._nextTest.Run(moduleId);
-console.log('test: ' + fixture.name);			
+	
 
 			setTimeout(function(){																					
 				fixture._nextTest.Run(moduleId);

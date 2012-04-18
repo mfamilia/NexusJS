@@ -44,8 +44,8 @@ require([
 	// set up what to do with analytics
 	Nexus.App.Analytics.PostToAnalyticsServer = function(msg){
 		// will just log to console for now
-		console.log('POST TO MY ANALYTICS SERVER. MESSAGE: ');
-		console.log(msg);
+		//console.log('POST TO MY ANALYTICS SERVER. MESSAGE: ');
+		//console.log(msg);
 	};
 	
 	// Register command handlers

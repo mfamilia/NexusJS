@@ -29,7 +29,7 @@ define([
 
 
 	return new Nexus
-	.ViewTest('Should display home page',500)
+	.ViewTest('Should display home page')
 		.GivenEventHandler(homePageDisplayedHandler)
 		.ExpectTemplate(expectedView.template)
 		.ExpectPlaceholder(expectedView.placeholder)

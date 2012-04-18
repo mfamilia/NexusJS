@@ -48,8 +48,9 @@ require([
 				
 				new Nexus.TestModule('Hello NexusJS - View Tests',
 				[
-					//shouldDisplayHelloScreenTest,
-					shouldDisplayHomePageViewTest
+					shouldDisplayHomePageViewTest,				
+					shouldDisplayHelloScreenTest
+
 				])					
 
 			
