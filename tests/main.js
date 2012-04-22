@@ -24,7 +24,8 @@ require([
 	'js/SimpleCommandBusTests',
 	'js/SimpleDBTests',
 	'js/UtilTests',
-	'js/ValidationTests'
+	'js/ValidationTests',
+	'js/ViewTestTests'
 ],function(
 	$, 
 	Nexus,
@@ -42,12 +43,14 @@ require([
 	SimpleCommandBusTests,
 	SimpleDBTests,
 	UtilTests,
-	ValidationTests
+	ValidationTests,
+	ViewTestTests
 	){
 
 	$('#performTest').click(function () {
 	
 		Nexus.Tests.run([
+/*
 			CreateCachableEventStoreTests,
 			DBTests,
 			LocalStorageArrayListTests,
@@ -61,7 +64,9 @@ require([
 			SimpleCommandBusTests,
 			SimpleDBTests,
 			UtilTests,
-			ValidationTests
+			ValidationTests,
+*/
+			ViewTestTests
 		]);
 
 	});

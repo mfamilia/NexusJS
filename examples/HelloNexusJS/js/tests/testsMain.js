@@ -34,7 +34,7 @@ require([
 		
 	
 		
-/*
+
 				new Nexus.TestModule('Hello NexusJS - Behavior Tests',
 				[
 					shouldDisplayHomePageTest,
@@ -44,7 +44,7 @@ require([
 					shouldDisplayErrorAndHighlightWhenTextToSayIsOver8CharactersTest,
 					shouldRequireToEnterSomethingToSayTest
 				]),
-*/
+
 				
 				new Nexus.TestModule('Hello NexusJS - View Tests',
 				[

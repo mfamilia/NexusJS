@@ -1249,21 +1249,27 @@ Nexus.TestHelper = {
 	appendToTestRunner: function(testRunnerId, html){
 		document.getElementById(testRunnerId).innerHTML += html;
 	},	
-	getExpectedActualErrorMessage: function(expected, actual, errorMessage){
+	getExpectedActualErrorMessage: function(expected, actual, whatAreYouTesting){
 		return '<div class="nexus-test-failed-expected-actual">'
-		+ '<div class="nexus-test-failed-message">' + errorMessage + ' </div>'
+		+ '<div class="nexus-test-failed-message">Wrong ' + whatAreYouTesting + ' </div>'
 		+ '<div class="nexus-test-failed-expected-header">EXPECTED: </div>'
 		+ '<div class="nexus-test-failed-expected-events">' + expected + '</div>'
 		+ '<div class="nexus-test-failed-actual-header">ACTUAL: </div>'
 		+ '<div class="nexus-test-failed-actual-events">' + actual + '</div>'
 		+ '</div>';	
 	},
-	getUnexpectedErrorMessage: function(actual, errorMessage){
+	getUnexpectedErrorMessage: function(actual, whatAreYouTesting){
 		return '<div class="nexus-test-failed-expected-actual">'
-		+ '<div class="nexus-test-failed-message">' + errorMessage + '</div>'
-		+ '<div class="nexus-test-failed-actual-events">' + actual + '</div>'
+		+ '<div class="nexus-test-failed-message">Unexpected ' + whatAreYouTesting + '</div>'
+		+ '<div class="nexus-test-failed-actual-events">ACTUAL: ' + actual + '</div>'
 		+ '</div>';	
 	},
+	getNoActualErrorMessage: function(expected, whatAreYouTesting){
+		return '<div class="nexus-test-failed-expected-actual">'
+		+ '<div class="nexus-test-failed-message">' + whatAreYouTesting + ' was not expected</div>'
+		+ '<div class="nexus-test-failed-actual-events">EXPECTED: ' + expected + '</div>'
+		+ '</div>';	
+	},	
 	appendDoneToModule: function(moduleId){
 		Nexus.TestHelper.appendToModule(moduleId, '<div class="nexus-test-module-separator"></div>');	
 	},
@@ -1408,7 +1414,7 @@ Nexus.BehaviorTest = function(testName, waitTime){
 		
 		// behavior asserts
 		if (actualEvents != expectedEvents){	
-			errors += Nexus.TestHelper.getExpectedActualErrorMessage(expectedEvents, actualEvents || 'no events were published', 'Actual events do not match expected events!');				
+			errors += Nexus.TestHelper.getExpectedActualErrorMessage(expectedEvents, actualEvents || 'events. No events were published', 'events. Actual events do not match expected events!');				
 		}	
 		
 		// render asserts
@@ -1435,6 +1441,7 @@ Nexus.BehaviorTest = function(testName, waitTime){
 	};	
 };
 
+/*
 /////////////////////////////////////////////////////
 ///////// VIEW TEST /////////////////////////////////
 /////////////////////////////////////////////////////
@@ -1467,12 +1474,12 @@ console.log('template: ' + fixture.viewSpy.template);
 	},	
 	
 //	fixture.nexusView = Nexus.View;
-/*
+
 	fixture.observableNexusView = function(view){
 		fixture.viewSpy = view;
 	};
 	Nexus.Util.extend(fixture.observableNexusView, fixture.nexusView);
-*/
+
 	Nexus.View = fixture.observableNexusView;	
 	
 	fixture.ExpectTemplate = function(template){
@@ -1608,6 +1615,198 @@ console.log('template: ' + fixture.viewSpy.template);
 	
 						
 };
+
+
+
+*/
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////
+///////// VIEW TEST /////////////////////////////////
+/////////////////////////////////////////////////////
+Nexus.ViewTest = function(name, waitTime){
+	var fixture = this;
+	fixture.waitTime = waitTime || 0;		
+	fixture.name = name;
+	fixture.errors = '';
+	
+	fixture._beforeTest = function(){
+		// setup 
+		Nexus.isInTestMode = true;
+
+		// test uses fake event store so not to write to real one
+		fixture.BACKUP = {
+			NEXUS_VIEW: Nexus.View
+		};		
+		
+		// nexus view stub
+		Nexus.View = function(view){
+			var self = this; 
+			self.data = view.data;
+			self.onLoad = view.onLoad;		
+			self.template = view.template;
+			self.placeholder = view.placeholder;
+			self.childViews = view.childViews;
+			self.render = function(){
+				if (self.template){
+					fixture.setActualTemplate(self.template);
+				}
+				if (self.placeholder){
+					fixture.setActualPlaceholder(self.placeholder);
+				}
+				if (self.data){
+					fixture.setActualData(self.data);
+				}
+				if (self.onLoad){
+					fixture.setActualOnLoad(self.onLoad);				
+				}
+			};	
+			return self;
+		};
+	};
+	
+	fixture._afterTest = function(){
+		// restore app state
+		Nexus.View = fixture.BACKUP.NEXUS_VIEW;																
+		Nexus.isInTestMode = false;			
+	};	
+	
+	fixture.ExpectTemplate = function(template){
+		fixture.expectedTemplate = template;
+		return fixture;
+	};	
+
+	fixture.ExpectPlaceholder = function(placeholder){
+		fixture.expectedPlaceholder = placeholder;
+		return fixture;
+	};
+
+	fixture.ExpectData = function(data){
+		if (data){
+			fixture.expectedData = ('' + Nexus.Util.serialize(data)).replace(/\s+/g, "");
+		}else{
+			throw 'ExpectData needs data parameter';
+		}
+		return fixture;
+	};
+	
+	fixture.ExpectOnLoad = function(onLoad){
+		if (onLoad){
+			fixture.expectedOnLoad = ('' + Nexus.Util.serialize(onLoad)).replace(/\s+/g, "");
+		}else{
+			throw 'setActualOnLoad needs onLoad parameter';
+		}	
+		return fixture;
+	};	
+	
+	fixture.GivenEventHandler = function(eventHandler){
+		fixture.givenEventHandler = eventHandler;
+		return fixture;
+	};
+	
+	fixture.setActualTemplate = function(template){
+		fixture.actualTemplate = template;
+		return fixture;
+	};
+	
+	fixture.setActualPlaceholder = function(placeholder){
+		fixture.actualPlaceholder = placeholder;
+		return fixture;
+	};
+	
+	fixture.setActualData = function(data){
+		if (data){
+			fixture.actualData = ('' + Nexus.Util.serialize(data)).replace(/\s+/g, "");
+		}else{
+			throw 'setActualData needs data parameter';
+		}
+		return fixture;
+	};
+	
+	fixture.setActualOnLoad = function(onLoad){
+		if (onLoad){
+			fixture.actualOnLoad = ('' + Nexus.Util.serialize(onLoad)).replace(/\s+/g, "");
+		}else{
+			throw 'setActualOnLoad needs onLoad parameter';
+		}		
+		return fixture;
+	};
+	
+	fixture.assert = function(expected, actual, whatAreYouTesting){
+		if (expected && !actual){
+			fixture.errors += Nexus.TestHelper.getNoActualErrorMessage(expected, whatAreYouTesting);
+		}else if(!expected && actual){
+			fixture.errors += Nexus.TestHelper.getUnexpectedErrorMessage(actual, whatAreYouTesting);						
+		}else if (expected && actual && expected != actual){
+			fixture.errors += Nexus.TestHelper.getExpectedActualErrorMessage(expected, actual, whatAreYouTesting);												
+		}		
+	};	
+		
+	fixture.assertView = function(){
+		fixture.assert(fixture.expectedData, fixture.actualData, 'Data');
+		fixture.assert(fixture.expectedPlaceholder, fixture.actualPlaceholder, 'Placeholder');		
+		fixture.assert(fixture.expectedTemplate, fixture.actualTemplate, 'Template');		
+		fixture.assert(fixture.expectedOnLoad, fixture.actualOnLoad, 'OnLoad');		
+	};
+	
+	fixture.assertEventHandlerRegistration = function(){
+		if (!fixture.givenEventHandler){
+			fixture.errors += Nexus.TestHelper.getNoActualErrorMessage(fixture.givenEventHandler, 'event handler REGISTRATION');		
+		}else if (!Nexus.App.EventBus.isRegistered(fixture.givenEventHandler)){
+			fixture.errors += Nexus.TestHelper.getUnregisteredEventHandlerMessage(fixture.givenEventHandler.name);
+		}	
+	};
+	
+	fixture.handleEvent = function(){
+		if (!fixture.givenEventHandler){
+			fixture.errors += Nexus.TestHelper.getNoActualErrorMessage(fixture.givenEventHandler, 'event handler HANDLE METHOD');		
+		}else{
+			fixture.givenEventHandler.handle();	
+		}	
+	};
+	
+	fixture._nextTest = {
+		Run: function(moduleId){
+			Nexus.TestHelper.appendDoneToModule(moduleId);		
+		}
+	}
+	
+	fixture.Run = function(moduleId){
+		setTimeout(function(){		
+			// setup
+			fixture._beforeTest();	
+			
+			// act	
+			fixture.handleEvent();			
+																		
+			// assert
+			fixture.assertEventHandlerRegistration();	
+			fixture.assertView();			
+			Nexus.TestHelper.renderAsserts(moduleId, fixture.name, fixture.errors);	
+			
+			// tear down
+			fixture._afterTest();
+			
+			// next test in module																		
+			fixture._nextTest.Run(moduleId);			
+		},fixture.waitTime); 
+	};	
+	
+						
+};
+
+
+
+
+
+
+
+
 
 /////////////////////////////////////////////////////
 ///////// DEFAULT INIT //////////////////////////////

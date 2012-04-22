@@ -11,7 +11,7 @@ define([
 	return new Nexus
 	.ViewTest('Should display hello screen')
 		.GivenEventHandler(helloScreenDisplayedHandler)
-		.ExpectTemplate(expectedView.tmplate)
+		.ExpectTemplate(expectedView.template)
 		.ExpectPlaceholder(expectedView.placeholder);
 			   
 });
