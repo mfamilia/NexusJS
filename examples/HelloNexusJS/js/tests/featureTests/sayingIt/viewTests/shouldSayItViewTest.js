@@ -22,7 +22,7 @@ define([
 	};	
 
 	return new Nexus
-	.ViewTest('Should say it')
+	.ViewTest('Should render saidItTemplate on correct placeholder with correct data and add textbox class to correct selector')
 		.GivenEvent(eventToHandle)	
 		.GivenEventHandler(saidItHandler)
 		.ExpectTemplate(expectedView.template)

@@ -25,15 +25,13 @@
 	
 	<body>
 		<h1>Say Hello NexusJS Tests</h1>
-		<div><input type="button" value="Run Behavior Tests" style="display:none;" id="runBehaviorTests" /></div>
-		<div><input type="button" value="Run View Tests" style="display:none;" id="runViewTests" /></div>		
+		<div><input type="button" value="Run Tests" style="display:none;" id="runTests" /></div>		
 		
 		<div id="nexus-test-results"></div>
 		
 		<!-- Tests to run -->
 		<script type="text/javascript">
-			require(['tests/behaviorTestsMain']);
-			require(['tests/viewTestsMain']);			
+			require(['tests/testRunner']);			
 		</script>		
 	</body>
 </html>
