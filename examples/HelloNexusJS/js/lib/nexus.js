@@ -1266,7 +1266,7 @@ Nexus.TestHelper = {
 	},
 	getNoActualErrorMessage: function(expected, whatAreYouTesting){
 		return '<div class="nexus-test-failed-expected-actual">'
-		+ '<div class="nexus-test-failed-message">' + whatAreYouTesting + ' was not expected</div>'
+		+ '<div class="nexus-test-failed-message">Actual ' + whatAreYouTesting + ' is missing</div>'
 		+ '<div class="nexus-test-failed-actual-events">EXPECTED: ' + expected + '</div>'
 		+ '</div>';	
 	},	
@@ -1288,7 +1288,16 @@ Nexus.TestHelper = {
 		return '<div class="nexus-test-failed-expected-actual">'
 		+ '<div class="nexus-test-failed-message">Unregistered event handler: ' + eventHandlerName + '</div>'
 		+ '</div>';
-	}
+	},
+	getEventNotHandledBySpecifiedEventHandlerMessage: function(eventHandlerName, expectedEventToHandle, actualEventItHandles){
+		return '<div class="nexus-test-failed-expected-actual">'
+		+ '<div class="nexus-test-failed-message">Event handler ' + eventHandlerName + ' does not handle this event</div>'
+		+ '<div class="nexus-test-failed-expected-header">EXPECTED TO HANDLE: </div>'
+		+ '<div class="nexus-test-failed-expected-events">' + expectedEventToHandle + '</div>'
+		+ '<div class="nexus-test-failed-actual-header">ACTUALLY HANDLES: </div>'
+		+ '<div class="nexus-test-failed-actual-events">' + actualEventItHandles + '</div>'
+		+ '</div>';	
+	},	
 };
 /////////////////////////////////////////////////////
 ///////// BEHAVIOR TEST /////////////////////////////
@@ -1414,7 +1423,7 @@ Nexus.BehaviorTest = function(testName, waitTime){
 		
 		// behavior asserts
 		if (actualEvents != expectedEvents){	
-			errors += Nexus.TestHelper.getExpectedActualErrorMessage(expectedEvents, actualEvents || 'events. No events were published', 'events. Actual events do not match expected events!');				
+			errors += Nexus.TestHelper.getExpectedActualErrorMessage(expectedEvents, actualEvents || 'No events were published', 'events. Actual events do not match expected events!');				
 		}	
 		
 		// render asserts
@@ -1440,191 +1449,6 @@ Nexus.BehaviorTest = function(testName, waitTime){
 
 	};	
 };
-
-/*
-/////////////////////////////////////////////////////
-///////// VIEW TEST /////////////////////////////////
-/////////////////////////////////////////////////////
-Nexus.ViewTest = function(testName, waitTime){
-	var fixture = this;
-	fixture.expectedView = {};
-	fixture.actualView = {};
-	fixture._waitTime = waitTime || 0;		
-	Nexus.isInTestMode = true;
-	fixture.name = testName;
-	
-	fixture.viewSpy = {};
-	
-	fixture.observableNexusView = function(view){
-		var self = this; 
-		self.data = view.data;
-		self.onLoad = view.onLoad;		
-		self.template = view.template;
-		self.placeholder = view.placeholder;
-		self.childViews = view.childViews;
-		self.render = function(){
-			//Nexus.RenderView(self);			
-			fixture.viewSpy.data = self.data ? ('' + Nexus.Util.serialize(self.data)).replace(/\s+/g, "") : undefined;
-			fixture.viewSpy.template = self.template;
-			fixture.viewSpy.placeholder = self.placeholder;
-			fixture.viewSpy.onLoad = self.onLoad ? ('' + Nexus.Util.serialize(self.onLoad)).replace(/\s+/g, "") : undefined;
-console.log('template: ' + fixture.viewSpy.template);			
-		};	
-		return self;
-	},	
-	
-//	fixture.nexusView = Nexus.View;
-
-	fixture.observableNexusView = function(view){
-		fixture.viewSpy = view;
-	};
-	Nexus.Util.extend(fixture.observableNexusView, fixture.nexusView);
-
-	Nexus.View = fixture.observableNexusView;	
-	
-	fixture.ExpectTemplate = function(template){
-		fixture.expectedView.template = template;
-		return fixture;
-	};	
-
-	fixture.ExpectPlaceholder = function(placeholder){
-		fixture.expectedView.placeholder = placeholder;
-		return fixture;
-	};
-
-	fixture.ExpectData = function(data){
-		fixture.expectedView.data = data;
-		return fixture;
-	};
-	
-	fixture.ExpectOnLoad = function(onLoad){
-		fixture.expectedView.onLoad = onLoad;
-		return fixture;
-	};	
-	
-	fixture.GivenEventHandler = function(eventHandler){
-		fixture.eventHandler = eventHandler;
-		return fixture;
-	};
-		
-	fixture._viewAsserts = function(){
-		// view asserts
-		var errors = '';
-		fixture.actualView = fixture.viewSpy; // Nexus.Tests.ViewSpy;
-		
-		console.log(fixture.viewSpy);
-		
-	
-		////////////// DATA //////////////////////////////////////////////
-		// data was expected
-		if (fixture.expectedView.data){
-			var actualData = fixture.actualView.data;
-			var expectedData = ('' + Nexus.Util.serialize(fixture.expectedView.data)).replace(/\s+/g, "");
-			if(actualData != expectedData){	
-				errors += Nexus.TestHelper.getExpectedActualErrorMessage(expectedData, actualData, 'Wrong view data!');												
-			}
-		// data was not expected but did appear
-		}else if(fixture.actualView.data){
-			var actualData = ('' + Nexus.Util.serialize(fixture.actualView.data)).replace(/\s+/g, "");
-			errors += Nexus.TestHelper.getUnexpectedErrorMessage(actualData, 'Data was not expected but the following data did appear!');			
-		}			
-	
-		////////////// PLACEHOLDER //////////////////////////////////////////////
-		// placeholder was expected
-		if (fixture.expectedView.placeholder){
-			if(fixture.actualView.placeholder != fixture.expectedView.placeholder){	
-				errors += Nexus.TestHelper.getExpectedActualErrorMessage(
-					fixture.expectedView.placeholder, fixture.actualView.placeholder, 'Wrong view placeholder!');								
-			}
-		// placeholder was not expected but did appear
-		}else if(fixture.actualView.placeholder){					
-			errors += Nexus.TestHelper.getUnexpectedErrorMessage(fixture.actualView.placeholder, 'Placeholder was not expected but the following placeholder did appear!');
-		}			
-	
-		////////////// TEMPLATE //////////////////////////////////////////////
-		// template was expected
-		if (fixture.expectedView.template){
-			if(fixture.actualView.template != fixture.expectedView.template){	
-				errors += Nexus.TestHelper.getExpectedActualErrorMessage(
-					fixture.expectedView.template, fixture.actualView.template, 'Wrong template rendered!');						
-			}
-		// template was not expected but was rendered
-		}else if(fixture.actualView.template){
-			errors += Nexus.TestHelper.getUnexpectedErrorMessage(fixture.actualView.template, 'Template was not expected but the following template was rendered!');					
-		}			
-	
-		////////////// ON LOAD //////////////////////////////////////////////
-		// it was expected for something to be executed			
-		if (fixture.expectedView.onLoad){
-			var actualExecuted = fixture.actualView.onLoad;
-			var expectedExecuted = ('' + Nexus.Util.serialize(fixture.expectedView.onLoad)).replace(/\s+/g, "");
-			if (actualExecuted != expectedExecuted){
-				errors += Nexus.TestHelper.getExpectedActualErrorMessage(expectedExecuted, actualExecuted, 'Wrong onLoad executed!');							
-			}
-		// nothing was expected but something was executed	
-		}else if(fixture.actualView.onLoad){
-			var actualExecuted = ('' + Nexus.Util.serialize(fixture.actualView.onLoad)).replace(/\s+/g, "");
-			errors += Nexus.TestHelper.getUnexpectedErrorMessage(actualExecuted, 'Nothing was expected to execute but the following did execute!');							
-		}
-		
-		return errors;	
-	};
-	
-	
-	fixture._asserts = function(moduleId){
-
-		var errors = '';
-		
-		// is event handler registered assert
-		if (!Nexus.App.EventBus.isRegistered(fixture.eventHandler)){
-			errors += Nexus.TestHelper.getUnregisteredEventHandlerMessage(fixture.eventHandler.name);
-		}
-
-		// ui asserts
-		if (fixture.expectedView != {}){
-			errors += fixture._viewAsserts();
-		}	
-		
-		// render asserts
-		Nexus.TestHelper.renderAsserts(moduleId, fixture.name, errors);								
-	};
-	
-	fixture._nextTest = {
-		Run: function(moduleId){
-			Nexus.TestHelper.appendDoneToModule(moduleId);		
-		}
-	}
-	
-	fixture.Run = function(moduleId){
-		fixture.eventHandler.handle();
-		setTimeout(function(){																					
-			fixture._asserts(moduleId);
-			Nexus.isInTestMode = false;
-			//fixture._nextTest.Run(moduleId);
-	
-
-			setTimeout(function(){																					
-				fixture._nextTest.Run(moduleId);
-			},300); 			
-
-			
-		},fixture._waitTime); // waitTime for async tests
-		
-				
-	};	
-	
-						
-};
-
-
-
-*/
-
-
-
-
-
-
 
 /////////////////////////////////////////////////////
 ///////// VIEW TEST /////////////////////////////////
@@ -1709,6 +1533,13 @@ Nexus.ViewTest = function(name, waitTime){
 		return fixture;
 	};
 	
+	
+	fixture.GivenEvent = function(givenEvent){
+		fixture.givenEvent = givenEvent;
+		return fixture;
+	};
+		
+	
 	fixture.setActualTemplate = function(template){
 		fixture.actualTemplate = template;
 		return fixture;
@@ -1765,8 +1596,17 @@ Nexus.ViewTest = function(name, waitTime){
 	fixture.handleEvent = function(){
 		if (!fixture.givenEventHandler){
 			fixture.errors += Nexus.TestHelper.getNoActualErrorMessage(fixture.givenEventHandler, 'event handler HANDLE METHOD');		
-		}else{
-			fixture.givenEventHandler.handle();	
+		}else{	
+			if (fixture.givenEvent && fixture.givenEventHandler.handlesEvent == fixture.givenEvent.eventName){ 
+				fixture.givenEventHandler.handle(fixture.givenEvent);	
+			}else if (fixture.givenEvent && fixture.givenEventHandler.handlesEvent != fixture.givenEvent.eventName){ 	
+				fixture.errors += Nexus.TestHelper.getEventNotHandledBySpecifiedEventHandlerMessage(
+					fixture.givenEventHandler.name, 
+					fixture.givenEvent.eventName, 
+					fixture.givenEventHandler.handlesEvent);
+			}else{
+				fixture.givenEventHandler.handle();	
+			}
 		}	
 	};
 	

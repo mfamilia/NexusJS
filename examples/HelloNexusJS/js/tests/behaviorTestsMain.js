@@ -6,10 +6,7 @@ require([
 	'tests/behavior/shouldSayItTest',
 	'tests/behavior/shouldDisplayErrorAndHighlightWhenTextToSayIsUnder3CharactersTest',
 	'tests/behavior/shouldDisplayErrorAndHighlightWhenTextToSayIsOver8CharactersTest',
-	'tests/behavior/shouldRequireToEnterSomethingToSayTest',
-	
-	'tests/views/shouldDisplayHelloScreenTest',
-	'tests/views/shouldDisplayHomePageTest'
+	'tests/behavior/shouldRequireToEnterSomethingToSayTest'
 ],function(
 	$,
 	Nexus,
@@ -18,45 +15,34 @@ require([
 	shouldSayItTest,
 	shouldDisplayErrorAndHighlightWhenTextToSayIsUnder3CharactersTest,
 	shouldDisplayErrorAndHighlightWhenTextToSayIsOver8CharactersTest,
-	shouldRequireToEnterSomethingToSayTest,
-	
-	shouldDisplayHelloScreenTest,
-	shouldDisplayHomePageViewTest
+	shouldRequireToEnterSomethingToSayTest
 ){
 
 	$().ready(function(){
 		
-		$('#runTests').click(function () {	
+		$('#runBehaviorTests').click(function () {	
 		
 			$('#nexus-test-results').html('');
 		
 			var testModules = [
 		
-	
-		
-
-				new Nexus.TestModule('Hello NexusJS - Behavior Tests',
+				new Nexus.TestModule('Hello NexusJS - Behavior Tests [Home Page & Hello Module]',
 				[
 					shouldDisplayHomePageTest,
-					shouldSayHelloTest,
+					shouldSayHelloTest
+				]),
+				
+				new Nexus.TestModule('Hello NexusJS - Behavior Tests [Should Say It Module]',
+				[
 					shouldSayItTest,	
 					shouldDisplayErrorAndHighlightWhenTextToSayIsUnder3CharactersTest,
 					shouldDisplayErrorAndHighlightWhenTextToSayIsOver8CharactersTest,
 					shouldRequireToEnterSomethingToSayTest
-				]),
+				])									
 
-				
-				new Nexus.TestModule('Hello NexusJS - View Tests',
-				[
-					shouldDisplayHomePageViewTest,				
-					shouldDisplayHelloScreenTest
-
-				])					
-
-			
 			];
 			
-			new Nexus.TestRunner('TEST RUNNER').run(testModules);
+			new Nexus.TestRunner('BEHAVIOR TEST RUNNER').run(testModules);
 		
 		}).show();		
 		

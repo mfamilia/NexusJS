@@ -9,7 +9,7 @@ define([
 	};
 
 	return new Nexus
-	.ViewTest('Should display hello screen')
+	.ViewTest('Should display hello screen', 300)
 		.GivenEventHandler(helloScreenDisplayedHandler)
 		.ExpectTemplate(expectedView.template)
 		.ExpectPlaceholder(expectedView.placeholder);
