@@ -113,14 +113,18 @@ var Nexus = {
 		}
 	},
 	ajaxOnErrorDefaultCallback: function(jqXHR, textStatus, errorThrown){
+		/*
 		console.log(jqXHR);
 		console.log(textStatus);
 		console.log(errorThrown);
+		*/
 	},
 	ajaxOnSuccessDefaultCallback: function(data, textStatus, jqXHR){
+		/*
 		console.log(data);
 		console.log(textStatus);
 		console.log(jqXHR);
+		*/
 	},
 	jsonGET: function(payload){
 		//TODO: rewrite without jquery	
