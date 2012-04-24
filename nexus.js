@@ -1725,16 +1725,16 @@ Nexus.BackendTest = function(name, waitTime){
 		// as per single responsibility principal, only single call should be made in event handler
 		// this is why fixutre.actualPayload is set from all jsonXXX handlers
 		Nexus.jsonGET = function(payload){	
-			fixture.setActualPayload(payload);
+			fixture.setActualPayload(payload, 'GET');
 		};
 		Nexus.jsonPOST = function(payload){	
-			fixture.setActualPayload(payload);
+			fixture.setActualPayload(payload,'POST');
 		};
 		Nexus.jsonPUT = function(payload){	
-			fixture.setActualPayload(payload);
+			fixture.setActualPayload(payload, 'PUT');
 		};
 		Nexus.jsonDELETE = function(payload){	
-			fixture.setActualPayload(payload);
+			fixture.setActualPayload(payload, 'DELETE');
 		};		
 	};
 	
@@ -1755,6 +1755,11 @@ Nexus.BackendTest = function(name, waitTime){
 		}	
 		return fixture;
 	};	
+
+	fixture.ExpectType = function(type){
+		fixture.expectedType = type;
+		return fixture;
+	}
 	
 	fixture.GivenEventHandler = function(eventHandler){
 		fixture.givenEventHandler = eventHandler;
@@ -1767,12 +1772,15 @@ Nexus.BackendTest = function(name, waitTime){
 		return fixture;
 	};		
 	
-	fixture.setActualPayload = function(payload){
+	fixture.setActualPayload = function(payload, type){
 		if (payload){
 			fixture.actualPayload = ('' + Nexus.Util.serialize(payload)).replace(/\s+/g, "");
 		}else{
 			throw 'setActualPayload needs payload parameter';
 		}		
+		if (type){
+			fixture.actualType = type;
+		}
 		return fixture;
 	};
 	
@@ -1788,6 +1796,7 @@ Nexus.BackendTest = function(name, waitTime){
 		
 	fixture.assertPayload = function(){
 		fixture.assert(fixture.expectedPayload, fixture.actualPayload, 'Payload');
+		fixture.assert(fixture.expectedType, fixture.actualType, 'Type');
 	};
 	
 	fixture.assertEventHandlerRegistration = function(){

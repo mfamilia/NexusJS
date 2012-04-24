@@ -23,6 +23,7 @@ define([
 	.BackendTest('Should call backend')
 		.GivenEvent(givenEvent)
 		.GivenEventHandler(homePageDisplayedBackEndHandler)
+		.ExpectType('POST')
 		.ExpectPayload(expectedPayload);
 			   
 });
