@@ -1,25 +1,25 @@
 define([
 	'jquery',
 	"Nexus",
-	'app/eventHandlers/homePageDisplayedHandler',
-	'app/commands/sayHello',
-	'app/commands/sayIt'
+	'app/features/displayingHomepage/eventHandlers/homePageDisplayedHandler',
+	'app/features/sayingHello/commands/sayHello',
+	'app/features/sayingIt/commands/sayIt'
 ], function ($, Nexus, homePageDisplayedHandler, SayHello, SayIt) {
 
 
 	var expectedView = {
-		template: 'homePageTemplate.html', // template to be rendered
+		template: 'app/features/displayingHomepage/templates/homePageTemplate.html', // template to be rendered
 		placeholder: '#body', // where should it be rendered
 		onLoad: // what should execute on view load
 		function(){
 			$('#sayHello').click(function () {
-				Nexus.App.CommandBus.dispatch(
-					SayHello.Command(Nexus.App.newId(), new Date)		
+				Nexus.CommandBus.dispatch(
+					SayHello.Command(Nexus.newId(), new Date)		
 				);	
 			});
 			$('#sayIt').click(function () {
 				var text = $('#thingToSay').val();
-				Nexus.App.CommandBus.dispatch(
+				Nexus.CommandBus.dispatch(
 					SayIt.Command('#thingToSay', new Date, text)
 				);		
 			});						

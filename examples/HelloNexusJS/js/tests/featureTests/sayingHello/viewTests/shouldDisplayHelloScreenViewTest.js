@@ -1,10 +1,10 @@
 define([
 	"Nexus",
-	'app/eventHandlers/helloScreenDisplayedHandler'
+	'app/features/sayingHello/eventHandlers/helloScreenDisplayedHandler'
 ], function (Nexus, helloScreenDisplayedHandler) {
 
 	var expectedView = {
-		template: 'helloTemplate.html',
+		template: 'app/features/sayingHello/templates/helloTemplate.html',
 		placeholder: '#output'
 	};
 

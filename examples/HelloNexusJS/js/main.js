@@ -11,19 +11,20 @@ require.config({
 // Init App
 require([
 	'Nexus',
-	'app/commands/displayHomePage',
+	'app/features/displayingHomepage/commands/displayHomePage',
 	
 	// command handlers
-	'app/commandHandlers/displayHomePageHandler',
-	'app/commandHandlers/sayHelloHandler',	
-	'app/commandHandlers/sayItHandler',	
+	'app/features/displayingHomepage/commandHandlers/displayHomePageHandler',
+	'app/features/sayingHello/commandHandlers/sayHelloHandler',	
+	'app/features/sayingIt/commandHandlers/sayItHandler',	
 	
 	// event handlers
-	'app/eventHandlers/homePageDisplayedHandler',
-	'app/eventHandlers/helloScreenDisplayedHandler',	
-	'app/eventHandlers/saidItHandler',
-	'app/eventHandlers/errorRaisedHandler',
-	'app/eventHandlers/highlightedHandler'
+	'app/features/displayingHomepage/eventHandlers/homePageDisplayedHandler',
+	'app/features/sayingHello/eventHandlers/helloScreenDisplayedHandler',	
+	'app/features/sayingIt/eventHandlers/saidItHandler',
+	'app/shared/eventHandlers/errorRaisedHandler',
+	'app/shared/eventHandlers/highlightedHandler',
+	'app/features/displayingHomepage/eventHandlers/homePageDisplayedBackEndHandler'
 	
 ], function(
 	Nexus,
@@ -39,35 +40,39 @@ require([
 	helloScreenDisplayedHandler,	
 	saidItHandler,
 	errorRaisedHandler,
-	highlightedHandler
+	highlightedHandler,
+	homePageDisplayedBackEndHandler
 ) {
 	// set up what to do with analytics
-	Nexus.App.Analytics.PostToAnalyticsServer = function(msg){
+	Nexus.Analytics.PostToAnalyticsServer = function(msg){
 		// will just log to console for now
 		//console.log('POST TO MY ANALYTICS SERVER. MESSAGE: ');
 		//console.log(msg);
 	};
 	
 	// Register command handlers
-	Nexus.App.CommandBus.registerCommandHandlers([
+	Nexus.CommandBus.registerCommandHandlers([
 		displayHomePageHandler,
 		sayHelloHandler,
 		sayItHandler
 	]);		
 	
 	// Register event handlers
-	Nexus.App.EventBus.registerEventHandlers([
+	Nexus.EventBus.registerEventHandlers([
 		homePageDisplayedHandler,
 		helloScreenDisplayedHandler,
 		saidItHandler,
 		errorRaisedHandler,
-		highlightedHandler
+		highlightedHandler,
+		homePageDisplayedBackEndHandler
 	]);	
 	
 	// Display main screen
-	Nexus.App.CommandBus.dispatch(
-		DisplayHomePage.Command(Nexus.App.newId(), new Date())
+
+	Nexus.CommandBus.dispatch(
+		DisplayHomePage.Command(Nexus.newId(), new Date)
 	);	
+
 });
 
 

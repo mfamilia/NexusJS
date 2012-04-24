@@ -2,7 +2,7 @@ define([
 	"Nexus"
 ], function (Nexus) {
 		
-	var id = Nexus.App.newId();
+	var id = Nexus.newId();
 	var date = new Date();
 	
 	var mainScreenDisplayedEvent = {
@@ -23,7 +23,7 @@ define([
 	};
 
 	return new Nexus
-	.BehaviorTest('Should say hello')
+	.BehaviorTest('Should say hello', 600)
 		.Given(mainScreenDisplayedEvent)
 		.When(sayHelloCommand)
 		.Then(helloScreenDisplayedEvent);

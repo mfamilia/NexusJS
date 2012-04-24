@@ -4,18 +4,18 @@ define(['Nexus'],function(Nexus){
 		
 		test("should create command bus with local storage for command handlers", function() {
 			// Arrange/Act
-			Nexus.App.CommandBus = Nexus.CreateLocalStorageCommandBus('TESTLocalStorageCommandBus');
+			Nexus.CommandBus = Nexus.CreateLocalStorageCommandBus('TESTLocalStorageCommandBus');
 	
 			// Assert
-			ok(Nexus.Interfaces.CheckIfImplements(Nexus.App.CommandBus, Nexus.Interfaces.CommandBus));
-			ok(Nexus.App.CommandBus.commandHandlers.count);																		
+			ok(Nexus.Interfaces.CheckIfImplements(Nexus.CommandBus, Nexus.Interfaces.CommandBus));
+			ok(Nexus.CommandBus.commandHandlers.count);																		
 		});		
 		
 		test("should register single command handler on LocalStorageCommandBus", function() {
 			// Arrange
 			var localStorageKey = 'TESTLocalStorageCommandBus';
 			Nexus.Util.saveArrayToLocalStorage(localStorageKey, new Array());
-			Nexus.App.CommandBus = Nexus.CreateLocalStorageCommandBus(localStorageKey);
+			Nexus.CommandBus = Nexus.CreateLocalStorageCommandBus(localStorageKey);
 			
 			var cmdHandlerName = Nexus.NewGuid();
 			var testCommandHandler = new Nexus.CommandHandler(cmdHandlerName, "cmd", function(cmd){/*do stuff*/});					
@@ -23,7 +23,7 @@ define(['Nexus'],function(Nexus){
 			var expected = cmdHandlerName;
 								
 			// Act
-			Nexus.App.CommandBus.registerCommandHandler(testCommandHandler);
+			Nexus.CommandBus.registerCommandHandler(testCommandHandler);
 			var arr = Nexus.Util.getArrayFromLocalStorage(localStorageKey);
 			var actual = arr[arr.length - 1].name;
 	
@@ -37,7 +37,7 @@ define(['Nexus'],function(Nexus){
 			// Arrange
 			var localStorageKey = 'TESTLocalStorageCommandBus';
 			Nexus.Util.saveArrayToLocalStorage(localStorageKey, new Array());
-			Nexus.App.CommandBus = Nexus.CreateLocalStorageCommandBus(localStorageKey);
+			Nexus.CommandBus = Nexus.CreateLocalStorageCommandBus(localStorageKey);
 			
 			var cmdHandler1Name = Nexus.NewGuid();
 			var cmdHandler2Name = Nexus.NewGuid();						
@@ -45,7 +45,7 @@ define(['Nexus'],function(Nexus){
 			var testCommandHandler2 = new Nexus.CommandHandler(cmdHandler2Name, "cmd2", function(cmd){/*do stuff*/});											
 								
 			// Act
-			Nexus.App.CommandBus.registerCommandHandlers([testCommandHandler1, testCommandHandler2]);	
+			Nexus.CommandBus.registerCommandHandlers([testCommandHandler1, testCommandHandler2]);	
 			var arr = Nexus.Util.getArrayFromLocalStorage(localStorageKey);
 			var actualFirstCommandHandler = arr[arr.length - 2];
 			var actualSecondCommandHandler = arr[arr.length - 1];						
@@ -63,18 +63,18 @@ define(['Nexus'],function(Nexus){
 			// Arrange
 			var localStorageKey = 'TESTLocalStorageCommandBus';
 			Nexus.Util.saveArrayToLocalStorage(localStorageKey, new Array());
-			Nexus.App.CommandBus = Nexus.CreateLocalStorageCommandBus(localStorageKey);
+			Nexus.CommandBus = Nexus.CreateLocalStorageCommandBus(localStorageKey);
 			
 			var cmdHandler1Name = Nexus.NewGuid();
 			var cmdHandler2Name = Nexus.NewGuid();						
 			var testCommandHandler1 = new Nexus.CommandHandler(cmdHandler1Name, "cmd1", function(cmd){/*do stuff*/});		
 			var testCommandHandler2 = new Nexus.CommandHandler(cmdHandler2Name, "cmd2", function(cmd){/*do stuff*/});		
 			
-			Nexus.App.CommandBus.registerCommandHandlers([testCommandHandler1, testCommandHandler2]);		
+			Nexus.CommandBus.registerCommandHandlers([testCommandHandler1, testCommandHandler2]);		
 			equal(Nexus.Util.getArrayFromLocalStorage(localStorageKey).length, 2, "2 command handlers should have been registered during arrange stage");														
 								
 			// Act
-			Nexus.App.CommandBus.unregisterAllCommandHandlers();											
+			Nexus.CommandBus.unregisterAllCommandHandlers();											
 	
 			// Assert
 			equal(Nexus.Util.getArrayFromLocalStorage(localStorageKey).length, 0, "command handlers array on local storage should be empty");					
@@ -85,14 +85,15 @@ define(['Nexus'],function(Nexus){
 			// Arrange
 			var localStorageKey = 'TESTLocalStorageCommandBus';
 			Nexus.Util.saveArrayToLocalStorage(localStorageKey, new Array());
-			Nexus.App.CommandBus = Nexus.CreateLocalStorageCommandBus(localStorageKey);
+			Nexus.CommandBus = Nexus.CreateLocalStorageCommandBus(localStorageKey);
 			
-			Nexus.App.Domain.TestAggregate = function(name, age){
+			Nexus.Domain = {};
+			Nexus.Domain.TestAggregate = function(name, age){
 				this.name = name;
 				this.age = age;
 			};
 			
-			Nexus.App.Domain.Result = {};
+			Nexus.Domain.Result = {};
 			
 			var cmd1Name = 'cmd1';
 			var cmd2Name = 'cmd2';
@@ -103,13 +104,14 @@ define(['Nexus'],function(Nexus){
 				cmdHandler2Name, 
 				cmd2Name, 
 				function(cmd){
-					Nexus.App.Domain.Result = new Nexus.App.Domain.TestAggregate(cmd.name, cmd.age);
+					Nexus.Domain.Result = new Nexus.Domain.TestAggregate(cmd.name, cmd.age);
 			});	
 			
-			Nexus.App.CommandBus.registerCommandHandlers([testCommandHandler1, testCommandHandler2]);		
+			Nexus.CommandBus.registerCommandHandlers([testCommandHandler1, testCommandHandler2]);		
 			equal(Nexus.Util.getArrayFromLocalStorage(localStorageKey).length, 2, "2 command handlers should have been registered during arrange stage");												
+			Nexus.Commands = {};
 			
-			Nexus.App.Commands.TestCommands = {
+			Nexus.Commands.TestCommands = {
 				// command names
 				SomeCommandName: cmd2Name,
 				
@@ -117,18 +119,18 @@ define(['Nexus'],function(Nexus){
 				SomeCommand: function(name, age){
 					this.name = name;
 					this.age = age;
-					this.commandName = Nexus.App.Commands.TestCommands.SomeCommandName;
+					this.commandName = Nexus.Commands.TestCommands.SomeCommandName;
 				}
 			};
 			
-			var command = new Nexus.App.Commands.TestCommands.SomeCommand('kate',20);					
+			var command = new Nexus.Commands.TestCommands.SomeCommand('kate',20);					
 								
 			// Act
-			Nexus.App.CommandBus.dispatch(command);						
+			Nexus.CommandBus.dispatch(command);						
 	
 			// Assert
-			equal(Nexus.App.Domain.Result.name, 'kate', "1st property set correctly");
-			equal(Nexus.App.Domain.Result.age, 20, "2nd property set correctly");											
+			equal(Nexus.Domain.Result.name, 'kate', "1st property set correctly");
+			equal(Nexus.Domain.Result.age, 20, "2nd property set correctly");											
 								
 		});	
 	};

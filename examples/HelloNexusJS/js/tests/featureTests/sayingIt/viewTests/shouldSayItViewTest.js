@@ -1,7 +1,7 @@
 define([
 	'jquery',
 	"Nexus",
-	'app/eventHandlers/saidItHandler'
+	'app/features/sayingIt/eventHandlers/saidItHandler'
 ], function ($, Nexus, saidItHandler) {
 	
 	var eventToHandle = {
@@ -12,7 +12,7 @@ define([
 	};
 	
 	var expectedView = {
-		template: 'saidItTemplate.html',
+		template: 'app/features/sayingIt/templates/saidItTemplate.html',
 		placeholder: '#output',
 		data: eventToHandle,
 		onLoad: 

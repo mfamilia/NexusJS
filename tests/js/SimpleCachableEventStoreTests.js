@@ -5,11 +5,11 @@ define(['Nexus'],function(Nexus){
 		
 		test("should create simple cachable event store", function() {
 			// Arrange/Act
-			Nexus.App.EventStore = Nexus.CreateSimpleCachableEventStore();
+			Nexus.EventStore = Nexus.CreateSimpleCachableEventStore();
 	
 			// Assert
-			ok(Nexus.Interfaces.CheckIfImplements(Nexus.App.EventStore, Nexus.Interfaces.EventStore), 'must implement event store interface');
-			ok(Nexus.App.EventStore.events.count, 'should initialize event store');																		
+			ok(Nexus.Interfaces.CheckIfImplements(Nexus.EventStore, Nexus.Interfaces.EventStore), 'must implement event store interface');
+			ok(Nexus.EventStore.events.count, 'should initialize event store');																		
 		});	
 		
 	};

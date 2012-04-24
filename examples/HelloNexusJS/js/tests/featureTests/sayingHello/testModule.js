@@ -10,22 +10,11 @@ define([
 	shouldDisplayHelloScreenViewTest
 ){
 
-	var sayingHelloTests = new Array();
+	var tests = [
+		shouldSayHelloBehaviorTest,
+		shouldDisplayHelloScreenViewTest	
+	];
 
-	var addBehaviorTests = function(){
-		sayingHelloTests.push(
-			shouldSayHelloBehaviorTest
-		);
-	};
-	
-	var addViewTests = function(){
-		sayingHelloTests.push(
-			shouldDisplayHelloScreenViewTest
-		);
-	};	
-	
-	addBehaviorTests();
-	addViewTests();
-	return new Nexus.TestModule('Saying hello', sayingHelloTests);	
+	return new Nexus.TestModule('Saying hello', tests);	
 
 });

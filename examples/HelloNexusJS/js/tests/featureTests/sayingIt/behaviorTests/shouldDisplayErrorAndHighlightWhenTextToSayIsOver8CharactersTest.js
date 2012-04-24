@@ -2,11 +2,11 @@ define([
 	"Nexus"
 ], function (Nexus) {
 		
-	var id = Nexus.App.newId();
+	var id = Nexus.newId();
 	var date = new Date();
-	var text = '1234567890';
+	var text = '1234567890123456789012345678901234567890';
 	var selector = '#thingToSay';
-	var msg = 'length must be between 3 and 8 characters long';
+	var msg = 'length must be between 3 and 20 characters long';
 	
 	var mainScreenDisplayedEvent = {
 		id: id,

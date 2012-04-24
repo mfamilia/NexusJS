@@ -50,7 +50,7 @@ require([
 	$('#performTest').click(function () {
 	
 		Nexus.Tests.run([
-/*
+
 			CreateCachableEventStoreTests,
 			DBTests,
 			LocalStorageArrayListTests,
@@ -65,8 +65,7 @@ require([
 			SimpleDBTests,
 			UtilTests,
 			ValidationTests,
-*/
-			ViewTestTests
+
 		]);
 
 	});

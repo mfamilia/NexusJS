@@ -2,7 +2,7 @@ define([
 	"Nexus",
 ], function (Nexus) {
 
-	var id = Nexus.App.newId();
+	var id = Nexus.newId();
 	var date = new Date();
 			
 	var homePageDisplayedEvent = {

@@ -1,14 +1,14 @@
 require([
 	'jquery',
 	'Nexus',	
-	'tests/sharedViewTests/testModule',		
+	'tests/sharedTests/viewTests/testModule',
 	'tests/featureTests/displayingHomepage/testModule',
 	'tests/featureTests/sayingHello/testModule',
 	'tests/featureTests/sayingIt/testModule'
 ],function(
 	$,
-	Nexus,	
-	sharedViewTestsTestModule,	
+	Nexus,
+	sharedViewTestsTestModule,
 	displayingHomepageTestModule,
 	sayingHelloTestModule,
 	sayingItTestModule
@@ -24,7 +24,7 @@ require([
 	$().ready(function(){
 		$('#runTests').click(function () {	
 			$('#nexus-test-results').html('');
-			new Nexus.TestRunner('Hello NexusJS Tests').run(testModules);
+			new Nexus.TestRunner('Running Tests').run(testModules);
 		}).show();		
 	});
 

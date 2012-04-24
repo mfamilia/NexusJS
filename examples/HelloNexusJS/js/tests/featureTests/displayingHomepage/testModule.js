@@ -2,30 +2,22 @@ define([
 	'jquery',
 	'Nexus',
 	'tests/featureTests/displayingHomepage/behaviorTests/shouldDisplayHomePageBehaviorTest',
-	'tests/featureTests/displayingHomepage/viewTests/shouldDisplayHomePageViewTest'
+	'tests/featureTests/displayingHomepage/viewTests/shouldDisplayHomePageViewTest',
+	'tests/featureTests/displayingHomepage/backendTests/shouldCallBackend'
 ],function(
 	$,
 	Nexus,
 	shouldDisplayHomePageBehaviorTest,
-	shouldDisplayHomePageViewTest
+	shouldDisplayHomePageViewTest,
+	shouldCallBackend
 ){
 
-	var displayingHomePageTests = new Array();
-
-	var addBehaviorTests = function(){
-		displayingHomePageTests.push(
-			shouldDisplayHomePageBehaviorTest
-		);
-	};
+	var tests = [
+		shouldDisplayHomePageBehaviorTest,
+		shouldDisplayHomePageViewTest,
+		shouldCallBackend
+	];
 	
-	var addViewTests = function(){
-		displayingHomePageTests.push(
-			shouldDisplayHomePageViewTest
-		);
-	};	
-	
-	addBehaviorTests();
-	addViewTests();
-	return new Nexus.TestModule('Displaying Homepage', displayingHomePageTests);	
+	return new Nexus.TestModule('Displaying Homepage', tests);	
 
 });

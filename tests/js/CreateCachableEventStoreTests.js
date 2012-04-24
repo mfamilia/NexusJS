@@ -41,123 +41,123 @@ define(['Nexus'],function(Nexus){
 		test("should create cachable event store", function() {
 			// Arrange/Act
 			var arrList = TEST.getMockArrayList();
-			Nexus.App.EventStore = Nexus.CreateCachableEventStore(arrList);
+			Nexus.EventStore = Nexus.CreateCachableEventStore(arrList);
 	
 			// Assert
-			ok(Nexus.Interfaces.CheckIfImplements(Nexus.App.EventStore, Nexus.Interfaces.EventStore), 'should implement event store interface');
-			ok(Nexus.App.EventStore.events.count, 'should initialize event store');	
-			deepEqual(Nexus.App.EventStore.events, arrList, 'passed array list should equal initialized events');
-			equal(Nexus.App.EventStore.events.count(),0,'initialized event store should be empty')															
+			ok(Nexus.Interfaces.CheckIfImplements(Nexus.EventStore, Nexus.Interfaces.EventStore), 'should implement event store interface');
+			ok(Nexus.EventStore.events.count, 'should initialize event store');	
+			deepEqual(Nexus.EventStore.events, arrList, 'passed array list should equal initialized events');
+			equal(Nexus.EventStore.events.count(),0,'initialized event store should be empty')															
 		});	
 		
 		test("should set event bus", function(){
 			// Arrange
 			var arrList = TEST.getMockArrayList();
-			Nexus.App.EventStore = Nexus.CreateCachableEventStore(arrList);
+			Nexus.EventStore = Nexus.CreateCachableEventStore(arrList);
 			
 			var mockEventBus = TEST.getMockEventBus();
 					
 			// Act
-			Nexus.App.EventStore.setEventBus(mockEventBus);
+			Nexus.EventStore.setEventBus(mockEventBus);
 			
 			// Assert
-			deepEqual(Nexus.App.EventStore.eventBus, mockEventBus, 'right event bus should be set');
-			equal(Nexus.App.EventStore.eventBus.publish(),TEST.mockEventBusPublishingMessage,'methods on event bus set should be working correctly')
+			deepEqual(Nexus.EventStore.eventBus, mockEventBus, 'right event bus should be set');
+			equal(Nexus.EventStore.eventBus.publish(),TEST.mockEventBusPublishingMessage,'methods on event bus set should be working correctly')
 		});	
 		
 		test("should save event when not rehydrating aggregate and not replaying events", function(){
 			// Arrange
 			var arrList = TEST.getMockArrayList();
-			Nexus.App.EventStore = Nexus.CreateCachableEventStore(arrList);
+			Nexus.EventStore = Nexus.CreateCachableEventStore(arrList);
 			
 			var mockEvent = TEST.getMockEvent();
 					
 			// Act
 			Nexus.Aggregate.isRehydrating = false;
 			Nexus.isReplayingEvents = false;
-			Nexus.App.EventStore.saveEvent(mockEvent);		
+			Nexus.EventStore.saveEvent(mockEvent);		
 			
 			// Assert
-			equal(Nexus.App.EventStore.events.count(), 1, 'event store should have 1 event');
-			deepEqual(Nexus.App.EventStore.events.getAt(0), mockEvent, 'event should be saved');
+			equal(Nexus.EventStore.events.count(), 1, 'event store should have 1 event');
+			deepEqual(Nexus.EventStore.events.getAt(0), mockEvent, 'event should be saved');
 		});		
 		
 		test("should clear event store", function(){
 			// Arrange
 			var arrList = TEST.getMockArrayList();
-			Nexus.App.EventStore = Nexus.CreateCachableEventStore(arrList);
+			Nexus.EventStore = Nexus.CreateCachableEventStore(arrList);
 			
 			var mockEvent = TEST.getMockEvent();
 			Nexus.Aggregate.isRehydrating = false;
 			Nexus.isReplayingEvents = false;
-			Nexus.App.EventStore.saveEvent(mockEvent);
+			Nexus.EventStore.saveEvent(mockEvent);
 							
 			// Act
-			Nexus.App.EventStore.clear();		
+			Nexus.EventStore.clear();		
 			
 			// Assert
-			equal(Nexus.App.EventStore.events.count(), 0, 'event store should be cleared');
+			equal(Nexus.EventStore.events.count(), 0, 'event store should be cleared');
 		});		
 		
 		test("should not save event when rehydrating aggregate", function(){
 			// Arrange
 			var arrList = TEST.getMockArrayList();
-			Nexus.App.EventStore = Nexus.CreateCachableEventStore(arrList);
+			Nexus.EventStore = Nexus.CreateCachableEventStore(arrList);
 			
 			var mockEvent = TEST.getMockEvent();
 					
 			// Act
 			Nexus.Aggregate.isRehydrating = true;
 			Nexus.isReplayingEvents = false;
-			Nexus.App.EventStore.saveEvent(mockEvent);		
+			Nexus.EventStore.saveEvent(mockEvent);		
 			
 			// Assert
-			equal(Nexus.App.EventStore.events.count(), 0, 'event store should have 0 events');
+			equal(Nexus.EventStore.events.count(), 0, 'event store should have 0 events');
 		});		
 		
 		test("should not save event when replaying events", function(){
 			// Arrange
 			var arrList = TEST.getMockArrayList();
-			Nexus.App.EventStore = Nexus.CreateCachableEventStore(arrList);
+			Nexus.EventStore = Nexus.CreateCachableEventStore(arrList);
 			
 			var mockEvent = TEST.getMockEvent();
 					
 			// Act
 			Nexus.Aggregate.isRehydrating = false;
 			Nexus.isReplayingEvents = true;
-			Nexus.App.EventStore.saveEvent(mockEvent);		
+			Nexus.EventStore.saveEvent(mockEvent);		
 			
 			// Assert
-			equal(Nexus.App.EventStore.events.count(), 0, 'event store should have 0 events');
+			equal(Nexus.EventStore.events.count(), 0, 'event store should have 0 events');
 		});	
 		
 		test("should get all events", function(){
 			// Arrange
 			var arrList = TEST.getMockArrayList();
-			Nexus.App.EventStore = Nexus.CreateCachableEventStore(arrList);
+			Nexus.EventStore = Nexus.CreateCachableEventStore(arrList);
 			
 			var mockEvent = TEST.getMockEvent();
 			var mockEvent2 = TEST.getMockEvent2();	
 			
 			Nexus.Aggregate.isRehydrating = false;
 			Nexus.isReplayingEvents = false;
-			Nexus.App.EventStore.saveEvent(mockEvent);		
-			Nexus.App.EventStore.saveEvent(mockEvent2);			
+			Nexus.EventStore.saveEvent(mockEvent);		
+			Nexus.EventStore.saveEvent(mockEvent2);			
 					
 			// Act
-			var allEvents = Nexus.App.EventStore.getAllEvents();
+			var allEvents = Nexus.EventStore.getAllEvents();
 				
 			// Assert
 			ok(allEvents.map, 'events collection must have map function');
 			equal(allEvents.size(), 2, 'event store should have 2 events');
-			deepEqual(Nexus.App.EventStore.events.getAt(0), mockEvent, 'should return correct events');		
+			deepEqual(Nexus.EventStore.events.getAt(0), mockEvent, 'should return correct events');		
 		});		
 		
 		
 		test("should replay all events", function(){
 			// Arrange
 			var arrList = TEST.getMockArrayList();
-			Nexus.App.EventStore = Nexus.CreateCachableEventStore(arrList);
+			Nexus.EventStore = Nexus.CreateCachableEventStore(arrList);
 			
 			var mockEvent = TEST.getMockEvent();
 			var mockEvent2 = TEST.getMockEvent2();	
@@ -175,12 +175,12 @@ define(['Nexus'],function(Nexus){
 			
 			Nexus.Aggregate.isRehydrating = false;
 			Nexus.isReplayingEvents = false;
-			Nexus.App.EventStore.setEventBus(eventBus);
-			Nexus.App.EventStore.saveEvent(mockEvent);		
-			Nexus.App.EventStore.saveEvent(mockEvent2);			
+			Nexus.EventStore.setEventBus(eventBus);
+			Nexus.EventStore.saveEvent(mockEvent);		
+			Nexus.EventStore.saveEvent(mockEvent2);			
 					
 			// Act
-			Nexus.App.EventStore.replayAllEvents();
+			Nexus.EventStore.replayAllEvents();
 				
 			// Assert
 			equal(actual, expected, 'should publish all events when replaying all events');
@@ -191,29 +191,29 @@ define(['Nexus'],function(Nexus){
 		test("should get all events by id", function(){
 			// Arrange
 			var arrList = TEST.getMockArrayList();
-			Nexus.App.EventStore = Nexus.CreateCachableEventStore(arrList);
+			Nexus.EventStore = Nexus.CreateCachableEventStore(arrList);
 			
 			var mockEvent = TEST.getMockEvent();
 			var mockEvent2 = TEST.getMockEvent2();	
 			
 			Nexus.Aggregate.isRehydrating = false;
 			Nexus.isReplayingEvents = false;
-			Nexus.App.EventStore.saveEvent(mockEvent);		
-			Nexus.App.EventStore.saveEvent(mockEvent2);			
+			Nexus.EventStore.saveEvent(mockEvent);		
+			Nexus.EventStore.saveEvent(mockEvent2);			
 					
 			// Act
-			var allEventsById = Nexus.App.EventStore.getAllEventsById(TEST.mockEventId);
+			var allEventsById = Nexus.EventStore.getAllEventsById(TEST.mockEventId);
 				
 			// Assert
 			ok(allEventsById.map, 'events collection must have map function');
 			equal(allEventsById.length, 1, 'event store should have 1 event');
-			deepEqual(Nexus.App.EventStore.events.getAt(0), mockEvent, 'should return correct events');		
+			deepEqual(Nexus.EventStore.events.getAt(0), mockEvent, 'should return correct events');		
 		});		
 			
 		test("should rehydrate non namespaced aggregate", function(){
 			// Arrange
 			var arrList = TEST.getMockArrayList();
-			Nexus.App.EventStore = Nexus.CreateCachableEventStore(arrList);
+			Nexus.EventStore = Nexus.CreateCachableEventStore(arrList);
 	
 			var CarCreatedEvent = function(id, name){
 				this.id = id;
@@ -252,26 +252,26 @@ define(['Nexus'],function(Nexus){
 			
 			Nexus.Aggregate.isRehydrating = false;
 			Nexus.isReplayingEvents = false;
-			Nexus.App.EventStore.saveEvent(carCreatedEvent);		
-			Nexus.App.EventStore.saveEvent(carPaintedEvent);		
+			Nexus.EventStore.saveEvent(carCreatedEvent);		
+			Nexus.EventStore.saveEvent(carPaintedEvent);		
 			
 			var expectedCar = new Car();
 			expectedCar.applyEvent(carCreatedEvent);
 			expectedCar.applyEvent(carPaintedEvent);		
 					
 			// Act
-			var rehydratedCar = Nexus.App.EventStore.rehydrate(carId,'Car');
+			var rehydratedCar = Nexus.EventStore.rehydrate(carId,'Car');
 				
 			// Assert
 			deepEqual(rehydratedCar, expectedCar, 'should rehydrate correctly');	
-			deepEqual(Nexus.App.EventStore.cache[0], rehydratedCar, 'should cache rehydrated object');					
+			deepEqual(Nexus.EventStore.cache[0], rehydratedCar, 'should cache rehydrated object');					
 		});		
 		
 		
 		test("should rehydrate namespaced aggregate", function(){
 			// Arrange
 			var arrList = TEST.getMockArrayList();
-			Nexus.App.EventStore = Nexus.CreateCachableEventStore(arrList);
+			Nexus.EventStore = Nexus.CreateCachableEventStore(arrList);
 	
 			var CarCreatedEvent = function(id, name){
 				this.id = id;
@@ -312,19 +312,19 @@ define(['Nexus'],function(Nexus){
 			
 			Nexus.Aggregate.isRehydrating = false;
 			Nexus.isReplayingEvents = false;
-			Nexus.App.EventStore.saveEvent(carCreatedEvent);		
-			Nexus.App.EventStore.saveEvent(carPaintedEvent);		
+			Nexus.EventStore.saveEvent(carCreatedEvent);		
+			Nexus.EventStore.saveEvent(carPaintedEvent);		
 			
 			var expectedCar = new Namespace.Car();
 			expectedCar.applyEvent(carCreatedEvent);
 			expectedCar.applyEvent(carPaintedEvent);		
 					
 			// Act
-			var rehydratedCar = Nexus.App.EventStore.rehydrate(carId,'Namespace.Car');
+			var rehydratedCar = Nexus.EventStore.rehydrate(carId,'Namespace.Car');
 				
 			// Assert
 			deepEqual(rehydratedCar, expectedCar, 'should rehydrate correctly');
-			deepEqual(Nexus.App.EventStore.cache[0], rehydratedCar, 'should cache rehydrated object');		
+			deepEqual(Nexus.EventStore.cache[0], rehydratedCar, 'should cache rehydrated object');		
 		});		
 		
 	//TODO: test so the object is rehydrated from cache when asked for more than once	
@@ -337,7 +337,7 @@ define(['Nexus'],function(Nexus){
 		test("should getById non namespaced aggregate", function(){
 			// Arrange
 			var arrList = TEST.getMockArrayList();
-			Nexus.App.EventStore = Nexus.CreateCachableEventStore(arrList);
+			Nexus.EventStore = Nexus.CreateCachableEventStore(arrList);
 	
 			var CarCreatedEvent = function(id, name){
 				this.id = id;
@@ -376,26 +376,26 @@ define(['Nexus'],function(Nexus){
 			
 			Nexus.Aggregate.isRehydrating = false;
 			Nexus.isReplayingEvents = false;
-			Nexus.App.EventStore.saveEvent(carCreatedEvent);		
-			Nexus.App.EventStore.saveEvent(carPaintedEvent);		
+			Nexus.EventStore.saveEvent(carCreatedEvent);		
+			Nexus.EventStore.saveEvent(carPaintedEvent);		
 			
 			var expectedCar = new Car();
 			expectedCar.applyEvent(carCreatedEvent);
 			expectedCar.applyEvent(carPaintedEvent);		
 					
 			// Act
-			var rehydratedCar = Nexus.App.EventStore.getById(carId,'Car');
+			var rehydratedCar = Nexus.EventStore.getById(carId,'Car');
 				
 			// Assert
 			deepEqual(rehydratedCar, expectedCar, 'should rehydrate correctly');	
-			deepEqual(Nexus.App.EventStore.cache[0], rehydratedCar, 'should cache rehydrated object');					
+			deepEqual(Nexus.EventStore.cache[0], rehydratedCar, 'should cache rehydrated object');					
 		});		
 		
 		
 		test("should getById namespaced aggregate", function(){
 			// Arrange
 			var arrList = TEST.getMockArrayList();
-			Nexus.App.EventStore = Nexus.CreateCachableEventStore(arrList);
+			Nexus.EventStore = Nexus.CreateCachableEventStore(arrList);
 	
 			var CarCreatedEvent = function(id, name){
 				this.id = id;
@@ -436,19 +436,19 @@ define(['Nexus'],function(Nexus){
 			
 			Nexus.Aggregate.isRehydrating = false;
 			Nexus.isReplayingEvents = false;
-			Nexus.App.EventStore.saveEvent(carCreatedEvent);		
-			Nexus.App.EventStore.saveEvent(carPaintedEvent);		
+			Nexus.EventStore.saveEvent(carCreatedEvent);		
+			Nexus.EventStore.saveEvent(carPaintedEvent);		
 			
 			var expectedCar = new Namespace.Car();
 			expectedCar.applyEvent(carCreatedEvent);
 			expectedCar.applyEvent(carPaintedEvent);		
 					
 			// Act
-			var rehydratedCar = Nexus.App.EventStore.getById(carId,'Namespace.Car');
+			var rehydratedCar = Nexus.EventStore.getById(carId,'Namespace.Car');
 				
 			// Assert
 			deepEqual(rehydratedCar, expectedCar, 'should rehydrate correctly');
-			deepEqual(Nexus.App.EventStore.cache[0], rehydratedCar, 'should cache rehydrated object');		
+			deepEqual(Nexus.EventStore.cache[0], rehydratedCar, 'should cache rehydrated object');		
 		});			
 	};
 	
