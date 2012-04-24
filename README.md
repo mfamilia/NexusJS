@@ -9,10 +9,6 @@ Examples (WORK IN PROGRESS)
 	<dd>index.html (example app)</dd>
 	<dd>tests.html (BDD/UI tests)</dd>
 </dl>
-<dl>
-	<dt>Store</dt>
-	<dd>currently not working</dd>
-</dl>
 
 Benefits for Developers
 -------------------------
