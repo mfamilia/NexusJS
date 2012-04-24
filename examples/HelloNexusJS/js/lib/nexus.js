@@ -123,10 +123,7 @@ var Nexus = {
 		console.log(jqXHR);
 	},
 	jsonGET: function(payload){
-		console.log('JSON GET WITH PAYLOAD:');
-		console.log(payload);
-		//TODO: rewrite without jquery
-/*	
+		//TODO: rewrite without jquery	
 		require(['jquery'], function($) {	
 			$.ajax({
 				url: payload.url,
@@ -136,14 +133,10 @@ var Nexus = {
 				success: payload.success || Nexus.ajaxOnSuccessDefaultCallback,
 				error: payload.error || Nexus.ajaxOnErrorDefaultCallback
 			});					
-		});				
-*/		
+		});						
 	},	
 	jsonPOST: function(payload){
-		console.log('JSON POST WITH PAYLOAD:');
-		console.log(payload);
 		//TODO: rewrite without jquery
-/*	
 		require(['jquery'], function($) {	
 			$.ajax({
 				url: payload.url,
@@ -154,14 +147,10 @@ var Nexus = {
 				success: payload.success || Nexus.ajaxOnSuccessDefaultCallback,
 				error: payload.error || Nexus.ajaxOnErrorDefaultCallback
 			});					
-		});				
-*/		
+		});					
 	},
 	jsonPUT: function(payload){
-		console.log('JSON PUT WITH PAYLOAD:');
-		console.log(payload);
-		//TODO: rewrite without jquery
-/*	
+		//TODO: rewrite without jquery	
 		require(['jquery'], function($) {	
 			$.ajax({
 				url: payload.url,
@@ -172,14 +161,10 @@ var Nexus = {
 				success: payload.success || Nexus.ajaxOnSuccessDefaultCallback,
 				error: payload.error || Nexus.ajaxOnErrorDefaultCallback
 			});					
-		});				
-*/		
+		});					
 	},
 	jsonDELETE: function(payload){
-		console.log('JSON DELETE WITH PAYLOAD:');
-		console.log(payload);
-		//TODO: rewrite without jquery
-/*	
+		//TODO: rewrite without jquery	
 		require(['jquery'], function($) {	
 			$.ajax({
 				url: payload.url,
@@ -190,8 +175,7 @@ var Nexus = {
 				success: payload.success || Nexus.ajaxOnSuccessDefaultCallback,
 				error: payload.error || Nexus.ajaxOnErrorDefaultCallback
 			});					
-		});				
-*/		
+		});						
 	}	
 };
 

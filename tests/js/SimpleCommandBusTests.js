@@ -76,6 +76,8 @@ define(['Nexus'],function(Nexus){
 			// Arrange
 			Nexus.CommandBus = Nexus.CreateSimpleCommandBus();
 			
+			Nexus.Domain = {};
+
 			Nexus.Domain.TestAggregate = function(name, age){
 				this.name = name;
 				this.age = age;
@@ -98,6 +100,8 @@ define(['Nexus'],function(Nexus){
 			Nexus.CommandBus.registerCommandHandlers([testCommandHandler1, testCommandHandler2]);		
 			equal(Nexus.CommandBus.commandHandlers.count(), 2, "2 command handlers should have been registered during arrange stage");												
 			
+			Nexus.Commands = {};
+
 			Nexus.Commands.TestCommands = {
 				// command names
 				SomeCommandName: cmd2Name,
