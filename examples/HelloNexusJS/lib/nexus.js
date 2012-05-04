@@ -145,7 +145,7 @@ var Nexus = {
 			$.ajax({
 				url: payload.url,
 				type: 'POST',
-				data: JSON.stringify(payload.data),
+				data: payload.data,
 				dataType: 'json',
 				contentTypeString: 'application/json',
 				success: payload.success || Nexus.ajaxOnSuccessDefaultCallback,
@@ -159,7 +159,7 @@ var Nexus = {
 			$.ajax({
 				url: payload.url,
 				type: 'PUT',
-				data: JSON.stringify(payload.data),
+				data: payload.data,
 				dataType: 'json',
 				contentTypeString: 'application/json',
 				success: payload.success || Nexus.ajaxOnSuccessDefaultCallback,
@@ -173,7 +173,7 @@ var Nexus = {
 			$.ajax({
 				url: payload.url,
 				type: 'DELETE',
-				data: JSON.stringify(payload.data),
+				data: payload.data,
 				dataType: 'json',
 				contentTypeString: 'application/json',
 				success: payload.success || Nexus.ajaxOnSuccessDefaultCallback,

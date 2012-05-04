@@ -113,14 +113,18 @@ var Nexus = {
 		}
 	},
 	ajaxOnErrorDefaultCallback: function(jqXHR, textStatus, errorThrown){
+		/*
 		console.log(jqXHR);
 		console.log(textStatus);
 		console.log(errorThrown);
+		*/
 	},
 	ajaxOnSuccessDefaultCallback: function(data, textStatus, jqXHR){
+		/*
 		console.log(data);
 		console.log(textStatus);
 		console.log(jqXHR);
+		*/
 	},
 	jsonGET: function(payload){
 		//TODO: rewrite without jquery	
@@ -141,7 +145,7 @@ var Nexus = {
 			$.ajax({
 				url: payload.url,
 				type: 'POST',
-				data: JSON.stringify(payload.data),
+				data: payload.data,
 				dataType: 'json',
 				contentTypeString: 'application/json',
 				success: payload.success || Nexus.ajaxOnSuccessDefaultCallback,
@@ -155,7 +159,7 @@ var Nexus = {
 			$.ajax({
 				url: payload.url,
 				type: 'PUT',
-				data: JSON.stringify(payload.data),
+				data: payload.data,
 				dataType: 'json',
 				contentTypeString: 'application/json',
 				success: payload.success || Nexus.ajaxOnSuccessDefaultCallback,
@@ -169,7 +173,7 @@ var Nexus = {
 			$.ajax({
 				url: payload.url,
 				type: 'DELETE',
-				data: JSON.stringify(payload.data),
+				data: payload.data,
 				dataType: 'json',
 				contentTypeString: 'application/json',
 				success: payload.success || Nexus.ajaxOnSuccessDefaultCallback,
