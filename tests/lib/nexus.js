@@ -1138,6 +1138,9 @@ Nexus.CreateEventBus = function(eventStore, arr){
 			}
 
 			self.eventStore.saveEvent(evt);
+		
+			// Routing
+            		Nexus.Router.mapToRoute(evt);
 			
 			var evtHandlersCount = self.eventHandlers.count();
 
@@ -1858,9 +1861,167 @@ Nexus.BackendTest = function(name, waitTime){
 						
 };
 
+
+/////////////////////////////////////////////////////
+///////// ROUTER ////////////////////////////////////
+/////////////////////////////////////////////////////
+Nexus.Router = {
+    init: function(){
+        window.onhashchange = function(e){
+            Nexus.Router.route(location.hash);
+        };
+    },
+    registerRoute: function(routeName, events){
+        var eventNamesAsString = '';
+        for (var i=0; i<events.length; i++){
+            eventNamesAsString += events[i].eventName;
+        }
+        Nexus.Router.registeredRoutes.push({
+            routeName: routeName,
+            events: events,
+            eventNamesAsString: eventNamesAsString
+        });
+    },
+    publishEvents: function(routeName, registeredRoute){
+        var extractDataFromRouteName = function(routeName, registeredRouteName, keyValueArr){
+            var startRouteName = '[';
+            var endRouteName = ']';
+            var startRegisteredRouteName = '{';
+            var endRegisteredRouteName = '}';
+
+            if (routeName.indexOf(startRouteName) != -1 ){
+                var leftRouteNameBracket = routeName.indexOf(startRouteName);
+                var rightRouteNameBracket = routeName.indexOf(endRouteName);
+                var leftRegisteredRouteNameBracket = registeredRouteName.indexOf(startRegisteredRouteName);
+                var rightRegisteredRouteNameBracket = registeredRouteName.indexOf(endRegisteredRouteName);
+
+                var routeData = routeName.substring(leftRouteNameBracket + 1, rightRouteNameBracket);
+                var registeredRouteVariable = registeredRouteName.substring(leftRegisteredRouteNameBracket + 1, rightRegisteredRouteNameBracket);
+
+                keyValueArr.push({eventField: registeredRouteVariable, data: routeData});
+
+                var newRouteName = routeName.replace(startRouteName + routeData + endRouteName, '');
+                var newRegisteredRouteName = registeredRouteName.replace(startRegisteredRouteName + registeredRouteVariable + endRegisteredRouteName, '');
+
+                extractDataFromRouteName(newRouteName, newRegisteredRouteName, keyValueArr);
+
+                return keyValueArr;
+            }
+        };
+        var routeValues = new Array();
+        extractDataFromRouteName(routeName, registeredRoute.routeName, routeValues);
+
+        for(var j=0; j<registeredRoute.events.length; j++){
+            var evt = registeredRoute.events[j];
+            for (var k=0; k<routeValues.length; k++){
+                var routeValue = routeValues[k];
+                evt[routeValue.eventField] = routeValue.data;
+            }
+            evt.__origin__ = "ROUTER";
+            Nexus.EventBus.publish(evt);
+        }
+    },
+    currentRoute: '',
+    route: function(routeName){
+        if (Nexus.Router.currentRoute != routeName){
+            var registeredRoute = Nexus.Router.getRegisteredRouteFromRouteName(routeName);
+            if (registeredRoute != Nexus.Router.routeMatchNotFound){
+                Nexus.Router.publishEvents(routeName, registeredRoute);
+                Nexus.Router.currentRoute = routeName;
+            }
+        }
+    },
+    displayRoute: function(routeName, origin){
+        if (origin == 'EventBus'){
+            history.pushState(
+                {
+                    origin:origin
+                },
+                routeName,
+                routeName);
+        }else{
+            window.location.hash = routeName;
+        }
+        Nexus.Router.currentRoute = routeName;
+    },
+    routeMatchNotFound: 'NEXUS.ERROR.ROUTE.MATCH.NOT.FOUND',
+    matchRoute: function(events){
+        var eventNamesAsString = '';
+        for(var j=0; j<events.length; j++){
+            eventNamesAsString += events[j].eventName;
+        }
+        for (var i=0; i<Nexus.Router.registeredRoutes.length; i++){
+            if (Nexus.Router.registeredRoutes[i].eventNamesAsString == eventNamesAsString){
+                return Nexus.Router.registeredRoutes[i].routeName;
+            }
+        }
+        return Nexus.Router.routeMatchNotFound;
+    },
+    events: [],
+    mapToRoute: function(event){
+        Nexus.Router.events.push(event);
+        var routeName = Nexus.Router.matchRoute(Nexus.Router.events);
+        if (routeName != Nexus.Router.routeMatchNotFound){
+            routeName = Nexus.Router.replaceRouteVariables(routeName, Nexus.Router.events);
+            Nexus.Router.displayRoute(routeName, event.__origin__ || 'EventBus');
+            Nexus.Router.events = [];
+        }
+    },
+    replaceRouteVariables: function(routeName, events){
+        if (routeName.indexOf('{') != -1 ){
+            var leftBracket = routeName.indexOf('{');
+            var rightBracket = routeName.indexOf('}');
+
+            var routeVariable = routeName.substring(leftBracket + 1, rightBracket);
+            var replaceWith = 'ERROR:NOT-FOUND';
+            for(var i=0; i<events.length; i++){
+                replaceWith = events[i][routeVariable];
+            }
+            var newRoute = routeName.replace('{' + routeVariable + '}', '[' + replaceWith + ']');
+
+            if (newRoute.indexOf('{') != -1 ){
+                newRoute = Nexus.Router.replaceRouteVariables(newRoute, events);
+            }
+            return newRoute;
+        }else{
+            return routeName;
+        }
+    },
+    reduceRouteName: function(routeName, startChar, endChar){
+        if (routeName.indexOf(startChar) != -1 ){
+            var leftBracket = routeName.indexOf(startChar);
+            var rightBracket = routeName.indexOf(endChar);
+
+            var routeVariable = routeName.substring(leftBracket + 1, rightBracket);
+            var newRoute = routeName.replace(startChar + routeVariable + endChar, '');
+
+            if (newRoute.indexOf(startChar) != -1 ){
+                newRoute = Nexus.Router.reduceRouteName(newRoute, startChar, endChar);
+            }
+            return newRoute;
+        }else{
+            return routeName;
+        }
+    },
+    getRegisteredRouteFromRouteName: function(routeName){
+        var reducedRouteName = Nexus.Router.reduceRouteName(routeName, '[',']');
+        for (var i=0; i<Nexus.Router.registeredRoutes.length; i++){
+            var registeredRoute = Nexus.Router.registeredRoutes[i];
+            var reducedRegisteredRoute = Nexus.Router.reduceRouteName(registeredRoute.routeName, '{','}');
+            if (reducedRegisteredRoute == reducedRouteName){
+                return registeredRoute;
+            }
+        }
+        return Nexus.Router.routeMatchNotFound;
+    }
+};
+
+
 /////////////////////////////////////////////////////
 ///////// DEFAULT INIT //////////////////////////////
 /////////////////////////////////////////////////////
+Nexus.Router.registeredRoutes = new Array();
+Nexus.Router.init();
 Nexus.Analytics.EnabledForCommands = true;
 Nexus.Analytics.EnabledForEvents = true;
 Nexus.newId = Nexus.NewGuid;

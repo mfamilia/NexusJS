@@ -11,7 +11,9 @@ require.config({
 // Init App
 require([
 	'Nexus',
-	'app/features/displayingHomepage/commands/displayHomePage',
+
+	// routes
+	'routes',
 	
 	// command handlers
 	'app/features/displayingHomepage/commandHandlers/displayHomePageHandler',
@@ -28,7 +30,9 @@ require([
 	
 ], function(
 	Nexus,
-	DisplayHomePage,
+	
+	// routes
+	routes,
 	
 	// command handlers
 	displayHomePageHandler,
@@ -65,13 +69,13 @@ require([
 		errorRaisedHandler,
 		highlightedHandler,
 		homePageDisplayedBackEndHandler
-	]);	
+	]);
 	
-	// Display main screen
+	// Register routes
+	routes.register();
 
-	Nexus.CommandBus.dispatch(
-		DisplayHomePage.Command(Nexus.newId(), new Date)
-	);	
+	// Display homepage
+	Nexus.Router.route('#home');	
 
 });
 
