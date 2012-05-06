@@ -7,7 +7,7 @@ Examples (WORK IN PROGRESS)
 <dl>
 	<dt>Hello NexusJS</dt>
 	<dd>index.html (example app)</dd>
-	<dd>tests.html (BDD/UI tests)</dd>
+	<dd>tests.html (BDD/UI/Back-End tests)</dd>
 </dl>
 
 How it flows
