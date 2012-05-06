@@ -5,7 +5,7 @@ define([
 
 	return {
 		register: function(){
-			Nexus.Router.registerRoute('#say/hello',[helloScreenDisplayed]);		
+			Nexus.Router.registerRoute('#say/hello',[helloScreenDisplayed.Event()]);
 		}
 	};
 	

@@ -6,8 +6,7 @@ define([
 
 	return {
 		register: function(){
-			Nexus.Router.registerRoute('#ERROR:{msg}',[errorRaised]);
-			Nexus.Router.registerRoute('#highlight/{selector}',[highlighted]);		
+			Nexus.Router.registerRoute('#ERROR:{msg}/highlighted/{selector}',[errorRaised.Event(), highlighted.Event()]);
 		}
 	};
 	

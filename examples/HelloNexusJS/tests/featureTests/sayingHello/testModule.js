@@ -2,17 +2,21 @@ define([
 	'jquery',
 	'Nexus',
 	'tests/featureTests/sayingHello/behaviorTests/shouldSayHelloBehaviorTest',
-	'tests/featureTests/sayingHello/viewTests/shouldDisplayHelloScreenViewTest'
+	'tests/featureTests/sayingHello/viewTests/shouldDisplayHelloScreenViewTest',
+    'tests/featureTests/sayingHello/backendTests/shouldSendHelloToBackend'
+
 ],function(
 	$,
 	Nexus,
 	shouldSayHelloBehaviorTest,
-	shouldDisplayHelloScreenViewTest
+	shouldDisplayHelloScreenViewTest,
+    shouldSendHelloToBackend
 ){
 
 	var tests = [
 		shouldSayHelloBehaviorTest,
-		shouldDisplayHelloScreenViewTest	
+		shouldDisplayHelloScreenViewTest,
+        shouldSendHelloToBackend
 	];
 
 	return new Nexus.TestModule('Saying hello', tests);	

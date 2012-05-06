@@ -12,8 +12,8 @@ define([
 	}
 
 	var expectedPayload = {
-		url: 'http://www.google.com',
-		data: {'key':'value'}
+		url: 'http://192.168.0.134:3000',
+		data: {'text':'Homepage Displayed'}
 		// optionally...
 		//,success: function(data){console.log(data)}
 		//,error: function(){}

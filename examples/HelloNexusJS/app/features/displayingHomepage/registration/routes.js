@@ -5,7 +5,7 @@ define([
 
 	return {
 		register: function(){
-			Nexus.Router.registerRoute('#home',[homePageDisplayed]);		
+			Nexus.Router.registerRoute('#home',[homePageDisplayed.Event()]);
 		}
 	};
 	

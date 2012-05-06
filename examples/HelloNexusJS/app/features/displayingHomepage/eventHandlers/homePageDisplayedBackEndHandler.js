@@ -10,11 +10,11 @@ define([
 		function(evt){											
 			
 			var payload = {
-				url: 'http://www.google.com',
-				data: {'key':'value'}
+				url: 'http://192.168.0.134:3000',
+				data: {'text':'Homepage Displayed'}
 			};
 			
-			Nexus.jsonPOST(payload);			
+			Nexus.jsonPOST(payload);
 		}	
 	);
 	

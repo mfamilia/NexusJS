@@ -7,8 +7,7 @@ define([
 	return new Nexus.EventHandler(
 		'Highlighted event handler',
 		Highlighted.eventName,
-		function(evt){	
-		
+		function(evt){
 			new Nexus.View({
 				onLoad: function(){
 					$(evt.selector).removeClass().addClass('highlighted'); 

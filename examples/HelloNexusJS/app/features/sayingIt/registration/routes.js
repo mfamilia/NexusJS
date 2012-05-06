@@ -5,7 +5,7 @@ define([
 
 	return {
 		register: function(){
-			Nexus.Router.registerRoute('#{text}/has/been/said',[saidIt]);		
+			Nexus.Router.registerRoute('#{text}/has/been/said',[saidIt.Event()]);
 		}
 	};
 	

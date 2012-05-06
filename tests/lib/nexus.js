@@ -10,7 +10,10 @@
 ///// * http://www.gnu.org/copyleft/lesser.html ///
 ///// * Please email me if you are using NexusJS //
 ///////////////////////////////////////////////////
-
+///////////////////////////////////////////////////
+///// WORK IN PROGRESS ////////////////////////////
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
 
 define(function(){
 
@@ -99,7 +102,14 @@ var Nexus = {
 	EventBus: '',
 	newId: 'assign id generator strategy function here',
 	Analytics: {
-		PostToAnalyticsServer: function(msg){},
+        serverUrl: 'http://192.168.0.134:3000/analytics', //TODO: refactor
+        PostToAnalyticsServer: function(data){ //TODO: refactor
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', Nexus.Analytics.serverUrl, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(data));
+        },
+		//PostToAnalyticsServer: function(msg){},
 		EnabledForCommands: false,
 		EnabledForEvents: false,
 		Message: function(msgType, jsonMsg){
@@ -107,12 +117,12 @@ var Nexus = {
 			this.msgType = msgType;
 			this.msgPayload = jsonMsg;
 		},
-		Post: function(msgType, jsonEvent){    		
-			var msg = new Nexus.Analytics.Message(msgType, jsonEvent);
-			Nexus.Analytics.PostToAnalyticsServer(msg);
+		Post: function(jsonEvent){ //TODO: refactor
+			Nexus.Analytics.PostToAnalyticsServer(jsonEvent);
 		}
 	},
 	ajaxOnErrorDefaultCallback: function(jqXHR, textStatus, errorThrown){
+        //console.log("ERROR CALLBACK");
 		/*
 		console.log(jqXHR);
 		console.log(textStatus);
@@ -120,6 +130,7 @@ var Nexus = {
 		*/
 	},
 	ajaxOnSuccessDefaultCallback: function(data, textStatus, jqXHR){
+        //console.log("SUCCESS CALLBACK");
 		/*
 		console.log(data);
 		console.log(textStatus);
@@ -138,7 +149,7 @@ var Nexus = {
 				error: payload.error || Nexus.ajaxOnErrorDefaultCallback
 			});					
 		});						
-	},	
+	},
 	jsonPOST: function(payload){
 		//TODO: rewrite without jquery
 		require(['jquery'], function($) {	
@@ -148,8 +159,8 @@ var Nexus = {
 				data: payload.data,
 				dataType: 'json',
 				contentTypeString: 'application/json',
-				success: payload.success || Nexus.ajaxOnSuccessDefaultCallback,
-				error: payload.error || Nexus.ajaxOnErrorDefaultCallback
+				success:  Nexus.ajaxOnSuccessDefaultCallback,
+				error:  Nexus.ajaxOnErrorDefaultCallback
 			});					
 		});					
 	},
@@ -180,7 +191,7 @@ var Nexus = {
 				error: payload.error || Nexus.ajaxOnErrorDefaultCallback
 			});					
 		});						
-	}	
+	}
 };
 
 /////////////////////////////////////////////////////
@@ -256,7 +267,7 @@ Nexus.Interfaces.Array = {
 	splice: function(){},
 	toString: function(){},
 	unshift: function(){},
-	valueOf: function(){},
+	valueOf: function(){}
 };
 
 Nexus.Interfaces.DB = {
@@ -1045,8 +1056,14 @@ Nexus.CreateCommandBus = function(arr){
 		
 		self.dispatch = function(command){
 			// Analytics
-			if (Nexus.Analytics.EnabledForCommands && !Nexus.Aggregate.isRehydrating ){  
-				Nexus.Analytics.Post('COMMAND', JSON.stringify(command));
+			if (Nexus.Analytics.EnabledForCommands && !Nexus.Aggregate.isRehydrating ){
+                var behavior = {
+                    sessionId: '123',
+                    clientTimeStamp: new Date,
+                    payloadType: 'COMMAND',
+                    payload: command
+                };
+				Nexus.Analytics.Post(behavior);
 			}	
 			
 			var cmdHandlersCount = self.commandHandlers.count();
@@ -1133,14 +1150,19 @@ Nexus.CreateEventBus = function(eventStore, arr){
 
 		self.publish = function(evt){
 			// Analytics
-			if (Nexus.Analytics.EnabledForEvents && !Nexus.Aggregate.isRehydrating ){  
-				Nexus.Analytics.Post('EVENT', JSON.stringify(evt));
+			if (Nexus.Analytics.EnabledForEvents && !Nexus.Aggregate.isRehydrating ){
+                var behavior = {
+                    sessionId: '123',
+                    clientTimeStamp: new Date,
+                    payloadType: 'EVENT',
+                    payload: evt
+                };
+                Nexus.Analytics.Post(behavior);
 			}
 
 			self.eventStore.saveEvent(evt);
-		
-			// Routing
-            		Nexus.Router.mapToRoute(evt);
+            // Routing
+            Nexus.Router.mapToRoute(evt);
 			
 			var evtHandlersCount = self.eventHandlers.count();
 
@@ -1345,7 +1367,7 @@ Nexus.TestHelper = {
 		+ '<div class="nexus-test-failed-actual-header">ACTUALLY HANDLES: </div>'
 		+ '<div class="nexus-test-failed-actual-events">' + actualEventItHandles + '</div>'
 		+ '</div>';	
-	},	
+	}
 };
 
 /////////////////////////////////////////////////////
@@ -1862,6 +1884,7 @@ Nexus.BackendTest = function(name, waitTime){
 };
 
 
+
 /////////////////////////////////////////////////////
 ///////// ROUTER ////////////////////////////////////
 /////////////////////////////////////////////////////
@@ -1915,7 +1938,9 @@ Nexus.Router = {
             var evt = registeredRoute.events[j];
             for (var k=0; k<routeValues.length; k++){
                 var routeValue = routeValues[k];
-                evt[routeValue.eventField] = routeValue.data;
+                if(evt.hasOwnProperty(routeValue.eventField)){
+                    evt[routeValue.eventField] = routeValue.data;
+                }
             }
             evt.__origin__ = "ROUTER";
             Nexus.EventBus.publish(evt);
@@ -1975,7 +2000,9 @@ Nexus.Router = {
             var routeVariable = routeName.substring(leftBracket + 1, rightBracket);
             var replaceWith = 'ERROR:NOT-FOUND';
             for(var i=0; i<events.length; i++){
-                replaceWith = events[i][routeVariable];
+                if (events[i][routeVariable]){
+                    replaceWith = events[i][routeVariable];
+                }
             }
             var newRoute = routeName.replace('{' + routeVariable + '}', '[' + replaceWith + ']');
 
@@ -2016,6 +2043,9 @@ Nexus.Router = {
     }
 };
 
+//TODO: refactor so handleOneOrMany routes
+//TODO: put [ ] and { } into variables
+//TODO: match routes so to get rid of [ ] (low priority)
 
 /////////////////////////////////////////////////////
 ///////// DEFAULT INIT //////////////////////////////
