@@ -1922,6 +1922,12 @@ Nexus.ResolveRouteTest = function(name, waitTime){
 	fixture.assertNumberOfEvents = function(){
 		fixture.errors += Nexus.TestHelper.assert(fixture.expectedEvents.length, fixture.actualEvents.length, 'Number of events');
 	};	
+	
+	fixture.assertCorrectActualEvents = function(){
+		var expectedEventsAsString = Nexus.Util.serialize(fixture.expectedEvents);
+		var actualEventsAsString = Nexus.Util.serialize(fixture.actualEvents).replace(/, __origin__:"ROUTER"/g,'');
+		fixture.errors += Nexus.TestHelper.assert(expectedEventsAsString, actualEventsAsString, 'Published vents');
+	};
 
 	fixture._nextTest = {
 		Run: function(moduleId){
@@ -1949,7 +1955,8 @@ Nexus.ResolveRouteTest = function(name, waitTime){
 			
 																		
 			// assert
-			fixture.assertNumberOfEvents();				
+			fixture.assertNumberOfEvents();	
+			fixture.assertCorrectActualEvents();
 			Nexus.TestHelper.renderAsserts(moduleId, fixture.name, fixture.errors);	
 			
 			// tear down
