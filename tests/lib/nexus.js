@@ -1368,7 +1368,18 @@ Nexus.TestHelper = {
 		+ '<div class="nexus-test-failed-actual-header">ACTUALLY HANDLES: </div>'
 		+ '<div class="nexus-test-failed-actual-events">' + actualEventItHandles + '</div>'
 		+ '</div>';	
-	}
+	},
+	assert: function(expected, actual, whatAreYouTesting){
+		var errors = '';
+		if (expected && !actual){
+			errors += Nexus.TestHelper.getNoActualErrorMessage(expected, whatAreYouTesting);
+		}else if(!expected && actual){
+			errors += Nexus.TestHelper.getUnexpectedErrorMessage(actual, whatAreYouTesting);						
+		}else if (expected && actual && expected != actual){
+			errors += Nexus.TestHelper.getExpectedActualErrorMessage(expected, actual, whatAreYouTesting);												
+		}	
+		return errors;
+	}	
 };
 
 /////////////////////////////////////////////////////
@@ -1661,17 +1672,11 @@ Nexus.ViewTest = function(name, waitTime){
 		}		
 		return fixture;
 	};
-	
+
 	fixture.assert = function(expected, actual, whatAreYouTesting){
-		if (expected && !actual){
-			fixture.errors += Nexus.TestHelper.getNoActualErrorMessage(expected, whatAreYouTesting);
-		}else if(!expected && actual){
-			fixture.errors += Nexus.TestHelper.getUnexpectedErrorMessage(actual, whatAreYouTesting);						
-		}else if (expected && actual && expected != actual){
-			fixture.errors += Nexus.TestHelper.getExpectedActualErrorMessage(expected, actual, whatAreYouTesting);												
-		}		
+		fixture.errors += Nexus.TestHelper.assert(expected, actual, whatAreYouTesting);	
 	};	
-		
+	
 	fixture.assertView = function(){
 		fixture.assert(fixture.expectedData, fixture.actualData, 'Data');
 		fixture.assert(fixture.expectedPlaceholder, fixture.actualPlaceholder, 'Placeholder');		
@@ -1815,13 +1820,7 @@ Nexus.BackendTest = function(name, waitTime){
 	};
 	
 	fixture.assert = function(expected, actual, whatAreYouTesting){
-		if (expected && !actual){
-			fixture.errors += Nexus.TestHelper.getNoActualErrorMessage(expected, whatAreYouTesting);
-		}else if(!expected && actual){
-			fixture.errors += Nexus.TestHelper.getUnexpectedErrorMessage(actual, whatAreYouTesting);						
-		}else if (expected && actual && expected != actual){
-			fixture.errors += Nexus.TestHelper.getExpectedActualErrorMessage(expected, actual, whatAreYouTesting);												
-		}		
+		fixture.errors += Nexus.TestHelper.assert(expected, actual, whatAreYouTesting);			
 	};	
 		
 	fixture.assertPayload = function(){
@@ -1919,20 +1918,9 @@ Nexus.ResolveRouteTest = function(name, waitTime){
 	fixture._afterTest = function(){
 		Nexus.EventBus = fixture.BACKUP.EVENT_BUS;
 	};
-
-
-	fixture.assert = function(expected, actual, whatAreYouTesting){
-		if (expected && !actual){
-			fixture.errors += Nexus.TestHelper.getNoActualErrorMessage(expected, whatAreYouTesting);
-		}else if(!expected && actual){
-			fixture.errors += Nexus.TestHelper.getUnexpectedErrorMessage(actual, whatAreYouTesting);						
-		}else if (expected && actual && expected != actual){
-			fixture.errors += Nexus.TestHelper.getExpectedActualErrorMessage(expected, actual, whatAreYouTesting);												
-		}		
-	};	
 		
 	fixture.assertNumberOfEvents = function(){
-		fixture.assert(fixture.expectedEvents.length, fixture.actualEvents.length, 'Number of events');
+		fixture.errors += Nexus.TestHelper.assert(fixture.expectedEvents.length, fixture.actualEvents.length, 'Number of events');
 	};	
 
 	fixture._nextTest = {
