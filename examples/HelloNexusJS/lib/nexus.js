@@ -1886,7 +1886,6 @@ Nexus.BackendTest = function(name, waitTime){
 /////////////////////////////////////////////////////
 ///////// RESOLVE ROUTE TEST ////////////////////////
 /////////////////////////////////////////////////////
-
 Nexus.ResolveRouteTest = function(name, waitTime){
 	var fixture = this;
 	fixture.name = name;
@@ -1938,29 +1937,36 @@ Nexus.ResolveRouteTest = function(name, waitTime){
 	fixture.Run = function(moduleId){
 		setTimeout(function(){		
 
-			// setup
-/*
-			if (!fixture.givenRoute){
-				throw 'Route not given';
-			}
-			if (!Nexus.Util.isArray(fixture.expectedEvents)){
-				throw 'Expected events are not an array';
-			}.
 
-*/	
-			fixture._beforeTest();	
 			
-			// act				
-			Nexus.Router.route(fixture.givenRoute);
+
+			if (!fixture.givenRoute){
+				fixture.errors += Nexus.TestHelper.assert('GivenRoute(...)', 'not specified', 'Given Route');
+			}else{
+
+//TODO: allow one or many events to be passed
+	/*
+				if (fixture.expectedEvents && !Nexus.Util.isArray(fixture.expectedEvents)){
+					fixture.errors += Nexus.TestHelper.assert('Event Array', '???', 'Event Array');
+				}.
+	*/
+
+				fixture._beforeTest();	
+
+				// act				
+				Nexus.Router.route(fixture.givenRoute);
+
+
+				// assert
+				fixture.assertNumberOfEvents();	
+				fixture.assertCorrectActualEvents();
+				
+
+				// tear down
+				fixture._afterTest();
+			}
 			
-																		
-			// assert
-			fixture.assertNumberOfEvents();	
-			fixture.assertCorrectActualEvents();
 			Nexus.TestHelper.renderAsserts(moduleId, fixture.name, fixture.errors);	
-			
-			// tear down
-			fixture._afterTest();
 			
 			// next test in module																		
 			fixture._nextTest.Run(moduleId);
