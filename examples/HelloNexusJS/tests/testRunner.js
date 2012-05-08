@@ -2,6 +2,7 @@ require([
 	'jquery',
 	'Nexus',	
 	'tests/sharedTests/viewTests/testModule',
+	'tests/sharedTests/routeTests/testModule',
 	'tests/featureTests/displayingHomepage/testModule',
 	'tests/featureTests/sayingHello/testModule',
 	'tests/featureTests/sayingIt/testModule'
@@ -9,6 +10,7 @@ require([
 	$,
 	Nexus,
 	sharedViewTestsTestModule,
+	sharedRouteTestsTestModule,
 	displayingHomepageTestModule,
 	sayingHelloTestModule,
 	sayingItTestModule
@@ -16,6 +18,7 @@ require([
 
 	var testModules = [
 		sharedViewTestsTestModule,
+		sharedRouteTestsTestModule,
 		displayingHomepageTestModule,
 		sayingHelloTestModule,
 		sayingItTestModule

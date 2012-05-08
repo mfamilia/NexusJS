@@ -1161,8 +1161,9 @@ Nexus.CreateEventBus = function(eventStore, arr){
 			}
 
 			self.eventStore.saveEvent(evt);
-            // Routing
-            Nexus.Router.mapToRoute(evt);
+			
+            		// Routing
+            		Nexus.Router.mapToRoute(evt);
 			
 			var evtHandlersCount = self.eventHandlers.count();
 
@@ -1883,7 +1884,96 @@ Nexus.BackendTest = function(name, waitTime){
 						
 };
 
+/////////////////////////////////////////////////////
+///////// RESOLVE ROUTE TEST ////////////////////////
+/////////////////////////////////////////////////////
 
+Nexus.ResolveRouteTest = function(name, waitTime){
+	var fixture = this;
+	fixture.name = name;
+	fixture.errors = '';
+	fixture.waitTime = waitTime || 0;	
+	fixture.actualEvents = new Array();
+	
+	fixture.GivenRoute = function(route){
+		fixture.givenRoute = route;
+		return fixture;
+	};
+	
+	fixture.ExpectEvents = function(events){
+		fixture.expectedEvents = events;
+		return fixture;
+	};
+
+	fixture._beforeTest = function(){
+		fixture.BACKUP = {
+			EVENT_BUS: Nexus.EventBus
+		};		
+		Nexus.EventBus = {
+			publish: function(evt){
+				fixture.actualEvents.push(evt);
+			}
+		}
+	};
+
+	fixture._afterTest = function(){
+		Nexus.EventBus = fixture.BACKUP.EVENT_BUS;
+	};
+
+
+	fixture.assert = function(expected, actual, whatAreYouTesting){
+		if (expected && !actual){
+			fixture.errors += Nexus.TestHelper.getNoActualErrorMessage(expected, whatAreYouTesting);
+		}else if(!expected && actual){
+			fixture.errors += Nexus.TestHelper.getUnexpectedErrorMessage(actual, whatAreYouTesting);						
+		}else if (expected && actual && expected != actual){
+			fixture.errors += Nexus.TestHelper.getExpectedActualErrorMessage(expected, actual, whatAreYouTesting);												
+		}		
+	};	
+		
+	fixture.assertNumberOfEvents = function(){
+		fixture.assert(fixture.expectedEvents.length, fixture.actualEvents.length, 'Number of events');
+	};	
+
+	fixture._nextTest = {
+		Run: function(moduleId){
+			Nexus.TestHelper.appendDoneToModule(moduleId);		
+		}
+	};	
+
+	fixture.Run = function(moduleId){
+		setTimeout(function(){		
+
+			// setup
+/*
+			if (!fixture.givenRoute){
+				throw 'Route not given';
+			}
+			if (!Nexus.Util.isArray(fixture.expectedEvents)){
+				throw 'Expected events are not an array';
+			}.
+
+*/	
+			fixture._beforeTest();	
+			
+			// act				
+			Nexus.Router.route(fixture.givenRoute);
+			
+																		
+			// assert
+			fixture.assertNumberOfEvents();				
+			Nexus.TestHelper.renderAsserts(moduleId, fixture.name, fixture.errors);	
+			
+			// tear down
+			fixture._afterTest();
+			
+			// next test in module																		
+			fixture._nextTest.Run(moduleId);
+		
+		},fixture.waitTime); 
+	};		
+	
+};
 
 /////////////////////////////////////////////////////
 ///////// ROUTER ////////////////////////////////////
