@@ -1,7 +1,7 @@
 define([
     "Nexus",
-    'app/shared/eventHandlers/errorRaisedHandler',
-    'app/shared/eventHandlers/highlightedHandler'
+    'app/shared/behavior/eventHandlers/errorRaisedHandler',
+    'app/shared/behavior/eventHandlers/highlightedHandler'
 ], function (
     Nexus,
     errorRaisedHandler,

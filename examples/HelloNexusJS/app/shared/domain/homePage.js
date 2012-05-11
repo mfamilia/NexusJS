@@ -7,8 +7,8 @@ define([
 	"app/features/displayingHomepage/behavior/events/homePageDisplayed",
 	'app/features/sayingIt/events/saidIt',
 	'app/features/sayingHello/events/helloScreenDisplayed',
-	'app/shared/events/errorRaised',
-	'app/shared/events/highlighted'
+	'app/shared/behavior/events/errorRaised',
+	'app/shared/behavior/events/highlighted'
 
 ], function (
 	Nexus, 

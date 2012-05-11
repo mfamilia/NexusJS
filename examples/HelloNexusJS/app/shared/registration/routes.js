@@ -1,7 +1,7 @@
 define([
 	"Nexus",
-	"app/shared/events/errorRaised",
-	"app/shared/events/highlighted"
+	"app/shared/behavior/events/errorRaised",
+	"app/shared/behavior/events/highlighted"
 ], function (Nexus, errorRaised, highlighted) {
 
 	return {
