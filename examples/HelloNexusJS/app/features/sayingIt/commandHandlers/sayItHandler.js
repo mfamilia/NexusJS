@@ -1,7 +1,7 @@
 define([
 	"Nexus",
 	"app/features/sayingIt/commands/sayIt",
-	"app/shared/domain/homePage"	
+	"app/shared/businessLogic/domain/homePage"	
 ], function (Nexus, SayIt, HomePage) {
 
 	return new Nexus.CommandHandler(

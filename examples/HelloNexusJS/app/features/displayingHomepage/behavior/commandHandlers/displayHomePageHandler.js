@@ -1,7 +1,7 @@
 define([
 	"Nexus",
 	"app/features/displayingHomepage/behavior/commands/displayHomePage",
-	"app/shared/domain/homePage"	
+	"app/shared/businessLogic/domain/homePage"	
 ], function (Nexus, DisplayHomePage, HomePage) {
 
 	return new Nexus.CommandHandler(
