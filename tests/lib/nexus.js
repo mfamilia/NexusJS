@@ -1936,10 +1936,6 @@ Nexus.ResolveRouteTest = function(name, waitTime){
 
 	fixture.Run = function(moduleId){
 		setTimeout(function(){		
-
-
-			
-
 			if (!fixture.givenRoute){
 				fixture.errors += Nexus.TestHelper.assert('GivenRoute(...)', 'not specified', 'Given Route');
 			}else{
@@ -1975,6 +1971,66 @@ Nexus.ResolveRouteTest = function(name, waitTime){
 	};		
 	
 };
+
+/////////////////////////////////////////////////////
+///////// GENERATE ROUTE TEST ///////////////////////
+/////////////////////////////////////////////////////
+Nexus.GenerateRouteTest = function(name, waitTime){
+	var fixture = this;
+	fixture.name = name;
+	fixture.errors = '';
+	fixture.waitTime = waitTime || 0;	
+	fixture.actualRoute = '';
+	
+	fixture.ExpectRoute = function(route){
+		fixture.expectedRoute = route;
+		return fixture;
+	};
+	
+	fixture.GivenEvents = function(events){
+		fixture.givenEvents = events;
+		return fixture;
+	};
+
+	fixture.assertRoute = function(){
+		fixture.errors += Nexus.TestHelper.assert
+		(
+			fixture.expectedRoute, 
+			Nexus.Router.replaceRouteVariables
+				(
+					Nexus.Router.matchRoute(fixture.givenEvents),
+					fixture.givenEvents
+				)
+		, 'Generated route'
+		);	
+	};
+
+	fixture._nextTest = {
+		Run: function(moduleId){
+			Nexus.TestHelper.appendDoneToModule(moduleId);		
+		}
+	};	
+
+	fixture.Run = function(moduleId){
+		setTimeout(function(){	
+		
+			// act				
+			fixture._publishGivenEvents
+
+			// assert
+			fixture.assertRoute();	
+			
+			// render asserts
+			Nexus.TestHelper.renderAsserts(moduleId, fixture.name, fixture.errors);	
+			
+			// next test in module																		
+			fixture._nextTest.Run(moduleId);
+		
+		},fixture.waitTime); 
+	};		
+	
+};
+
 
 /////////////////////////////////////////////////////
 ///////// ROUTER ////////////////////////////////////
