@@ -2,7 +2,7 @@ define([
 	'jquery',
 	'Nexus',
 	"app/features/displayingHomepage/behavior/events/homePageDisplayed",
-	'app/features/sayingHello/commands/sayHello',
+	'app/features/sayingHello/behavior/commands/sayHello',
 	'app/features/sayingIt/commands/sayIt'
 ], function ($, Nexus, HomePageDisplayed, SayHello, SayIt) {
 	

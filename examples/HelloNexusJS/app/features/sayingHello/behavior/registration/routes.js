@@ -1,6 +1,6 @@
 define([
 	"Nexus",
-	'app/features/sayingHello/events/helloScreenDisplayed'
+	'app/features/sayingHello/behavior/events/helloScreenDisplayed'
 ], function (Nexus, helloScreenDisplayed) {
 
 	return {

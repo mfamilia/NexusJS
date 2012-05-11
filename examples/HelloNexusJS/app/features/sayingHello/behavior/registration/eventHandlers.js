@@ -1,7 +1,7 @@
 define([
     "Nexus",
-    'app/features/sayingHello/eventHandlers/helloScreenDisplayedHandler',
-    'app/features/sayingHello/eventHandlers/helloSentToBackendEventHandler'
+    'app/features/sayingHello/behavior/eventHandlers/helloScreenDisplayedHandler',
+    'app/features/sayingHello/behavior/eventHandlers/helloSentToBackendEventHandler'
 ], function (
     Nexus,
     helloScreenDisplayedHandler,

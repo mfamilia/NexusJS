@@ -1,6 +1,6 @@
 define([
     "Nexus",
-    'app/features/sayingHello/commandHandlers/sayHelloHandler'
+    'app/features/sayingHello/behavior/commandHandlers/sayHelloHandler'
 ], function (
     Nexus,
     sayHelloHandler

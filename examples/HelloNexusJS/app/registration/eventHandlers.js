@@ -1,7 +1,7 @@
 define([
     'app/shared/behavior/registration/eventHandlers',
     'app/features/displayingHomepage/behavior/registration/eventHandlers',
-    'app/features/sayingHello/registration/eventHandlers',
+    'app/features/sayingHello/behavior/registration/eventHandlers',
     'app/features/sayingIt/registration/eventHandlers'
 ], function (
     sharedEventHandlers,

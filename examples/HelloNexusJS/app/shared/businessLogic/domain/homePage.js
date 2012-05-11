@@ -6,7 +6,7 @@ define([
 			
 	"app/features/displayingHomepage/behavior/events/homePageDisplayed",
 	'app/features/sayingIt/events/saidIt',
-	'app/features/sayingHello/events/helloScreenDisplayed',
+	'app/features/sayingHello/behavior/events/helloScreenDisplayed',
 	'app/shared/behavior/events/errorRaised',
 	'app/shared/behavior/events/highlighted'
 
