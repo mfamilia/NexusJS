@@ -1,7 +1,7 @@
 define([
 	'jquery',
 	"Nexus",
-	'app/shared/eventHandlers/highlightedHandler'
+	'app/shared/behavior/eventHandlers/highlightedHandler'
 ], function ($, Nexus, highlightedHandler) {
 	
 	var highlightedEvent = {

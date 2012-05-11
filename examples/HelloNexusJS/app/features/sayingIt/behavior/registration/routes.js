@@ -1,6 +1,6 @@
 define([
 	"Nexus",
-	'app/features/sayingIt/events/saidIt'
+	'app/features/sayingIt/behavior/events/saidIt'
 ], function (Nexus, saidIt) {
 
 	return {

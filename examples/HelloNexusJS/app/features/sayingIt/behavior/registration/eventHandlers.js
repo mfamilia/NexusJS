@@ -1,6 +1,6 @@
 define([
     "Nexus",
-    'app/features/sayingIt/eventHandlers/saidItHandler'
+    'app/features/sayingIt/behavior/eventHandlers/saidItHandler'
 ], function (
     Nexus,
     saidItHandler

@@ -3,7 +3,7 @@ define([
 	"app/shared/behavior/registration/routes",
 	'app/features/displayingHomepage/behavior/registration/routes',
 	'app/features/sayingHello/behavior/registration/routes',
-	'app/features/sayingIt/registration/routes'
+	'app/features/sayingIt/behavior/registration/routes'
 ], function (
 	Nexus,
 	sharedRoutes,

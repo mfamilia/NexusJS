@@ -5,7 +5,7 @@ define([
 	'app/shared/businessLogic/validators/requiredValidator',
 			
 	"app/features/displayingHomepage/behavior/events/homePageDisplayed",
-	'app/features/sayingIt/events/saidIt',
+	'app/features/sayingIt/behavior/events/saidIt',
 	'app/features/sayingHello/behavior/events/helloScreenDisplayed',
 	'app/shared/behavior/events/errorRaised',
 	'app/shared/behavior/events/highlighted'

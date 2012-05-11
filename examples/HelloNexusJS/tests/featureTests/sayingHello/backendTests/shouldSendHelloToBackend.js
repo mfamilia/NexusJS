@@ -1,7 +1,7 @@
 define([
     'jquery',
     "Nexus",
-    'app/features/sayingHello/eventHandlers/helloSentToBackendEventHandler'
+    'app/features/sayingHello/behavior/eventHandlers/helloSentToBackendEventHandler'
 ], function ($, Nexus, helloSentToBackendEventHandler) {
 
 

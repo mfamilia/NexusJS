@@ -3,7 +3,7 @@ define([
 	'Nexus',
 	"app/features/displayingHomepage/behavior/events/homePageDisplayed",
 	'app/features/sayingHello/behavior/commands/sayHello',
-	'app/features/sayingIt/commands/sayIt'
+	'app/features/sayingIt/behavior/commands/sayIt'
 ], function ($, Nexus, HomePageDisplayed, SayHello, SayIt) {
 	
 	return new Nexus.EventHandler(

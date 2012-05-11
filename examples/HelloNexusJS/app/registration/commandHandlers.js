@@ -1,7 +1,7 @@
 define([
     'app/features/displayingHomepage/behavior/registration/commandHandlers',
     'app/features/sayingHello/behavior/registration/commandHandlers',
-    'app/features/sayingIt/registration/commandHandlers'
+    'app/features/sayingIt/behavior/registration/commandHandlers'
 ], function (
     displayingHomepageCommandHandlers,
     sayingHelloCommandHandlers,

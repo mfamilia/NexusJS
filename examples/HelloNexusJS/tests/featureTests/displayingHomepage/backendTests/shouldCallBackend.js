@@ -1,7 +1,7 @@
 define([
 	'jquery',
 	"Nexus",
-	'app/features/displayingHomepage/eventHandlers/homePageDisplayedBackEndHandler'
+	'app/features/displayingHomepage/behavior/eventHandlers/homePageDisplayedBackEndHandler'
 ], function ($, Nexus, homePageDisplayedBackEndHandler) {
 
 

@@ -1,7 +1,7 @@
 define([
 	'jquery',
 	"Nexus",
-	'app/shared/eventHandlers/errorRaisedHandler'
+	'app/shared/behavior/eventHandlers/errorRaisedHandler'
 ], function ($, Nexus, errorRaisedHandler) {
 	
 	var errorRaisedEvent = {
@@ -10,7 +10,7 @@ define([
 	};
 	
 	var expectedView = {
-		template: 'app/shared/templates/errorTemplate.html',
+		template: 'app/shared/ui/templates/errorTemplate.html',
 		placeholder: '#output',
 		data: errorRaisedEvent			
 	};

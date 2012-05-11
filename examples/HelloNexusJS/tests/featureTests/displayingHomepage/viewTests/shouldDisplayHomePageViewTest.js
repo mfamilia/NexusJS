@@ -1,14 +1,14 @@
 define([
 	'jquery',
 	"Nexus",
-	'app/features/displayingHomepage/eventHandlers/homePageDisplayedHandler',
-	'app/features/sayingHello/commands/sayHello',
-	'app/features/sayingIt/commands/sayIt'
+	'app/features/displayingHomepage/behavior/eventHandlers/homePageDisplayedHandler',
+	'app/features/sayingHello/behavior/commands/sayHello',
+	'app/features/sayingIt/behavior/commands/sayIt'
 ], function ($, Nexus, homePageDisplayedHandler, SayHello, SayIt) {
 
 
 	var expectedView = {
-		template: 'app/features/displayingHomepage/templates/homePageTemplate.html', // template to be rendered
+		template: 'app/features/displayingHomepage/ui/templates/homePageTemplate.html', // template to be rendered
 		placeholder: '#body', // where should it be rendered
 		onLoad: // what should execute on view load
 		function(){
