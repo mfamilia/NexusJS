@@ -1,7 +1,7 @@
 define([
 	"Nexus",
 	"app/shared/registration/routes",
-	'app/features/displayingHomepage/registration/routes',
+	'app/features/displayingHomepage/behavior/registration/routes',
 	'app/features/sayingHello/registration/routes',
 	'app/features/sayingIt/registration/routes'
 ], function (

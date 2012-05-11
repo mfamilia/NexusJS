@@ -1,5 +1,5 @@
 define([
-    'app/features/displayingHomepage/registration/commandHandlers',
+    'app/features/displayingHomepage/behavior/registration/commandHandlers',
     'app/features/sayingHello/registration/commandHandlers',
     'app/features/sayingIt/registration/commandHandlers'
 ], function (
