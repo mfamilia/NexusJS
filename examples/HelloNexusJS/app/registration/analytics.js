@@ -5,7 +5,7 @@ define([
     ) {
 
     return {
-        register: function(){
+        register: function(){        
             // set up what to do with analytics
             Nexus.Analytics.PostToAnalyticsServer = function(msg){
                 // will just log to console for now

@@ -222,12 +222,21 @@ Nexus.Interfaces.EventHandler = {
 	handle: function() {}
 };
 
+Nexus.Interfaces.GlobalEventHandler = {
+	name: '',
+	handle: function() {}
+};
+
 Nexus.Interfaces.CommandHandler = {
 	name: '',
 	handlesCommand: '',
 	handle: function() {}
 };
 
+Nexus.Interfaces.GlobalCommandHandler = {
+	name: '',
+	handle: function() {}
+};
 
 Nexus.Interfaces.AnalyticsEnabledEvent = {
 	sentToAnalyticsService: false,
@@ -1043,39 +1052,71 @@ Nexus.CommandHandler = function(commandHandlerName, commandNameToHandle, handleM
 };	
 
 /////////////////////////////////////////////////////
+///////// GLOBAL COMMAND HANDLER ////////////////////
+/////////////////////////////////////////////////////
+Nexus.GlobalCommandHandler = function(name, handleMethod){
+	this.name = name;
+	this.handle = handleMethod;							
+};	
+
+/////////////////////////////////////////////////////
 ///////// COMMAND BUS [CREATE] //////////////////////
 /////////////////////////////////////////////////////
-Nexus.CreateCommandBus = function(arr){
+Nexus.CreateCommandBus = function(arr, globalArr){
 	if (!Nexus.Interfaces.CheckIfImplements(arr, Nexus.Interfaces.ArrayList)){
 		throw 'Nexus.CreateCommandBus "arr" parameter must implement Nexus.Interfaces.ArrayList interface';
 	}
+	if (!Nexus.Interfaces.CheckIfImplements(globalArr, Nexus.Interfaces.ArrayList)){
+		throw 'Nexus.CreateCommandBus "globalArr" parameter must implement Nexus.Interfaces.ArrayList interface';
+	}
+
 	
-	var CommandBus = function(arr){
+	var CommandBus = function(arr, globalArr){
 		var self = this;
 		self.commandHandlers = arr;
+		self.globalCommandHandlers = globalArr;
 		
-		self.dispatch = function(command){
-			// Analytics
-			if (Nexus.Analytics.EnabledForCommands && !Nexus.Aggregate.isRehydrating ){
-                var behavior = {
-                    sessionId: '123',
-                    clientTimeStamp: new Date,
-                    payloadType: 'COMMAND',
-                    payload: command
-                };
-				Nexus.Analytics.Post(behavior);
-			}	
-			
+		self.dispatch = function(command){			
 			var cmdHandlersCount = self.commandHandlers.count();
 			
 			for( var i = 0; i < cmdHandlersCount; i++ ){
 				var commandHandler = self.commandHandlers.getAt(i);
 				if (commandHandler.handlesCommand == command.commandName){
 					commandHandler.handle(command);
+					self.handleGlobalCommand(command);
 					return;
 				}
+			}		
+			self.handleGlobalCommand(command);
+		};
+			
+		self.handleGlobalCommand = function(command){
+			var globalCommandHandlersCount = self.globalCommandHandlers.count();
+			
+			for( var i = 0; i < globalCommandHandlersCount; i++ ){
+				var globalCommandHandler = self.globalCommandHandlers.getAt(i);
+				globalCommandHandler.handle(command);
+				return;
 			}			
 		};
+	
+		self.registerGlobalCommandHandler = function(globalCommandHandler){
+			if (!Nexus.Interfaces.CheckIfImplements(globalCommandHandler, Nexus.Interfaces.GlobalCommandHandler)){
+				throw 'Invalid CommandHandler (' + globalCommandHandler.name + '). CommandHandler must implement (Nexus.Interfaces.GlobalCommandHandler) interface';
+			}
+
+			var alreadyRegistered = false;
+			
+			self.globalCommandHandlers.getAll().map(function(registeredGlobalCommandHandler){
+				if(globalCommandHandler.name == registeredGlobalCommandHandler.name){
+					alreadyRegistered = true;
+				}
+			});			
+
+			if (!alreadyRegistered){
+				self.globalCommandHandlers.add(globalCommandHandler);	
+			}
+		};		
 		
 		self.registerCommandHandler = function(commandHandler){
 			if (!Nexus.Interfaces.CheckIfImplements(commandHandler, Nexus.Interfaces.CommandHandler)){
@@ -1104,9 +1145,9 @@ Nexus.CreateCommandBus = function(arr){
 				self.registerCommandHandler(commandHandler);
 			});	
 		};		
-	};
+	};	
 	
-	return new CommandBus(arr);
+	return new CommandBus(arr, globalArr);
 	
 };	
 
@@ -1114,14 +1155,20 @@ Nexus.CreateCommandBus = function(arr){
 ///////// COMMAND BUS [SIMPLE] //////////////////////
 /////////////////////////////////////////////////////
 Nexus.CreateSimpleCommandBus = function(){
-	return new Nexus.CreateCommandBus(new Nexus.CreateSimpleArrayList());
+	return new Nexus.CreateCommandBus(
+		new Nexus.CreateSimpleArrayList(), 
+		new Nexus.CreateSimpleArrayList()
+	);
 };	
 
 /////////////////////////////////////////////////////
 ///////// COMMAND BUS [LOCAL STORAGE]//////////////////
 /////////////////////////////////////////////////////
-Nexus.CreateLocalStorageCommandBus = function(localStorageKey){
-	return new Nexus.CreateCommandBus(new Nexus.CreateLocalStorageArrayList(localStorageKey))
+Nexus.CreateLocalStorageCommandBus = function(localStorageKeyForCommandHandlers, localStorageKeyForGlobalCommandHandlers){
+	return new Nexus.CreateCommandBus(
+		new Nexus.CreateLocalStorageArrayList(localStorageKeyForCommandHandlers), 
+		new Nexus.CreateLocalStorageArrayList(localStorageKeyForGlobalCommandHandlers)
+	);
 };
 
 /////////////////////////////////////////////////////
@@ -1134,37 +1181,27 @@ Nexus.EventHandler = function(eventHandlerName, eventNameToHandle, handleMethod)
 };	
 
 /////////////////////////////////////////////////////
+///////// GLOBAL EVENT HANDLER //////////////////////
+/////////////////////////////////////////////////////
+Nexus.GlobalEventHandler = function(name, handleMethod){
+	this.name = name;
+	this.handle = handleMethod;							
+};
+
+/////////////////////////////////////////////////////
 ///////// EVENT BUS [CREATE] ////////////////////////
 /////////////////////////////////////////////////////
-Nexus.CreateEventBus = function(eventStore, arr){
+Nexus.CreateEventBus = function(arr, arrGlobal){
 	if (!Nexus.Interfaces.CheckIfImplements(arr, Nexus.Interfaces.ArrayList)){
 		throw 'Nexus.CreateEventBus "arr" parameter must implement Nexus.Interfaces.ArrayList interface';
 	}	
 
-	var EventBus = function(eventStore, arr){
-		//TODO: check eventStore to satisfy interface
+	var EventBus = function(arr, arrGlobal){
 		var self = this;
-		self.eventStore = eventStore;
 		self.eventHandlers = arr;
-		self.eventStore.setEventBus(self);
+		self.globalEventHandlers = arrGlobal;
 
 		self.publish = function(evt){
-			// Analytics
-			if (Nexus.Analytics.EnabledForEvents && !Nexus.Aggregate.isRehydrating ){
-                var behavior = {
-                    sessionId: '123',
-                    clientTimeStamp: new Date,
-                    payloadType: 'EVENT',
-                    payload: evt
-                };
-                Nexus.Analytics.Post(behavior);
-			}
-
-			self.eventStore.saveEvent(evt);
-			
-            		// Routing
-            		Nexus.Router.mapToRoute(evt);
-			
 			var evtHandlersCount = self.eventHandlers.count();
 
 			for(var i = 0; i < evtHandlersCount; i++){
@@ -1174,7 +1211,34 @@ Nexus.CreateEventBus = function(eventStore, arr){
 						eventHandler.handle(evt);
 					}
 				}
+			}
+			
+			var globalEventHandlersCount = self.globalEventHandlers.count();
+			
+			for(var i = 0; i < globalEventHandlersCount; i++){
+				var globalEventHandler = self.globalEventHandlers.getAt(i);
+				if (!Nexus.Aggregate.isRehydrating){   
+					globalEventHandler.handle(evt);
+				}
 			}			
+		};
+		
+		self.registerGlobalEventHandler = function(globalEventHandler){
+			if (!Nexus.Interfaces.CheckIfImplements(globalEventHandler, Nexus.Interfaces.GlobalEventHandler)){
+				throw 'Invalid EventHandler (' + globalEventHandler.name + '). EventHandler must implement (Nexus.Interfaces.GlobalEventHandler) interface';
+			}	
+			
+			var alreadyRegistered = false;
+			
+			self.globalEventHandlers.getAll().map(function(registeredGlobalEventHandler){
+				if(globalEventHandler.name == registeredGlobalEventHandler.name){
+					alreadyRegistered = true;
+				}
+			});
+
+			if (!alreadyRegistered){
+				self.globalEventHandlers.add(globalEventHandler);	
+			}
 		};
 
 		self.registerEventHandler = function(eventHandler){
@@ -1223,21 +1287,21 @@ Nexus.CreateEventBus = function(eventStore, arr){
 		};
 	};
 	
-	return new EventBus(eventStore, arr);
+	return new EventBus(arr, arrGlobal);
 };
 
 /////////////////////////////////////////////////////
 ///////// EVENT BUS [SIMPLE]/////////////////////////
 /////////////////////////////////////////////////////
-Nexus.CreateSimpleEventBus = function(eventStore){
-	return new Nexus.CreateEventBus(eventStore, new Nexus.CreateSimpleArrayList());
+Nexus.CreateSimpleEventBus = function(){
+	return new Nexus.CreateEventBus(new Nexus.CreateSimpleArrayList(), new Nexus.CreateSimpleArrayList());
 };
 
 /////////////////////////////////////////////////////
 ///////// EVENT BUS [LOCAL STORAGE]//////////////////
 /////////////////////////////////////////////////////
-Nexus.CreateLocalStorageEventBus = function(eventStore, localStorageKey){
-	return new Nexus.CreateEventBus(eventStore, new Nexus.CreateLocalStorageArrayList(localStorageKey));
+Nexus.CreateLocalStorageEventBus = function(localStorageKeyForEventHandlers, localStorageKeyForGlobalEventHandlers){
+	return new Nexus.CreateEventBus(new Nexus.CreateLocalStorageArrayList(localStorageKeyForEventHandlers), new Nexus.CreateLocalStorageArrayList(localStorageKeyForGlobalEventHandlers));
 };
 
 /////////////////////////////////////////////////////
@@ -2204,7 +2268,61 @@ Nexus.Analytics.EnabledForEvents = true;
 Nexus.newId = Nexus.NewGuid;
 Nexus.CommandBus = Nexus.CreateSimpleCommandBus();
 Nexus.EventStore = Nexus.CreateSimpleCachableEventStore();
-Nexus.EventBus = Nexus.CreateSimpleEventBus(Nexus.EventStore);	
+Nexus.EventBus = Nexus.CreateSimpleEventBus();	
+
+Nexus.EventBus.registerGlobalEventHandler(
+	new Nexus.GlobalEventHandler(
+		'routingGlobalEventHandler', 
+		function(evt){
+			Nexus.Router.mapToRoute(evt);
+		}
+	)
+);
+
+Nexus.EventBus.registerGlobalEventHandler(
+	new Nexus.GlobalEventHandler(
+		'eventStoreGlobalEventHandler', 
+		function(evt){
+			Nexus.EventStore.saveEvent(evt);	
+		}
+	)
+);
+
+Nexus.EventBus.registerGlobalEventHandler(
+	new Nexus.GlobalEventHandler(
+		'analyticsGlobalEventHandler', 
+		function(evt){
+			if (Nexus.Analytics.EnabledForEvents && !Nexus.Aggregate.isRehydrating ){
+				var behavior = {
+				    sessionId: '123',
+				    clientTimeStamp: new Date,
+				    payloadType: 'EVENT',
+				    payload: evt
+				};
+				Nexus.Analytics.Post(behavior);
+			}	
+		}
+	)
+);
+
+Nexus.CommandBus.registerGlobalCommandHandler(
+	new Nexus.GlobalCommandHandler(
+		'analyticsGlobalCommandHandler', 
+		function(cmd){
+			if (Nexus.Analytics.EnabledForCommands && !Nexus.Aggregate.isRehydrating ){
+				var behavior = {
+				    sessionId: '123',
+				    clientTimeStamp: new Date,
+				    payloadType: 'COMMAND',
+				    payload: cmd
+				};
+				Nexus.Analytics.Post(behavior);
+			}
+		}
+	)
+);
+
+
 
 return Nexus;
 });
