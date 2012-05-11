@@ -1,7 +1,7 @@
 define([
     "Nexus",
-    'app/features/displayingHomepage/eventHandlers/homePageDisplayedHandler',
-    'app/features/displayingHomepage/eventHandlers/homePageDisplayedBackEndHandler'
+    'app/features/displayingHomepage/behavior/eventHandlers/homePageDisplayedHandler',
+    'app/features/displayingHomepage/behavior/eventHandlers/homePageDisplayedBackEndHandler'
 ], function (
     Nexus,
     homePageDisplayedHandler,

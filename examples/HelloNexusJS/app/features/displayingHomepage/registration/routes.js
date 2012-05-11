@@ -1,6 +1,6 @@
 define([
 	"Nexus",
-	'app/features/displayingHomepage/events/homePageDisplayed'
+	'app/features/displayingHomepage/behavior/events/homePageDisplayed'
 ], function (Nexus, homePageDisplayed) {
 
 	return {

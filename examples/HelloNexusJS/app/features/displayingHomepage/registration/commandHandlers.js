@@ -1,6 +1,6 @@
 define([
     "Nexus",
-    'app/features/displayingHomepage/commandHandlers/displayHomePageHandler'
+    'app/features/displayingHomepage/behavior/commandHandlers/displayHomePageHandler'
 ], function (
     Nexus,
     displayHomePageHandler

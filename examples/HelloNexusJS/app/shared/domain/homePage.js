@@ -4,7 +4,7 @@ define([
 	'app/shared/validators/lengthValidator',
 	'app/shared/validators/requiredValidator',
 			
-	"app/features/displayingHomepage/events/homePageDisplayed",
+	"app/features/displayingHomepage/behavior/events/homePageDisplayed",
 	'app/features/sayingIt/events/saidIt',
 	'app/features/sayingHello/events/helloScreenDisplayed',
 	'app/shared/events/errorRaised',
