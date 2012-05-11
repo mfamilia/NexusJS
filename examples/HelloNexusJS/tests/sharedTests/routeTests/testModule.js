@@ -1,16 +1,16 @@
 define([
 	'Nexus',
-	'tests/sharedTests/routeTests/errorRouteTest',
+	'tests/sharedTests/routeTests/shouldResolveErrorRouteTest',
 	'tests/sharedTests/routeTests/shouldGenerateErrorRouteTest'
 	
 ],function(
 	Nexus,
-	errorRouteTest,
+	shouldResolveErrorRouteTest,
 	shouldGenerateErrorRouteTest
 ){
 
 	var tests = [
-		errorRouteTest,
+		shouldResolveErrorRouteTest,
 		shouldGenerateErrorRouteTest
 	];
 	return new Nexus.TestModule('Shared route tests', tests);	
