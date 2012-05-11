@@ -4,9 +4,7 @@ define(function(){
 		this.obj = obj;
 	
 		this.isValid = function(){
-			if (this.obj)
-				return true;
-			return false;
+			return this.obj;			
 		};	
 	};		
 
