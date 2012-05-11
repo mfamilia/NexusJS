@@ -3,7 +3,8 @@ require.config({
     'jquery': 'lib/jquery',
     'mustache': 'lib/mustache',
     'text': 'lib/text',
-    'Nexus': 'lib/nexus'
+    'Nexus': 'lib/nexus',
+    'NexusTF': 'lib/nexus.test.framework'
   }
 });
 
@@ -30,7 +31,6 @@ require([
 
     Nexus.Router.route('#home');
     if (redirectToRoute){
-console.log('redirect to: ' + redirectToRoute);
         Nexus.Router.route(redirectToRoute);
     }
 

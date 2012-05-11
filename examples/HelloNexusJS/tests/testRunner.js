@@ -1,14 +1,19 @@
 require([
 	'jquery',
-	'Nexus',	
+	'Nexus',
+	
 	'tests/sharedTests/viewTests/testModule',
 	'tests/sharedTests/routeTests/testModule',
 	'tests/featureTests/displayingHomepage/testModule',
 	'tests/featureTests/sayingHello/testModule',
-	'tests/featureTests/sayingIt/testModule'
+	'tests/featureTests/sayingIt/testModule',
+	
+	'NexusTF'
+	
 ],function(
 	$,
 	Nexus,
+
 	sharedViewTestsTestModule,
 	sharedRouteTestsTestModule,
 	displayingHomepageTestModule,
