@@ -1,25 +1,23 @@
 define([
 	'jquery',
 	"Nexus",
+	"app/shared/behavior/events/highlighted",
 	'app/shared/behavior/eventHandlers/highlightedHandler'
-], function ($, Nexus, highlightedHandler) {
+], function ($, Nexus, Highlighted, highlightedHandler) {
 	
-	var highlightedEvent = {
-		selector: '#thingToSay',
-		eventName: 'Highlighted'
-	};
+	var givenEvent = Highlighted.Event('#thingToSay');
 	
-	var expectedView = {
+	var expectedView = new Nexus.View({
 		onLoad: 
 		function(){
 			$(evt.selector).removeClass().addClass('highlighted'); 
 		}									
-	};
+	});
 
 	return new Nexus
 	.ViewTest('Should highlight correct selector')
-		.GivenEvent(highlightedEvent)	
-		.GivenEventHandler(highlightedHandler)
-		.ExpectOnLoad(expectedView.onLoad);
+		.GivenEvent(givenEvent)	
+		.WhenHandledBy(highlightedHandler)
+		.ThenExpectView(expectedView);
 			   
 });

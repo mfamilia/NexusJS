@@ -62,7 +62,7 @@ define([
 					Nexus.EventBus.publish(ErrorRaised.Event(msg));
 					Nexus.EventBus.publish(Highlighted.Event(selector));							
 				}
-			);
+			);					
 		
 			// Nexus.Validate expects 
 				// 1) array of validatables or single validatable 

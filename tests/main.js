@@ -2,7 +2,8 @@ require.config({
   paths: {
     'jquery': 'lib/jquery',
     'qunit': 'lib/qunit',    
-    'Nexus': 'lib/nexus'
+    'Nexus': 'lib/nexus',
+    'NexusTF' : 'lib/nexus.test.framework'
   }
 });
 
@@ -10,6 +11,7 @@ require.config({
 require([
 	'jquery',
 	'Nexus',
+	'NexusTF',
 	'qunit',
 	'js/CreateCachableEventStoreTests',
 	'js/DBTests',
@@ -29,6 +31,7 @@ require([
 ],function(
 	$, 
 	Nexus,
+	NexusTF,
 	QUnit,
 	CreateCachableEventStoreTests,
 	DBTests,

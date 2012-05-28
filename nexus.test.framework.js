@@ -378,7 +378,7 @@ Nexus.ViewTest = function(name, waitTime){
 		Nexus.jsonDELETE = fixture.BACKUP.JSON_DELETE;
 		Nexus.isInTestMode = false;			
 	};	
-	
+	/*
 	fixture.ExpectTemplate = function(template){
 		fixture.expectedTemplate = template;
 		return fixture;
@@ -406,18 +406,28 @@ Nexus.ViewTest = function(name, waitTime){
 		}	
 		return fixture;
 	};	
-	
-	fixture.GivenEventHandler = function(eventHandler){
-		fixture.givenEventHandler = eventHandler;
-		return fixture;
-	};
-	
-	
+*/		
 	fixture.GivenEvent = function(givenEvent){
 		fixture.givenEvent = givenEvent;
 		return fixture;
 	};
 		
+	fixture.WhenHandledBy = function(eventHandler){
+		fixture.givenEventHandler = eventHandler;
+		return fixture;
+	};
+	
+	fixture.ThenExpectView = function(view){
+		fixture.expectedTemplate = view.template;
+		fixture.expectedPlaceholder = view.placeholder;
+		if (view.data){
+			fixture.expectedData = ('' + Nexus.Util.serialize(view.data)).replace(/\s+/g, "");
+		}
+		if (view.onLoad){
+			fixture.expectedOnLoad = ('' + Nexus.Util.serialize(view.onLoad)).replace(/\s+/g, "");
+		}
+		return fixture;
+	}
 	
 	fixture.setActualTemplate = function(template){
 		fixture.actualTemplate = template;

@@ -1,33 +1,26 @@
 define([
 	'jquery',
 	"Nexus",
+	"app/features/sayingIt/behavior/events/saidIt",
 	'app/features/sayingIt/behavior/eventHandlers/saidItHandler'
-], function ($, Nexus, saidItHandler) {
+], function ($, Nexus, SaidIt, saidItHandler) {
 	
-	var eventToHandle = {
-		selector: '#thingToSay',
-		date: new Date,
-		text: 'hello',
-		eventName: 'Said it'		
-	};
+	var givenEvent = SaidIt.Event('#thingToSay', new Date, 'hello');
 	
-	var expectedView = {
+	var expectedView = new Nexus.View({
 		template: 'app/features/sayingIt/ui/templates/saidItTemplate.html',
 		placeholder: '#output',
-		data: eventToHandle,
+		data: givenEvent,
 		onLoad: 
 		function(){
 			$(evt.selector).removeClass().addClass('textbox');					
 		}									
-	};	
+	});	
 
 	return new Nexus
 	.ViewTest('Should render saidItTemplate on correct placeholder with correct data and add textbox class to correct selector')
-		.GivenEvent(eventToHandle)	
-		.GivenEventHandler(saidItHandler)
-		.ExpectTemplate(expectedView.template)
-		.ExpectPlaceholder(expectedView.placeholder)
-		.ExpectData(expectedView.data)
-		.ExpectOnLoad(expectedView.onLoad);
+		.GivenEvent(givenEvent)	
+		.WhenHandledBy(saidItHandler)
+		.ThenExpectView(expectedView);
 			   
 });
