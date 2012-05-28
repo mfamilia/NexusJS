@@ -378,35 +378,7 @@ Nexus.ViewTest = function(name, waitTime){
 		Nexus.jsonDELETE = fixture.BACKUP.JSON_DELETE;
 		Nexus.isInTestMode = false;			
 	};	
-	/*
-	fixture.ExpectTemplate = function(template){
-		fixture.expectedTemplate = template;
-		return fixture;
-	};	
 
-	fixture.ExpectPlaceholder = function(placeholder){
-		fixture.expectedPlaceholder = placeholder;
-		return fixture;
-	};
-
-	fixture.ExpectData = function(data){
-		if (data){
-			fixture.expectedData = ('' + Nexus.Util.serialize(data)).replace(/\s+/g, "");
-		}else{
-			throw 'ExpectData needs data parameter';
-		}
-		return fixture;
-	};
-	
-	fixture.ExpectOnLoad = function(onLoad){
-		if (onLoad){
-			fixture.expectedOnLoad = ('' + Nexus.Util.serialize(onLoad)).replace(/\s+/g, "");
-		}else{
-			throw 'setActualOnLoad needs onLoad parameter';
-		}	
-		return fixture;
-	};	
-*/		
 	fixture.GivenEvent = function(givenEvent){
 		fixture.givenEvent = givenEvent;
 		return fixture;
