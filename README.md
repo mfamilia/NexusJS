@@ -7,12 +7,12 @@ Examples (WORK IN PROGRESS)
 <dl>
 	<dt>Hello NexusJS</dt>
 	<dd>index.html (example app)</dd>
-	<dd>tests.html (BDD/UI/Back-End tests)</dd>
+	<dd>tests.html (BDD/UI/Back-End/Generate & Resolve Route tests)</dd>
 </dl>
 
 How it flows
 -------------------------
-[Diagram Image](http://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgTmV4dXNKUyAKClVJLT5Db21tYW5kIEJ1czogZGlzcGF0Y2ggYwAQBnMKABcISGFuZGxlcgAhD3N1YnNjcmliZQAfCUJ1cwBKCgAuBzogaAA5BQA7G0RvbWFpbjogYnVzaW5lc3MgbG9naWMKABEGLT5VSSBWYWxpZGF0b3JzOiB2AAYGZSB1aQAaCUV2ZW50AIFABnB1Ymxpc2ggZXZlbnRzCgARCQAdCFN0b3JlOiBzYXZlAB4GADYPABkHcmVoeWRyYXRlIGFnZ3JlZ2F0ZQBFBwCCBgcASAkAgX0PAGARACgIAIIACQCBDQ0ARApSZWFkIE1vZGVsczogdXBkAF4UVUkAAhkAMwxxdWVyeQoAgisNAFEPABwGAIJaCAABGj5CYWNrZW5kIFtXUklURV06UkVTVDogUE9TVC9QVVQvREVMRVRFIFtvcl0gQ1FSUzogRACEPggAhFUHcwA5ElJFQUQAQghHRVQAMQ1UT3M&s=qsd)
+[Diagram Image](http://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgTmV4dXNKUyAKClVJLT5Db21tYW5kIEJ1czogZGlzcGF0Y2ggYwAQBnMKABcISGFuZGxlcgAhD3N1YnNjcmliZQAfCUJ1cwBKCgAuBzogaAA5BQA7G0RvbWFpbjogYnVzaW5lc3MgbG9naWMKABEGLT5WYWxpZGF0b3JzOiB2AAYGZQAUCUV2ZW50AIE6BnB1Ymxpc2ggZXZlbnRzCgAUBlN0b3JlABoNAIEtCgA2DgAlBTogcmVoeWRyYXRlIGFnZ3JlZ2F0ZQBEBwCBfwdzADcXAIEBCQCBDQgAKAgAgXkJAIEMDQBEClJlYWQgTW9kZWxzOiB1cACBWgUAYhBVSQASCVJvdXRlAG0YQW5hbHl0aWMAAR9jAIMdCwCBMhUAgQgWcXVlcnkAgX0RQmFja2VuZCBbUkVBRF0AHwYgKGdldCBqc29uKQAWGldSSVRFXTp3cml0ZSAocG9zdCAvIHB1dCAvIGRlbGV0ZQA6BwCDdwoAgh4PAIEKBgCEIAgAARoAgQMg&s=qsd)
 
 Highlights
 -------------------------
@@ -22,6 +22,7 @@ Highlights
 ** Behavior Tests
 ** View Tests
 ** Backend Tests
+** Generate & Resolve Route Tests
 * Reusable Validators
 * Behavior Routing
 * Integrates well with jQuery, RequireJS and Mustache.js
