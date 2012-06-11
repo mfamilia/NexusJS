@@ -11,20 +11,17 @@ define([
 		eventName: 'Home page displayed'
 	}
 
-	var expectedPayload = {
+	var expectedBackendCall = new Nexus.BackendCall({
+		type: 'POST',
 		url: 'http://192.168.0.134:3000',
 		data: {'text':'Homepage Displayed'}
-		// optionally...
-		//,success: function(data){console.log(data)}
-		//,error: function(){}
-	};
+	});
 
 	return new Nexus
 	.BackendTest('Should call backend')
 		.GivenEvent(givenEvent)
-		.GivenEventHandler(homePageDisplayedBackEndHandler)
-		.ExpectType('POST')
-		.ExpectPayload(expectedPayload);
+		.WhenHandledBy(homePageDisplayedBackEndHandler)
+		.ThenExpectBackendCall(expectedBackendCall);
 			   
 });
 

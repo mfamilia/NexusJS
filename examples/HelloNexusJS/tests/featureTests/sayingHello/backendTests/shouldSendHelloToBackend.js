@@ -10,18 +10,18 @@ define([
         eventName: 'Hello screen displayed'
     }
 
-    var expectedPayload = {
-        url: 'http://192.168.0.134:3000',
+	var expectedBackendCall = new Nexus.BackendCall({
+		type: 'POST',
+		url: 'http://192.168.0.134:3000',
         data: {'text':'HELLO'},
         success: function(){console.log('POSTED COMPLETE')}
-    };
+	});
 
     return new Nexus
         .BackendTest('Should send hello to backend')
         .GivenEvent(givenEvent)
-        .GivenEventHandler(helloSentToBackendEventHandler)
-        .ExpectType('POST')
-        .ExpectPayload(expectedPayload);
+        .WhenHandledBy(helloSentToBackendEventHandler)
+		.ThenExpectBackendCall(expectedBackendCall);
 
 });
 

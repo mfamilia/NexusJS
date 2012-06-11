@@ -202,10 +202,7 @@ Nexus.BehaviorTest = function(name, waitTime){
 			EVENT_STORE: Nexus.EventStore,
 			ANALYTICS_ENABLED_FOR_COMMANDS: Nexus.Analytics.EnabledForCommands,
 			ANALYTICS_ENABLED_FOR_EVENTS: Nexus.Analytics.EnabledForEvents,
-			JSON_GET: Nexus.jsonGET,
-			JSON_POST: Nexus.jsonPOST,
-			JSON_PUT: Nexus.jsonPUT,
-			JSON_DELETE: Nexus.jsonDELETE
+			ROUTE_DISPLAY: Nexus.Router.displayRoute
 		};		
 						
 		// backup app state			
@@ -214,10 +211,7 @@ Nexus.BehaviorTest = function(name, waitTime){
 		Nexus.EventStore.setEventBus(Nexus.EventBus);								
 		Nexus.Analytics.EnabledForCommands = false;
 		Nexus.Analytics.EnabledForEvents = false;
-		Nexus.jsonGET = function(){/*do nothing*/};
-		Nexus.jsonPOST = function(){/*do nothing*/};
-		Nexus.jsonPUT = function(){/*do nothing*/};
-		Nexus.jsonDELETE = function(){/*do nothing*/};
+		Nexus.Router.displayRoute = function(){};
 		if (Nexus.Util.isFunction(fixture.beforeTest)){
 			fixture.beforeTest();
 		}	
@@ -233,10 +227,7 @@ Nexus.BehaviorTest = function(name, waitTime){
 		Nexus.EventStore.setEventBus(Nexus.EventBus);	
 		Nexus.Analytics.EnabledForCommands = fixture.BACKUP.ANALYTICS_ENABLED_FOR_COMMANDS;
 		Nexus.Analytics.EnabledForEvents = fixture.BACKUP.ANALYTICS_ENABLED_FOR_EVENTS;																
-		Nexus.jsonGET = fixture.BACKUP.JSON_GET;
-		Nexus.jsonPOST = fixture.BACKUP.JSON_POST;
-		Nexus.jsonPUT = fixture.BACKUP.JSON_PUT;
-		Nexus.jsonDELETE = fixture.BACKUP.JSON_DELETE;
+		Nexus.Router.displayRoute = fixture.BACKUP.ROUTE_DISPLAY;
 		Nexus.isInTestMode = false;			
 	};
 	
@@ -325,23 +316,24 @@ Nexus.ViewTest = function(name, waitTime){
 	fixture.name = name;
 	fixture.errors = '';
 	
+	fixture.BeforeTest = function(beforeTest){
+		fixture.beforeTest = beforeTest;	
+		return fixture;
+	};
+	
+	fixture.AfterTest = function(afterTest){
+		fixture.afterTest = afterTest;	
+		return fixture;
+	};	
+	
 	fixture._beforeTest = function(){
 		// setup 
 		Nexus.isInTestMode = true;
 
 		// test uses fake event store so not to write to real one
 		fixture.BACKUP = {
-			NEXUS_VIEW: Nexus.View,
-			JSON_GET: Nexus.jsonGET,
-			JSON_POST: Nexus.jsonPOST,
-			JSON_PUT: Nexus.jsonPUT,
-			JSON_DELETE: Nexus.jsonDELETE
+			NEXUS_VIEW: Nexus.View
 		};		
-		
-		Nexus.jsonGET = function(){/*do nothing*/};
-		Nexus.jsonPOST = function(){/*do nothing*/};
-		Nexus.jsonPUT = function(){/*do nothing*/};
-		Nexus.jsonDELETE = function(){/*do nothing*/};
 		
 		// nexus view stub
 		Nexus.View = function(view){
@@ -367,15 +359,18 @@ Nexus.ViewTest = function(name, waitTime){
 			};	
 			return self;
 		};
+		
+		if (Nexus.Util.isFunction(fixture.beforeTest)){
+			fixture.beforeTest();
+		}			
 	};
 	
 	fixture._afterTest = function(){
+		if (Nexus.Util.isFunction(fixture.afterTest)){
+			fixture.afterTest();
+		}			
 		// restore app state
 		Nexus.View = fixture.BACKUP.NEXUS_VIEW;	
-		Nexus.jsonGET = fixture.BACKUP.JSON_GET;
-		Nexus.jsonPOST = fixture.BACKUP.JSON_POST;
-		Nexus.jsonPUT = fixture.BACKUP.JSON_PUT;
-		Nexus.jsonDELETE = fixture.BACKUP.JSON_DELETE;
 		Nexus.isInTestMode = false;			
 	};	
 
@@ -410,7 +405,7 @@ Nexus.ViewTest = function(name, waitTime){
 		fixture.actualPlaceholder = placeholder;
 		return fixture;
 	};
-	
+		
 	fixture.setActualData = function(data){
 		if (data){
 			fixture.actualData = ('' + Nexus.Util.serialize(data)).replace(/\s+/g, "");
@@ -508,80 +503,50 @@ Nexus.BackendTest = function(name, waitTime){
 		// setup 
 		Nexus.isInTestMode = true;
 		fixture.BACKUP = {
-			JSON_GET: Nexus.jsonGET,
-			JSON_POST: Nexus.jsonPOST,
-			JSON_PUT: Nexus.jsonPUT,
-			JSON_DELETE: Nexus.jsonDELETE
+			PERFORM_BACKEND_CALL: Nexus.PerformBackendCall
 		};	
-		// as per single responsibility principal, only single call should be made in event handler
-		// this is why fixutre.actualPayload is set from all jsonXXX handlers
-		Nexus.jsonGET = function(payload){	
-			fixture.setActualPayload(payload, 'GET');
-		};
-		Nexus.jsonPOST = function(payload){	
-			fixture.setActualPayload(payload,'POST');
-		};
-		Nexus.jsonPUT = function(payload){	
-			fixture.setActualPayload(payload, 'PUT');
-		};
-		Nexus.jsonDELETE = function(payload){	
-			fixture.setActualPayload(payload, 'DELETE');
+		Nexus.PerformBackendCall = function(backendCall){	
+			fixture.actualBackendCall = backendCall;
 		};		
 	};
 	
 	fixture._afterTest = function(){
 		// restore app state															
-		Nexus.jsonGET = fixture.BACKUP.JSON_GET;
-		Nexus.jsonPOST = fixture.BACKUP.JSON_POST;
-		Nexus.jsonPUT = fixture.BACKUP.JSON_PUT;
-		Nexus.jsonDELETE = fixture.BACKUP.JSON_DELETE;
+		Nexus.PerformBackendCall = fixture.BACKUP.PERFORM_BACKEND_CALL;
 		Nexus.isInTestMode = false;		
 	};		
 	
-	fixture.ExpectPayload = function(payload){
-		if (payload){
-			fixture.expectedPayload = ('' + Nexus.Util.serialize(payload)).replace(/\s+/g, "");
-		}else{
-			throw 'ExpectPayload needs payload parameter';
-		}	
+	fixture.ThenExpectBackendCall = function(expectedBackendCall){
+		fixture.expectedBackendCall = expectedBackendCall;				
 		return fixture;
-	};	
-
-	fixture.ExpectType = function(type){
-		fixture.expectedType = type;
-		return fixture;
-	}
-	
-	fixture.GivenEventHandler = function(eventHandler){
+	};
+		
+	fixture.WhenHandledBy = function(eventHandler){
 		fixture.givenEventHandler = eventHandler;
 		return fixture;
 	};
-	
-	
+		
 	fixture.GivenEvent = function(givenEvent){
 		fixture.givenEvent = givenEvent;
 		return fixture;
 	};		
 	
-	fixture.setActualPayload = function(payload, type){
-		if (payload){
-			fixture.actualPayload = ('' + Nexus.Util.serialize(payload)).replace(/\s+/g, "");
-		}else{
-			throw 'setActualPayload needs payload parameter';
-		}		
-		if (type){
-			fixture.actualType = type;
-		}
-		return fixture;
-	};
-	
 	fixture.assert = function(expected, actual, whatAreYouTesting){
 		fixture.errors += Nexus.TestHelper.assert(expected, actual, whatAreYouTesting);			
 	};	
 		
-	fixture.assertPayload = function(){
-		fixture.assert(fixture.expectedPayload, fixture.actualPayload, 'Payload');
-		fixture.assert(fixture.expectedType, fixture.actualType, 'Type');
+	fixture.assertBackendCall = function(){
+		fixture.assert(fixture.expectedBackendCall.type, fixture.actualBackendCall.type, 'Type');
+		fixture.assert(fixture.expectedBackendCall.url, fixture.actualBackendCall.url, 'URL');
+		if (fixture.expectedBackendCall.data){
+			fixture.assert(('' + Nexus.Util.serialize(fixture.expectedBackendCall.data)).replace(/\s+/g, ""), ('' + Nexus.Util.serialize(fixture.actualBackendCall.data)).replace(/\s+/g, ""), 'Data');
+		}
+		if (Nexus.Util.isFunction(fixture.expectedBackendCall.onSuccess)){
+			fixture.assert(('' + Nexus.Util.serialize(fixture.expectedBackendCall.onSuccess)).replace(/\s+/g, ""), ('' + Nexus.Util.serialize(fixture.actualBackendCall.onSuccess)).replace(/\s+/g, ""), 'OnSuccess');
+		}			
+		if (Nexus.Util.isFunction(fixture.expectedBackendCall.onError)){
+			fixture.assert(('' + Nexus.Util.serialize(fixture.expectedBackendCall.onError)).replace(/\s+/g, ""), ('' + Nexus.Util.serialize(fixture.actualBackendCall.onError)).replace(/\s+/g, ""), 'OnError');
+		}							
 	};
 	
 	fixture.assertEventHandlerRegistration = function(){
@@ -625,7 +590,7 @@ Nexus.BackendTest = function(name, waitTime){
 																		
 			// assert
 			fixture.assertEventHandlerRegistration();	
-			fixture.assertPayload();			
+			fixture.assertBackendCall();			
 			Nexus.TestHelper.renderAsserts(moduleId, fixture.name, fixture.errors);	
 			
 			// tear down
@@ -690,7 +655,8 @@ Nexus.ResolveRouteTest = function(name, waitTime){
 		}
 	};	
 
-	fixture.Run = function(moduleId){
+	fixture.Run = function(moduleId){	
+	
 		setTimeout(function(){		
 			if (!fixture.givenRoute){
 				fixture.errors += Nexus.TestHelper.assert('GivenRoute(...)', 'not specified', 'Given Route');

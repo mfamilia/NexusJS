@@ -9,12 +9,12 @@ define([
 		HomePageDisplayed.eventName,
 		function(evt){											
 			
-			var payload = {
+			Nexus.BackendCall(new Nexus.BackendCall({
+				type: 'POST',
 				url: 'http://192.168.0.134:3000',
 				data: {'text':'Homepage Displayed'}
-			};
-			
-			Nexus.jsonPOST(payload);
+			}))
+			.perform();
 		}	
 	);
 	

@@ -60,6 +60,37 @@ var Nexus = {
 		return self;
 	},
 	///////////////////////////////////////////////////    
+	// BACKEND CALL ///////////////////////////////////
+	///////////////////////////////////////////////////	
+	BackendCall: function(backendCall){
+		var self = this;
+		self.type = backendCall.type;
+		self.url = backendCall.url;
+		self.data = backendCall.data;
+		self.onSuccess = backendCall.onSuccess;
+		self.onError = backendCall.onError;
+		self.perform = function(){
+			Nexus.PerformBackendCall(self);
+		};
+		return self;
+	},
+	///////////////////////////////////////////////////    
+	// PERFORM BACKEND CALL ///////////////////////////
+	///////////////////////////////////////////////////
+	PerformBackendCall: function(backendCall){
+		require(['jquery'], function($) {	
+			$.ajax({
+				url: backendCall.url,
+				type: backendCall.type,
+				data: backendCall.data,
+				dataType: 'json',
+				contentTypeString: 'application/json',
+				success:  backendCall.onSuccess || Nexus.ajaxOnSuccessDefaultCallback,
+				error:  backendCall.onError || Nexus.ajaxOnErrorDefaultCallback
+			});					
+		});				
+	},
+	///////////////////////////////////////////////////    
 	// RENDER VIEW ////////////////////////////////////
 	///////////////////////////////////////////////////	
 	RenderView: function(view){
@@ -126,61 +157,6 @@ var Nexus = {
 		console.log(textStatus);
 		console.log(jqXHR);
 		*/
-	},
-	jsonGET: function(payload){
-		//TODO: rewrite without jquery	
-		require(['jquery'], function($) {	
-			$.ajax({
-				url: payload.url,
-				type: 'GET',
-				dataType: 'json',
-				contentTypeString: 'application/json',
-				success: payload.success || Nexus.ajaxOnSuccessDefaultCallback,
-				error: payload.error || Nexus.ajaxOnErrorDefaultCallback
-			});					
-		});						
-	},
-	jsonPOST: function(payload){
-		//TODO: rewrite without jquery
-		require(['jquery'], function($) {	
-			$.ajax({
-				url: payload.url,
-				type: 'POST',
-				data: payload.data,
-				dataType: 'json',
-				contentTypeString: 'application/json',
-				success:  Nexus.ajaxOnSuccessDefaultCallback,
-				error:  Nexus.ajaxOnErrorDefaultCallback
-			});					
-		});					
-	},
-	jsonPUT: function(payload){
-		//TODO: rewrite without jquery	
-		require(['jquery'], function($) {	
-			$.ajax({
-				url: payload.url,
-				type: 'PUT',
-				data: payload.data,
-				dataType: 'json',
-				contentTypeString: 'application/json',
-				success: payload.success || Nexus.ajaxOnSuccessDefaultCallback,
-				error: payload.error || Nexus.ajaxOnErrorDefaultCallback
-			});					
-		});					
-	},
-	jsonDELETE: function(payload){
-		//TODO: rewrite without jquery	
-		require(['jquery'], function($) {	
-			$.ajax({
-				url: payload.url,
-				type: 'DELETE',
-				data: payload.data,
-				dataType: 'json',
-				contentTypeString: 'application/json',
-				success: payload.success || Nexus.ajaxOnSuccessDefaultCallback,
-				error: payload.error || Nexus.ajaxOnErrorDefaultCallback
-			});					
-		});						
 	}
 };
 
