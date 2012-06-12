@@ -16,6 +16,55 @@
 ///////////////////////////////////////////////////
 
 require(['Nexus'],function(Nexus){
+	
+Nexus.Mock = {
+		BACKUP: {},
+		BackupAll: function(){
+			Nexus.Mock.BACKUP.PerformBackendCall = Nexus.PerformBackendCall;
+		},
+		RestoreAll: function(){
+			Nexus.PerformBackendCall = Nexus.Mock.BACKUP.PerformBackendCall;
+		},
+		BackendCall: function(){
+			var self = this;
+			
+			self.Type = function(type){
+				self.type = type;
+				return self;
+			};
+			
+			self.Url = function(url){
+				self.url = url;
+				return self;
+			};
+			
+			self.Execute = function(callbackType, callbackParam){
+				self.callbackParam = callbackParam;
+				self.callbackType = callbackType;
+				return self;
+			};
+			
+			self.Setup = function(){
+				Nexus.PerformBackendCall = function(backendCall){
+					var functionToExecute = self.onSuccess || self.onError;
+					if (self.url && backendCall.url != self.url){
+						return;
+					}
+					if(self.type && self.type != backendCall.type){
+						return;
+					}
+					if (self.callbackType == 'onSuccess'){
+						backendCall.onSuccess(self.callbackParam);
+					}
+					if (self.callbackType == 'onError'){
+						backendCall.onError(self.callbackParam);
+					}
+				}
+			}
+			
+			return self;
+		}
+};	
 
 ///////////////////////////////////////////////////    
 // TEST NEXUS FRAMEWORK ///////////////////////////
@@ -212,6 +261,10 @@ Nexus.BehaviorTest = function(name, waitTime){
 		Nexus.Analytics.EnabledForCommands = false;
 		Nexus.Analytics.EnabledForEvents = false;
 		Nexus.Router.displayRoute = function(){};
+
+		// mock real objects
+		Nexus.Mock.BackupAll();
+		
 		if (Nexus.Util.isFunction(fixture.beforeTest)){
 			fixture.beforeTest();
 		}	
@@ -220,7 +273,11 @@ Nexus.BehaviorTest = function(name, waitTime){
 	fixture._afterTest = function(){
 		if (Nexus.Util.isFunction(fixture.afterTest)){
 			fixture.afterTest();
-		}	
+		}
+		
+		// restore mocks to real objects
+		Nexus.Mock.RestoreAll();
+		
 		// restore app state
 		Nexus.EventStore = fixture.BACKUP.EVENT_STORE;
 		Nexus.EventBus.eventStore = Nexus.EventStore;
@@ -360,6 +417,9 @@ Nexus.ViewTest = function(name, waitTime){
 			return self;
 		};
 		
+		// mock real objects
+		Nexus.Mock.BackupAll();
+		
 		if (Nexus.Util.isFunction(fixture.beforeTest)){
 			fixture.beforeTest();
 		}			
@@ -369,6 +429,10 @@ Nexus.ViewTest = function(name, waitTime){
 		if (Nexus.Util.isFunction(fixture.afterTest)){
 			fixture.afterTest();
 		}			
+		
+		// restore mocks to real objects
+		Nexus.Mock.RestoreAll();
+		
 		// restore app state
 		Nexus.View = fixture.BACKUP.NEXUS_VIEW;	
 		Nexus.isInTestMode = false;			
