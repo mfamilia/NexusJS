@@ -20,6 +20,11 @@ require([
     commandHandlers,
     eventHandlers
 ) {
+
+    Nexus.App = {
+    	ApiUrl: 'http://api.nexusjs.com'
+    };
+
     commandHandlers.register();
     eventHandlers.register();
     routes.register();

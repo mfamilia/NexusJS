@@ -11,7 +11,7 @@ define([
         
 			new Nexus.BackendCall({
 				type: 'POST',
-				url: 'http://api.nexusjs.com/TwitterLight/SaveTweet',
+				url: Nexus.App.ApiUrl + '/TwitterLight/SaveTweet',
 				data: { 
 				    Text: evt.Tweet
 				}

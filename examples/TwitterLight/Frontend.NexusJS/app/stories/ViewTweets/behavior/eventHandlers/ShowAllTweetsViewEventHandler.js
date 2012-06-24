@@ -12,7 +12,7 @@ define([
         function(evt){        
 		new Nexus.BackendCall({
 			type: 'GET',
-			url: 'http://api.nexusjs.com/TwitterLight/GetAllTweets',
+			url: Nexus.App.ApiUrl + '/TwitterLight/GetAllTweets',
 			onSuccess: function(data){
 				new Nexus.View({
 					template: 'app/stories/ViewTweets/ui/templates/ViewTweets.html',
