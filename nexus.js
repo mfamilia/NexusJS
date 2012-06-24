@@ -349,11 +349,13 @@ Nexus.Util = {
 	serialize: function(_obj)
 	{
 	   // Let Gecko browsers do this the easy way
+	   /*
 	   if (typeof _obj.toSource !== 'undefined' && typeof _obj.callee === 'undefined')
 	   {
 	      return _obj.toSource();
 	   }
-
+	   */
+	
 	   // Other browsers must do it the hard way
 	   switch (typeof _obj)
 	   {
@@ -1288,6 +1290,21 @@ Nexus.CreateLocalStorageReadModel = function(localStorageKey){
 ///////// ROUTER ////////////////////////////////////
 /////////////////////////////////////////////////////
 Nexus.Router = {
+    ignoreRoute: function(events){
+	var eventNamesAsString = '';
+	var routeName='#ignored';
+        for (var i=0; i<events.length; i++){
+            eventNamesAsString += events[i].eventName;
+        }
+    
+	Nexus.Router.ignoredRoutes.push({
+	    routeName: routeName,
+	    events: events,
+	    eventNamesAsString: eventNamesAsString
+	});             	
+	
+	Nexus.Router.registerRoute(routeName, events);
+    },
     init: function(){
         window.onhashchange = function(e){
             Nexus.Router.route(location.hash);
@@ -1303,8 +1320,11 @@ Nexus.Router = {
             events: events,
             eventNamesAsString: eventNamesAsString
         });
-    },
+    },    
     publishEvents: function(routeName, registeredRoute){
+        if (Nexus.Router.shouldIgnoreRoute(routeName)){
+        	return;
+        }
         var extractDataFromRouteName = function(routeName, registeredRouteName, keyValueArr){
             var startRouteName = '[';
             var endRouteName = ']';
@@ -1356,6 +1376,9 @@ Nexus.Router = {
         }
     },
     displayRoute: function(routeName, origin){
+        if (Nexus.Router.shouldIgnoreRoute(routeName)){
+        	return;
+        }    
         if (origin == 'EventBus'){
             history.pushState(
                 {
@@ -1439,7 +1462,18 @@ Nexus.Router = {
             }
         }
         return Nexus.Router.routeMatchNotFound;
-    }
+    },
+    shouldIgnoreRoute: function(routeName){
+        var reducedRouteName = Nexus.Router.reduceRouteName(routeName, '[',']');
+        for (var i=0; i<Nexus.Router.ignoredRoutes.length; i++){
+            var registeredRouteThatDoNotPublishEvents = Nexus.Router.ignoredRoutes[i];
+            var reducedRegisteredRoute = Nexus.Router.reduceRouteName(registeredRouteThatDoNotPublishEvents.routeName, '{','}');
+            if (reducedRegisteredRoute == reducedRouteName){
+                return true;
+            }
+        }
+        return false;
+    }    
 };
 
 //TODO: refactor so handleOneOrMany routes
@@ -1450,6 +1484,7 @@ Nexus.Router = {
 ///////// DEFAULT INIT //////////////////////////////
 /////////////////////////////////////////////////////
 Nexus.Router.registeredRoutes = new Array();
+Nexus.Router.ignoredRoutes = new Array();
 Nexus.Router.init();
 Nexus.Analytics.EnabledForCommands = true;
 Nexus.Analytics.EnabledForEvents = true;

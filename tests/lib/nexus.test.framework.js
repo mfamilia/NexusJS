@@ -21,6 +21,7 @@ Nexus.Mock = {
 		BACKUP: {},
 		BackupAll: function(){
 			Nexus.Mock.BACKUP.PerformBackendCall = Nexus.PerformBackendCall;
+			Nexus.PerformBackendCall = function(){};
 		},
 		RestoreAll: function(){
 			Nexus.PerformBackendCall = Nexus.Mock.BACKUP.PerformBackendCall;
@@ -709,7 +710,9 @@ Nexus.ResolveRouteTest = function(name, waitTime){
 	
 	fixture.assertCorrectActualEvents = function(){
 		var expectedEventsAsString = Nexus.Util.serialize(fixture.expectedEvents);
-		var actualEventsAsString = Nexus.Util.serialize(fixture.actualEvents).replace(/, __origin__:"ROUTER"/g,'');
+		var actualEventsAsString = Nexus.Util.serialize(fixture.actualEvents)
+			.replace(/, __origin__:"ROUTER"/g,'')
+			.replace(/,__origin__:'ROUTER'/g,'');
 		fixture.errors += Nexus.TestHelper.assert(expectedEventsAsString, actualEventsAsString, 'Published vents');
 	};
 
