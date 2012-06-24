@@ -7,6 +7,6 @@
     <title></title>
 </head>
 <body>
-    <h1>Twitter Light API is Running...</h1>
+    <h1>.NET MVC 3 Twitter Light API is Running...</h1>
 </body>
 </html>

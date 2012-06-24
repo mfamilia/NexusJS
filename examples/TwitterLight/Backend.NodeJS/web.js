@@ -9,10 +9,9 @@ var arr = new Array();
 app.get('/', function(request, response, next) {
   response.header("Access-Control-Allow-Origin", "*");
   response.header("Access-Control-Allow-Headers", "X-Requested-With");
-  response.send("Twitter Light API is Running...");
+  response.send("<h1>NodeJS Twitter Light API is Running...</h1>");
   resonse.end();
 });
-
 
 app.get('/TwitterLight/GetAllTweets', function(request, response, next) {
   response.header("Access-Control-Allow-Origin", "*");
