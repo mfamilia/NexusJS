@@ -1,10 +1,9 @@
 define([
-    "Nexus",
-       'app/stories/PostATweet/behavior/events/SaveTweet',
+    'Nexus',
+    'app/stories/PostATweet/behavior/events/SaveTweet',
     'app/stories/PostATweet/behavior/events/ThanksForYourTweetPageShown',
     'app/stories/PostATweet/behavior/events/PostATweetFormShown',
-    'app/stories/PostATweet/behavior/events/ErrorRaised',
-    
+    'app/stories/PostATweet/behavior/events/ErrorRaised',    
     'app/stories/PostATweet/businessLogic/validators/LengthValidator',
     'app/stories/PostATweet/businessLogic/validators/RequiredValidator',
     'app/stories/PostATweet/businessLogic/config/ErrorMessages'
@@ -13,12 +12,11 @@ define([
     SaveTweet,
     ThanksForYourTweetPageShown,
     PostATweetFormShown,
-    ErrorRaised,
-    
+    ErrorRaised,    
     LengthValidator,
     RequiredValidator,
     ErrorMessages
-    ) {
+    ){
     return function(){
     
 	this.ShowPostATweetForm = function(){
@@ -41,11 +39,7 @@ define([
 			new LengthValidator(Tweet, validData.minLengthOfText, validData.maxLengthOfText), 
 			function(){
 				var msg = ErrorMessages.EM001(validData.minLengthOfText, validData.maxLengthOfText); 
-
 				Nexus.EventBus.publish(ErrorRaised.Event(msg));
-/*
-				Nexus.EventBus.publish(Highlighted.Event(selector));					
-*/				
 			}
 		);
 
@@ -53,11 +47,7 @@ define([
 			new RequiredValidator(Tweet),
 			function(){
 				var msg = ErrorMessages.EM002;
-
 				Nexus.EventBus.publish(ErrorRaised.Event(msg));
-/*				
-				Nexus.EventBus.publish(Highlighted.Event(selector));							
-*/				
 			}
 		);
 

@@ -1,20 +1,17 @@
 define([
-    "Nexus",
-       'app/stories/ViewTweets/behavior/eventHandlers/ShowAllTweetsViewEventHandler'
+    'Nexus',
+    'app/stories/ViewTweets/behavior/eventHandlers/ShowAllTweetsViewEventHandler'
 ], function (
-    Nexus,
-    ShowAllTweetsViewEventHandler
-    ) {
-
-    return {
-        register: function(){
-            Nexus.EventBus.registerEventHandlers([
-			    ShowAllTweetsViewEventHandler
-            ]);
-        }
-    }
-
-
+	Nexus,
+	ShowAllTweetsViewEventHandler
+    ){
+	return {
+		register: function(){
+			Nexus.EventBus.registerEventHandlers([
+				ShowAllTweetsViewEventHandler
+			]);
+		}
+	}	
 });
 
 

@@ -1,5 +1,5 @@
 define([
-       'app/stories/TwitterLightHomepage/behavior/registration/eventHandlers',
+    'app/stories/TwitterLightHomepage/behavior/registration/eventHandlers',
     'app/stories/ViewTweets/behavior/registration/eventHandlers',
     'app/stories/PostATweet/behavior/registration/eventHandlers'
 ], function (

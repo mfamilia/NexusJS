@@ -1,7 +1,7 @@
 define([
     "Nexus",
-    "app/stories/PostATweet/behavior/commands/PostNewTweet",
-    "app/stories/PostATweet/businessLogic/domain/PostATweet"
+    'app/stories/PostATweet/behavior/commands/PostNewTweet',
+    'app/stories/PostATweet/businessLogic/domain/PostATweet'
 ], function (Nexus, PostNewTweet, PostATweet) {
 
     return new Nexus.CommandHandler(

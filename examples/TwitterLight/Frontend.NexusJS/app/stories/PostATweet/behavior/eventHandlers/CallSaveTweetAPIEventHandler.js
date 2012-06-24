@@ -1,7 +1,7 @@
 define([
     'jquery',
     'Nexus',
-    "app/stories/PostATweet/behavior/events/SaveTweet"
+    'app/stories/PostATweet/behavior/events/SaveTweet'
 ], function ($, Nexus, SaveTweet) {
 
     return new Nexus.EventHandler(

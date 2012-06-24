@@ -123,13 +123,13 @@ var Nexus = {
 	EventBus: '',
 	newId: 'assign id generator strategy function here',
 	Analytics: {
-        serverUrl: 'http://192.168.0.134:3000/analytics', //TODO: refactor
-        PostToAnalyticsServer: function(data){ //TODO: refactor
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', Nexus.Analytics.serverUrl, true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify(data));
-        },
+		serverUrl: 'http://192.168.0.134:3000/analytics', //TODO: refactor
+		PostToAnalyticsServer: function(data){ //TODO: refactor
+		    var xhr = new XMLHttpRequest();
+		    xhr.open('POST', Nexus.Analytics.serverUrl, true);
+		    xhr.setRequestHeader('Content-Type', 'application/json');
+		    xhr.send(JSON.stringify(data));
+		},
 		//PostToAnalyticsServer: function(msg){},
 		EnabledForCommands: false,
 		EnabledForEvents: false,
@@ -1486,8 +1486,8 @@ Nexus.Router = {
 Nexus.Router.registeredRoutes = new Array();
 Nexus.Router.ignoredRoutes = new Array();
 Nexus.Router.init();
-Nexus.Analytics.EnabledForCommands = true;
-Nexus.Analytics.EnabledForEvents = true;
+Nexus.Analytics.EnabledForCommands = false;
+Nexus.Analytics.EnabledForEvents = false;
 Nexus.newId = Nexus.NewGuid;
 Nexus.CommandBus = Nexus.CreateSimpleCommandBus();
 Nexus.EventStore = Nexus.CreateSimpleCachableEventStore();

@@ -1,5 +1,5 @@
 define([
-       'app/stories/TwitterLightHomepage/behavior/registration/routes',
+    'app/stories/TwitterLightHomepage/behavior/registration/routes',
     'app/stories/ViewTweets/behavior/registration/routes',
     'app/stories/PostATweet/behavior/registration/routes'
 ], function (

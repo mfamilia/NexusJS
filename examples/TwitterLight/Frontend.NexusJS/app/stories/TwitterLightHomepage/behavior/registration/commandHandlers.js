@@ -1,18 +1,18 @@
 define([
-    "Nexus",
-       'app/stories/TwitterLightHomepage/behavior/commandHandlers/NavigateToHomepageCommandHandler'
+    'Nexus',
+    'app/stories/TwitterLightHomepage/behavior/commandHandlers/NavigateToHomepageCommandHandler'
 ], function (
-    Nexus,
-    NavigateToHomepageCommandHandler
-    ) {
+	Nexus,
+	NavigateToHomepageCommandHandler
+    ){
 
-    return {
-        register: function(){
-            Nexus.CommandBus.registerCommandHandlers([
-			    NavigateToHomepageCommandHandler
-            ]);
-        }
-    }
+	return {
+		register: function(){
+			Nexus.CommandBus.registerCommandHandlers([
+				NavigateToHomepageCommandHandler
+			]);
+		}
+	}
 });
 
 

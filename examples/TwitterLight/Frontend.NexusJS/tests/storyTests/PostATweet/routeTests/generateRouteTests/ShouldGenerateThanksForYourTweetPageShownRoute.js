@@ -1,6 +1,6 @@
 define([
-	"Nexus",
-	"app/stories/PostATweet/behavior/events/ThanksForYourTweetPageShown"
+	'Nexus',
+	'app/stories/PostATweet/behavior/events/ThanksForYourTweetPageShown'
 ], function (Nexus, ThanksForYourTweetPageShown) {	
 	
 	var givenEvents = [

@@ -1,6 +1,6 @@
 define([
-	"Nexus",
-	"app/stories/ViewTweets/behavior/events/TweetsShown"
+	'Nexus',
+	'app/stories/ViewTweets/behavior/events/TweetsShown'
 ], function (Nexus, TweetsShown) {	
 		
 	var expectedEvents = [

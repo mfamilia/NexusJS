@@ -35,31 +35,11 @@ define([
 	    }
 	];
 	
-	var beforeTest = function(){
-		// Mock BackendCall
-		/*
-		Nexus.Mock
-			.BackendCall()
-				.Type('GET')
-				.Url('http://localhost/your/url')
-				.Execute('onSuccess', {key: 'value'}) // to mock  onSuccess
-				.Execute('onError', {key: 'value'}) // to mock onError
-			.Setup();
-		*/
-	}
-	
-	// Tear down
-	var afterTest = function(){
-		// tear down
-	}	
-
 	return new Nexus
 	    .BehaviorTest('Should fill out the form and post a tweet')
-	    	.BeforeTest(beforeTest)
-	    		.Given(givenEvents)
-	    		.When(PostNewTweet)
-	    		.Then(expectedEvents)
-	    	.AfterTest(afterTest);
+		.Given(givenEvents)
+		.When(PostNewTweet)
+		.Then(expectedEvents);
 
 });
 

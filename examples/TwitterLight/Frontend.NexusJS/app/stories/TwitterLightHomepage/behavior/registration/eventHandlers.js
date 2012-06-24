@@ -1,18 +1,18 @@
 define([
-    "Nexus",
-       'app/stories/TwitterLightHomepage/behavior/eventHandlers/ShowHomepageViewEventHandler'
+    'Nexus',
+    'app/stories/TwitterLightHomepage/behavior/eventHandlers/ShowHomepageViewEventHandler'
 ], function (
-    Nexus,
-    ShowHomepageViewEventHandler
-    ) {
+	Nexus,
+	ShowHomepageViewEventHandler
+    ){
 
-    return {
-        register: function(){
-            Nexus.EventBus.registerEventHandlers([
-			    ShowHomepageViewEventHandler
-            ]);
-        }
-    }
+	return {
+		register: function(){
+			Nexus.EventBus.registerEventHandlers([
+				ShowHomepageViewEventHandler
+			]);
+		}
+	}
 
 
 });

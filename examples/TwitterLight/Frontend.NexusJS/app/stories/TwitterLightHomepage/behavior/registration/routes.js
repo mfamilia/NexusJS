@@ -1,13 +1,13 @@
 define([
-	"Nexus",
-       'app/stories/TwitterLightHomepage/behavior/events/HomepageShown'
+	'Nexus',
+	'app/stories/TwitterLightHomepage/behavior/events/HomepageShown'
 ], function (Nexus,
-		    HomepageShown
+	HomepageShown
 ) {
 
 	return {
 		register: function(){
-		    Nexus.Router.registerRoute('#TwitterLightHomepage/HomepageShown',[HomepageShown.Event()]);
+			Nexus.Router.registerRoute('#TwitterLightHomepage/HomepageShown',[HomepageShown.Event()]);
 		}
 	};
 	

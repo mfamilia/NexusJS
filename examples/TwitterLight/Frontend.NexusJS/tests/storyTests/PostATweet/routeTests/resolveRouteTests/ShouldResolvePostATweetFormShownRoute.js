@@ -1,6 +1,6 @@
 define([
-	"Nexus",
-	"app/stories/PostATweet/behavior/events/PostATweetFormShown"
+	'Nexus',
+	'app/stories/PostATweet/behavior/events/PostATweetFormShown'
 ], function (Nexus, PostATweetFormShown) {	
 		
 	var expectedEvents = [

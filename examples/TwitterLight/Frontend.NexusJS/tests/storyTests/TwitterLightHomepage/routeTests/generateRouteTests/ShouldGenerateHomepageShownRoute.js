@@ -1,6 +1,6 @@
 define([
-	"Nexus",
-	"app/stories/TwitterLightHomepage/behavior/events/HomepageShown"
+	'Nexus',
+	'app/stories/TwitterLightHomepage/behavior/events/HomepageShown'
 ], function (Nexus, HomepageShown) {	
 	
 	var givenEvents = [

@@ -1,7 +1,7 @@
 define([
     'jquery',
     'Nexus',			
-    "app/stories/PostATweet/behavior/events/ErrorRaised"
+    'app/stories/PostATweet/behavior/events/ErrorRaised'
 ], function ($, Nexus, ErrorRaised) {
 
     return new Nexus.EventHandler(

@@ -1,18 +1,17 @@
 require([
 	'jquery',
 	'Nexus',
-       'tests/storyTests/TwitterLightHomepage/testModule',	
-    'tests/storyTests/ViewTweets/testModule',	
-    'tests/storyTests/PostATweet/testModule',	
+	'tests/storyTests/TwitterLightHomepage/testModule',	
+	'tests/storyTests/ViewTweets/testModule',	
+	'tests/storyTests/PostATweet/testModule',	
 	'NexusTF'	
 ],function(
 	$,
 	Nexus,
-    TwitterLightHomepage,	
-    ViewTweets,	
-    PostATweet	
+	TwitterLightHomepage,	
+	ViewTweets,	
+	PostATweet	
 ){
-
 	var testModules = [
 	    TwitterLightHomepage,	
 	    ViewTweets,	
@@ -25,5 +24,5 @@ require([
 			new Nexus.TestRunner('Running Tests').run(testModules);
 		}).show();		
 	});
-
+	
 });

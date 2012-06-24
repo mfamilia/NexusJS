@@ -10,12 +10,12 @@ require.config({
 
 // Init App
 require([
-	'Nexus',
+    'Nexus',
     'app/registration/routes',
     'app/registration/commandHandlers',
     'app/registration/eventHandlers'
 ], function(
-	Nexus,
+    Nexus,
     routes,
     commandHandlers,
     eventHandlers
@@ -25,13 +25,12 @@ require([
     routes.register();
 
     var redirectToRoute = window.location.hash;
-
-	//TODO: below enter your initial route
-	if (window.location.href.indexOf("tests.html") == -1){
-		Nexus.Router.route('#TwitterLightHomepage/HomepageShown');
-	}
     
-
+    if (window.location.href.indexOf("tests.html") == -1){
+	// initial route
+	Nexus.Router.route('#TwitterLightHomepage/HomepageShown');
+    }
+    
     if (redirectToRoute){
         Nexus.Router.route(redirectToRoute);
     }
