@@ -1,6 +1,6 @@
 To run this example you would need to do the following:
 
-Frontend is NexusJS and was tested under Firefox, Safari and Chrome
+Frontend is NexusJS and was tested under Firefox, Safari, Chrome and Opera
 Backend is using .NET MVC 3 and was tested under IIS 7
 
 STEP 1:
