@@ -18,7 +18,6 @@ public class TwitterLight {
 
 	private List<Tweet> tweets = new ArrayList<Tweet>();
 	
-	// This method is called if TEXT_PLAIN is request
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/GetAllTweets")
