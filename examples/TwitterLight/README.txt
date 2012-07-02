@@ -50,6 +50,10 @@ TO RUN THIS EXAMPLE LOCALLY
         a) under Backend.NodeJS run 'npm update' to get node packages
         b) run 'node web' to start (will run on port 80)
       GO TO http://web.nexusjs.com:8080
+
+     To run with Java backend example
+     ----------------------------------
+	TBD
       
 P.S.
 Quickly wrote these step by step from memory so if you have questions feel free to email me at alex@nexusjs.com
