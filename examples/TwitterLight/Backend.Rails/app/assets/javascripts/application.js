@@ -12,4 +12,28 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require tilt-jade/runtime
+//= require nexus
+//= require config
 //= require_tree .
+
+$(function () {
+  Nexus.App = {
+    ApiUrl:'http://api.nexusjs.com'
+  };
+
+  TwitterLight.CommandHandlers.register();
+  TwitterLight.EventHandlers.register();
+  TwitterLight.Routes.register();
+
+  var redirectToRoute = window.location.hash;
+
+  if (window.location.href.indexOf("tests.html") == -1) {
+    // initial route
+    Nexus.Router.route('#TwitterLightHomepage/HomepageShown');
+  }
+
+  if (redirectToRoute) {
+    Nexus.Router.route(redirectToRoute);
+  }
+});
