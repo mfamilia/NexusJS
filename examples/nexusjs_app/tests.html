@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Say Hello NexusJS Tests</title>
+		
+		<!-- RequireJS -->
+		<script data-main="main" src="lib/require.js"></script>
+		
+		<!-- Move to css file -->
+		<style type="text/css" media="screen">
+			.nexus-test-module {color: blue; font-weight: bold; font-size: 18px;}
+			.nexus-test-name {color: #366097;}
+			.nexus-test-failed {color: #EE5757; font-weight: bold;}
+			.nexus-test-failed-message {color: #000000; background-color: #EE5757; padding: 3px; font-weight: bold; margin-bottom: 5px;}			
+			.nexus-test-passed {color: #528CE0; }
+			.nexus-test-failed-expected-events {color: green;}
+			.nexus-test-failed-actual-events {color: #EE5757; margin-bottom: 10px; }
+			.nexus-test-failed-expected-header {font-weight: bold;}
+			.nexus-test-failed-actual-header {font-weight: bold;}
+			.nexus-test-failed-expected-actual {margin-left: 70px; border: solid 1px #660000; padding: 10px;}
+			.nexus-test-module {margin-top: 10px;}
+			.nexus-test-module-separator {margin-top:5px; margin-bottom:5px; border: dotted 1pt #000080; width: 800px;}
+		</style>
+	</head>
+	
+	<body>
+		 <h1>Say Hello NexusJS Tests</h1> 
+		<div><input type="button" value="Run Tests" style="display:none;" id="runTests" /></div>		
+		
+		<div id="nexus-test-results"></div>
+		
+		<!-- Tests to run -->
+		<script type="text/javascript">
+			require(['tests/testRunner']);			
+		</script>		
+	</body>
+</html>
