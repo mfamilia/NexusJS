@@ -1,8 +1,8 @@
 .link {
-	color: Navy;
-	cursor: pointer;	
+  color: Navy;
+  cursor: pointer;
 }
 
 .link:hover {
-	text-decoration: underline;
+  text-decoration: underline;
 }

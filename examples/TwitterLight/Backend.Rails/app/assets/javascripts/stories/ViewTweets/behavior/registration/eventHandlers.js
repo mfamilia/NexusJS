@@ -1,6 +1,14 @@
-TwitterLight.ViewTweets.registerEventHandlers = function () {
-  Nexus.EventBus.registerEventHandlers([
-    TwitterLight.EventHandlers.ShowAllTweetsView
-  ]);
-};
+define([
+  'nexus',
+  'stories/ViewTweets/behavior/eventHandlers/ShowAllTweetsViewEventHandler'
+], function (Nexus, ShowAllTweetsViewEventHandler) {
+  return {
+    register:function () {
+      Nexus.EventBus.registerEventHandlers([
+        ShowAllTweetsViewEventHandler
+      ]);
+    }
+  }
+});
+
 

@@ -1,8 +1,14 @@
-$(function () {
-  TwitterLight.EventHandlers.CallSaveTweetAPI = new Nexus.EventHandler(
+define([
+  'jquery',
+  'nexus',
+  'stories/PostATweet/behavior/events/SaveTweet'
+], function ($, Nexus, SaveTweet) {
+
+  return new Nexus.EventHandler(
     'Save tweet event handler',
-    TwitterLight.Events.SaveTweet.eventName,
+    SaveTweet.eventName,
     function (evt) {
+
       new Nexus.BackendCall({
         type:'POST',
         url:Nexus.App.ApiUrl + '/TwitterLight/SaveTweet',
@@ -10,6 +16,8 @@ $(function () {
           Text:evt.Tweet
         }
       }).perform();
+
     }
   );
+
 });

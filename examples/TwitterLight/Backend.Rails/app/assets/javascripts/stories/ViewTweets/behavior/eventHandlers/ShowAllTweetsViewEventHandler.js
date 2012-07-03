@@ -1,25 +1,32 @@
-$(function () {
-  TwitterLight.EventHandlers.ShowAllTweetsView = new Nexus.EventHandler(
+define([
+  'jquery',
+  'nexus',
+  'stories/ViewTweets/behavior/events/TweetsShown',
+  'stories/TwitterLightHomepage/behavior/commands/NavigateToHomepage',
+  'stories/PostATweet/behavior/commands/ShowPostATweetForm'
+], function ($, Nexus, TweetsShown, NavigateToHomepage, ShowPostATweetForm) {
+
+  return new Nexus.EventHandler(
     'Tweets shown event handler',
-    TwitterLight.Events.TweetsShown.eventName,
+    TweetsShown.eventName,
     function (evt) {
       new Nexus.BackendCall({
         type:'GET',
         url:Nexus.App.ApiUrl + '/TwitterLight/GetAllTweets',
         onSuccess:function (data) {
           new Nexus.View({
-            template:'app/stories/ViewTweets/ui/templates/ViewTweets.jst.jade',
+            template:'stories/ViewTweets/ui/templates/ViewTweets.html',
             placeholder:'#content',
             data:data,
             onLoad:function () {
               $('#ShowHomepage').click(function () {
                 Nexus.CommandBus.dispatch(
-                  TwitterLight.Commands.NavigateToHomepage.Command()
+                  NavigateToHomepage.Command()
                 );
               });
               $('#PostTweets').click(function () {
                 Nexus.CommandBus.dispatch(
-                  TwitterLight.Commands.ShowPostATweetForm.Command()
+                  ShowPostATweetForm.Command()
                 );
               });
             }
@@ -29,7 +36,9 @@ $(function () {
         onError:function () {
           console.log('there was an error calling view tweets backend');
         }
-      }).perform();
+      })
+        .perform();
     }
   );
+
 });

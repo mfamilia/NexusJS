@@ -1,9 +1,16 @@
-TwitterLight.Events.SaveTweet = {
-  eventName:"Save tweet",
-  Event:function (tweet) {
-    return {
-      tweet:tweet,
-      eventName:this.eventName
-    };
-  }
-};
+define(function () {
+
+  var SaveTweet = {
+    eventName:"Save tweet",
+
+    Event:function (Tweet) {
+      return {
+        Tweet:Tweet,
+        eventName:SaveTweet.eventName
+      };
+    }
+  };
+
+  return SaveTweet;
+
+});

@@ -1,6 +1,15 @@
-TwitterLight.ViewTweets.registerCommandHandlers = function () {
-  Nexus.CommandBus.registerCommandHandlers([
-    TwitterLight.CommandHandlers.ViewAllTweets
-  ]);
-};
+define([
+  'nexus',
+  'stories/ViewTweets/behavior/commandHandlers/ViewAllTweetsCommandHandler'
+], function (Nexus, ViewAllTweetsCommandHandler) {
+
+  return {
+    register:function () {
+      Nexus.CommandBus.registerCommandHandlers([
+        ViewAllTweetsCommandHandler
+      ]);
+    }
+  }
+});
+
 

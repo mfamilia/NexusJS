@@ -18,6 +18,7 @@ group :assets do
   gem 'compass-rails'
   gem 'haml-rails'
   gem 'tilt-jade'
+  gem 'requirejs-rails'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platform => :ruby

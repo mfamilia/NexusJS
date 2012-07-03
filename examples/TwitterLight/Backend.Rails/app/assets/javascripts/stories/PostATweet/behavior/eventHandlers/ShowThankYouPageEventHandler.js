@@ -1,31 +1,37 @@
-$(function () {
-  TwitterLight.EventHandlers.ShowThankYouPage = new Nexus.EventHandler(
+define([
+  'jquery',
+  'nexus',
+  'stories/ViewTweets/behavior/commands/ViewAllTweets',
+  'stories/PostATweet/behavior/commands/ShowPostATweetForm',
+  'stories/PostATweet/behavior/events/ThanksForYourTweetPageShown'
+], function ($, Nexus, ViewAllTweets, ShowPostATweetForm, ThanksForYourTweetPageShown) {
+
+  return new Nexus.EventHandler(
     'Thanks for your tweet page shown event handler',
-    TwitterLight.Events.ThanksForYourTweetPageShown.eventName,
+    ThanksForYourTweetPageShown.eventName,
     function (evt) {
       new Nexus.View({
-        template:'app/stories/PostATweet/ui/templates/ThanksForYourTweet.html',
+        template:'stories/PostATweet/ui/templates/ThanksForYourTweet.html',
         placeholder:'#content',
         data:{
           message:evt.Message,
           tweet:evt.Tweet
         },
-        render:function(){
-
-        },
         onLoad:function () {
           $('#ViewTweets').click(function () {
             Nexus.CommandBus.dispatch(
-              TwitterLight.Commands.ViewAllTweets.Command()
+              ViewAllTweets.Command()
             );
           });
           $('#PostTweets').click(function () {
             Nexus.CommandBus.dispatch(
-              TwitterLight.Commands.ShowPostATweetForm.Command()
+              ShowPostATweetForm.Command()
             );
           });
         }
-      }).render();
+      })
+        .render();
     }
   );
+
 });

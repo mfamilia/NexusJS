@@ -1,11 +1,18 @@
-$(function() {
-  TwitterLight.CommandHandlers.ShowPostATweetForm = new Nexus.CommandHandler(
+define([
+  "nexus",
+  'stories/PostATweet/behavior/commands/ShowPostATweetForm',
+  'stories/PostATweet/businessLogic/domain/PostATweet'
+], function (Nexus, ShowPostATweetForm, PostATweet) {
+
+  return new Nexus.CommandHandler(
     'Show post a tweet form command handler',
-    TwitterLight.Commands.ShowPostATweetForm.commandName,
-    function(cmd){
-      new TwitterLight.Models.PostATweet()
+    ShowPostATweetForm.commandName,
+    function (cmd) {
+      new PostATweet()
         .ShowPostATweetForm(
       );
     }
   );
+
 });
+

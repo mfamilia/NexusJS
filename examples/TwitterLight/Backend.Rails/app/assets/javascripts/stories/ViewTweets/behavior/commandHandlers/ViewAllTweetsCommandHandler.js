@@ -1,9 +1,16 @@
-$(function () {
-  TwitterLight.CommandHandlers.ViewAllTweets = new Nexus.CommandHandler(
+define([
+  'nexus',
+  'stories/ViewTweets/behavior/commands/ViewAllTweets',
+  'stories/ViewTweets/businessLogic/domain/ViewTweets'
+], function (Nexus, ViewAllTweets, ViewTweets) {
+
+  return new Nexus.CommandHandler(
     'View all tweets command handler',
-    TwitterLight.Commands.ViewAllTweets.commandName,
+    ViewAllTweets.commandName,
     function (cmd) {
-      new TwitterLight.Models.ViewTweets().ViewAllTweets();
+      new ViewTweets().ViewAllTweets();
     }
   );
+
 });
+

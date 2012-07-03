@@ -1,9 +1,16 @@
-$(function () {
-  TwitterLight.CommandHandlers.NavigateToHomepage = new Nexus.CommandHandler(
+define([
+  'nexus',
+  'stories/TwitterLightHomepage/behavior/commands/NavigateToHomepage',
+  'stories/TwitterLightHomepage/businessLogic/domain/TwitterLightHomepage'
+], function (Nexus, NavigateToHomepage, TwitterLightHomepage) {
+
+  return new Nexus.CommandHandler(
     'Navigate to homepage command handler',
-    TwitterLight.Commands.NavigateToHomepage.commandName,
+    NavigateToHomepage.commandName,
     function (cmd) {
-      new TwitterLight.Models.Homepage().NavigateToHomepage();
+      new TwitterLightHomepage().NavigateToHomepage();
     }
   );
+
 });
+

@@ -1,25 +1,31 @@
-$(function () {
-  TwitterLight.EventHandlers.ShowPostATweetForm = new Nexus.EventHandler(
+define([
+  'jquery',
+  'nexus',
+  'stories/PostATweet/behavior/commands/PostNewTweet',
+  'stories/PostATweet/behavior/events/PostATweetFormShown'
+], function ($, Nexus, PostNewTweet, PostATweetFormShown) {
+
+  return new Nexus.EventHandler(
     'Post a tweet form shown event handler',
-    TwitterLight.Events.PostATweetFormShown.eventName,
+    PostATweetFormShown.eventName,
     function (evt) {
       new Nexus.View({
-        template:'app/stories/PostATweet/ui/templates/PostATweetForm.html',
+        template:'stories/PostATweet/ui/templates/PostATweetForm.html',
         placeholder:'#content',
         data:{},
-        render: function(){
-
-        },
         onLoad:function () {
           $('#PostATweet').click(function () {
             Nexus.CommandBus.dispatch(
-              TwitterLight.Commands.PostNewTweet.Command(
+              PostNewTweet.Command(
                 $('#tweet').val()
               )
             );
           });
         }
-      }).render();
+
+      })
+        .render();
     }
   );
+
 });

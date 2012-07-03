@@ -1,3 +1,10 @@
-TwitterLight.ViewTweets.registerRoutes = function () {
-  Nexus.Router.registerRoute('#ViewTweets/TweetsShown', [TwitterLight.Events.TweetsShown.Event()]);
-};
+define([
+  'nexus',
+  'stories/ViewTweets/behavior/events/TweetsShown'
+], function (Nexus, TweetsShown) {
+  return {
+    register:function () {
+      Nexus.Router.registerRoute('#ViewTweets/TweetsShown', [TweetsShown.Event()]);
+    }
+  };
+});

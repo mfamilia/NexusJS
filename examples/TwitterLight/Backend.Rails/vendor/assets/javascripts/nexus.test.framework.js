@@ -15,6 +15,8 @@
 ///////////////////////////////////////////////////
 ///////////////////////////////////////////////////
 
+require(['nexus'],function(Nexus){
+	
 Nexus.Mock = {
 		BACKUP: {},
 		BackupAll: function(){
@@ -817,3 +819,9 @@ Nexus.GenerateRouteTest = function(name, waitTime){
 	};		
 	
 };
+
+
+
+});
+
+

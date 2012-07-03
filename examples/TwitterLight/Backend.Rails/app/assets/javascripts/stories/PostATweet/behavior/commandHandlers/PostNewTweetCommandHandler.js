@@ -1,13 +1,19 @@
-$(function () {
-  TwitterLight.CommandHandlers.PostNewTweet = new Nexus.CommandHandler(
+define([
+  "nexus",
+  'stories/PostATweet/behavior/commands/PostNewTweet',
+  'stories/PostATweet/businessLogic/domain/PostATweet'
+], function (Nexus, PostNewTweet, PostATweet) {
+
+  return new Nexus.CommandHandler(
     'Post new tweet command handler',
-    TwitterLight.Commands.PostNewTweet.commandName,
+    PostNewTweet.commandName,
     function (cmd) {
-      new TwitterLight.Models.PostATweet()
+      new PostATweet()
         .PostNewTweet(
         cmd.Tweet
       );
     }
   );
+
 });
 

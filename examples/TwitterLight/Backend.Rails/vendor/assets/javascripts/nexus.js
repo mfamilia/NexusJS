@@ -15,7 +15,9 @@
 ///////////////////////////////////////////////////
 ///////////////////////////////////////////////////
 
-Nexus = {
+define(function(){
+
+var Nexus = {
 	///////////////////////////////////////////////////    
 	// VALIDATION /////////////////////////////////////
 	///////////////////////////////////////////////////
@@ -52,7 +54,7 @@ Nexus = {
 		self.onLoad = view.onLoad;		
 		self.template = view.template;
 		self.placeholder = view.placeholder;
-    self.render = view.render;
+		self.render = view.render;
 		return self;
 	},
 	///////////////////////////////////////////////////    
@@ -74,16 +76,36 @@ Nexus = {
 	// PERFORM BACKEND CALL ///////////////////////////
 	///////////////////////////////////////////////////
 	PerformBackendCall: function(backendCall){
-    $.ajax({
-      url: backendCall.url,
-      type: backendCall.type,
-      data: backendCall.data,
-      dataType: 'json',
-      contentTypeString: 'application/json',
-      success:  backendCall.onSuccess || Nexus.ajaxOnSuccessDefaultCallback,
-      error:  backendCall.onError || Nexus.ajaxOnErrorDefaultCallback
-    });
+		require(['jquery'], function($) {	
+			$.ajax({
+				url: backendCall.url,
+				type: backendCall.type,
+				data: backendCall.data,
+				dataType: 'json',
+				contentTypeString: 'application/json',
+				success:  backendCall.onSuccess || Nexus.ajaxOnSuccessDefaultCallback,
+				error:  backendCall.onError || Nexus.ajaxOnErrorDefaultCallback
+			});					
+		});				
 	},
+	///////////////////////////////////////////////////    
+	// RENDER VIEW ////////////////////////////////////
+	///////////////////////////////////////////////////	
+//	RenderView: function(view){
+//		var includes = ['jquery'];
+//		if (view.template) includes.push("text!" + view.template);
+//
+//		require(includes, function($, Mustache, tpl) {
+//			if (view.template){
+//				var data = view.data || {};
+//				$(view.placeholder).html(Mustache.to_html(tpl, data));
+//			}
+//
+//			if (view.onLoad){
+//				view.onLoad();
+//			}
+//		});
+//	},
 	///////////////////////////////////////////////////    
 	// LOAD CSS //////NOT USED YET/////////////////////
 	///////////////////////////////////////////////////		
@@ -1520,3 +1542,10 @@ Nexus.CommandBus.registerGlobalCommandHandler(
 		}
 	)
 );
+
+
+
+return Nexus;
+});
+
+

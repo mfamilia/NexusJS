@@ -1,9 +1,16 @@
-TwitterLight.Events.TweetsShown = {
-  eventName:"Tweets shown",
-  Event:function (tweets) {
-    return {
-      tweets:tweets,
-      eventName:this.eventName
-    };
-  }
-};
+define(function () {
+
+  var TweetsShown = {
+    eventName:"Tweets shown",
+
+    Event:function (Tweets) {
+      return {
+        Tweets:Tweets,
+        eventName:TweetsShown.eventName
+      };
+    }
+  };
+
+  return TweetsShown;
+
+});

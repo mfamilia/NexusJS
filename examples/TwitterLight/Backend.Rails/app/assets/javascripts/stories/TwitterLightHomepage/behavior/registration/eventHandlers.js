@@ -1,6 +1,17 @@
-TwitterLight.Homepage.registerEventHandlers = function () {
-  Nexus.EventBus.registerEventHandlers([
-    TwitterLight.EventHandlers.ShowHomepageView
-  ]);
-};
+define([
+  'nexus',
+  'stories/TwitterLightHomepage/behavior/eventHandlers/ShowHomepageViewEventHandler'
+], function (Nexus, ShowHomepageViewEventHandler) {
+
+  return {
+    register:function () {
+      Nexus.EventBus.registerEventHandlers([
+        ShowHomepageViewEventHandler
+      ]);
+    }
+  }
+
+
+});
+
 

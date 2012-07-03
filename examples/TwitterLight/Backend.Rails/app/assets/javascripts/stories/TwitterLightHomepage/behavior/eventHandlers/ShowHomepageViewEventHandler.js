@@ -1,27 +1,34 @@
-$(function () {
-  TwitterLight.EventHandlers.ShowHomepageView = new Nexus.EventHandler(
+define([
+  'jquery',
+  'nexus',
+  'stories/ViewTweets/behavior/commands/ViewAllTweets',
+  'stories/PostATweet/behavior/commands/ShowPostATweetForm',
+  'stories/TwitterLightHomepage/behavior/events/HomepageShown'
+], function ($, Nexus, ViewAllTweets, ShowPostATweetForm, HomepageShown) {
+
+  return new Nexus.EventHandler(
     'Homepage shown event handler',
-    TwitterLight.Events.HomepageShown.eventName,
+    HomepageShown.eventName,
     function (evt) {
       new Nexus.View({
-        template:JST['stories/TwitterLightHomepage/ui/templates/Homepage'],
+        template:'stories/TwitterLightHomepage/ui/templates/Homepage.html',
         placeholder:'#content',
         data:{},
-        render:function(){
-          $(this.placeholder).html(this.template());
-        },
         onLoad:function () {
           $('#ViewTweets').click(function () {
             Nexus.CommandBus.dispatch(
-              TwitterLight.Commands.ViewAllTweets.Command()
+              ViewAllTweets.Command()
             );
           });
           $('#PostTweets').click(function () {
             Nexus.CommandBus.dispatch(
-              TwitterLight.Commands.ShowPostATweetForm.Command()
+              ShowPostATweetForm.Command()
             );
           });
         }
-      }).render();
-    });
+      })
+        .render();
+    }
+  );
+
 });
